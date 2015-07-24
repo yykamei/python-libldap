@@ -5,21 +5,25 @@
 _filter = filter
 
 from _libldap import LDAPObject
-from collections import OrderedDict
+from collections import OrderedDict as _OrderedDict
+
+__all__ = (
+    'LDAP',
+)
 
 
-class OrderedEntry(OrderedDict):
+class _OrderedEntry(_OrderedDict):
     def __repr__(self):
         content = ', '.join(['%s: %s' % (x, y) for x, y in self.items()])
         return '{%s}' % (content,)
 
 
-class LDAPObject(LDAPObject):
-    def search(self, base, scope, filter, ordered_attributes=False, *args, **kwargs):
+class LDAP(LDAPObject):
+    def search(self, base, scope, filter, ordered_attributes=False):
         msg = super().search(base, scope, filter)
         for entry in super().result(msg):
             if ordered_attributes:
-                obj = OrderedEntry()
+                obj = _OrderedEntry()
                 for key in entry['__order__']:
                     obj[key] = entry[key]
                 yield obj
