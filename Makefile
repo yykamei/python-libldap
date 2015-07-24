@@ -1,14 +1,19 @@
-ROOT   = ./test-stage
-PREFIX = /bbb
+PYTHON        = /usr/bin/env python3
+ROOT          = ./test-stage
 
-.PHONY: install
-install:
-	python3.4 setup.py install --root=$(ROOT) --prefix=$(PREFIX)
 
-.PHONY: test
-test:
-	env PYTHONPATH=$(ROOT)$(PREFIX)/lib/python3.4/site-packages gdb python3.4
+.PHONY: test-interactive
+test-interactive:
+	$(PYTHON) setup.py install --root=$(ROOT) --install-lib=/
+	env PYTHONPATH=$(ROOT) $(PYTHON)
+
+
+.PHONY: test-interactive-with-gdb
+test-interactive-with-gdb:
+	$(PYTHON) setup.py install --root=$(ROOT) --install-lib=/
+	env PYTHONPATH=$(ROOT) gdb $(PYTHON)
+
 
 .PHONY: clean
 clean:
-	rm -rf build $(ROOT) $(PREFIX)
+	rm -rf build $(ROOT)

@@ -1,5 +1,5 @@
 /*
- * A Python binding for ldap.
+ * A Python binding for libldap.
  *
  * Copyright (C) 2015 Yutaka Kamei
  *

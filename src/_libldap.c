@@ -1,5 +1,5 @@
 /*
- * A Python binding for ldap.
+ * A Python binding for libldap.
  *
  * Copyright (C) 2015 Yutaka Kamei
  *
@@ -147,7 +147,7 @@ LDAPObject_search(LDAPObject *self, PyObject *args)
 	if (py_attributes == Py_None) {
 		attributes = NULL;
 	} else if (PyUnicode_Check(py_attributes)) {
-		*attributes = PyUnicode_FromString(py_attributes);
+		*attributes = PyUnicode_AsUTF8(py_attributes);
 	} else if (PySequence_Check(py_attributes)) {
 		// FIXME
 	}
@@ -171,15 +171,20 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 	int msgid = LDAP_RES_ANY;
 	int all = LDAP_MSG_ONE;
 	LDAPMessage *res, *msg;
-	char *dn;
 	int rc, err;
 	char *matched = NULL;
 	char *info = NULL;
 	char **refs = NULL;
 	LDAPControl **ctrls = NULL;
+	PyObject *result = NULL, *entry = NULL;
 
 	if (!PyArg_ParseTuple(args, "|ii", &msgid, &all))
 		return NULL;
+
+	/* Initialize container */
+	result = PyList_New(0);
+	if (result == NULL)
+		return PyErr_NoMemory();
 
 	LDAP_BEGIN_ALLOW_THREADS
 	while ((rc = ldap_result(self->ldap, msgid, all, NULL, &res)) > 0) {
@@ -188,8 +193,10 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 				msg = ldap_next_message(self->ldap, msg)) {
 			switch(ldap_msgtype(msg)) {
 				case LDAP_RES_SEARCH_ENTRY:
-					dn = ldap_get_dn(self->ldap, msg);
-					printf("%s\n", dn);
+					entry = get_entry(self->ldap, msg);
+					if (entry == NULL)
+						goto failed;
+					PyList_Append(result, entry);
 					break;
 				case LDAP_RES_SEARCH_RESULT:
 					rc = ldap_parse_result(self->ldap, res, &err, &matched, &info, &refs, &ctrls, 0);
@@ -209,7 +216,12 @@ done:
 		PyErr_SetString(LDAPError, ldap_err2string(err));
 		return NULL;
 	}
-	Py_RETURN_TRUE;
+	return result;
+
+failed:
+	Py_XDECREF(result);
+	Py_XDECREF(entry);
+	return NULL;
 }
 
 

@@ -1,0 +1,8 @@
+setup.py
+src/_libldap.c
+src/_libldap_utils.c
+src/libldap.py
+src/libldap.egg-info/PKG-INFO
+src/libldap.egg-info/SOURCES.txt
+src/libldap.egg-info/dependency_links.txt
+src/libldap.egg-info/top_level.txt

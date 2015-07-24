@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: libldap
+Version: 0.0.4
+Summary: A Python binding for libldap
+Home-page: UNKNOWN
+Author: Yutaka Kamei
+Author-email: kamei@ykamei.net
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
