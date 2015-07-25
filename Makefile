@@ -16,4 +16,4 @@ test-interactive-with-gdb:
 
 .PHONY: clean
 clean:
-	rm -rf build $(ROOT) src/libldap.egg-info
+	rm -rf build $(ROOT) Lib/libldap.egg-info
