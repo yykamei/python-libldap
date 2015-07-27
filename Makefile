@@ -13,6 +13,10 @@ test-interactive-with-gdb:
 	$(PYTHON) setup.py install --root=$(ROOT) --install-lib=/
 	env PYTHONPATH=$(ROOT) gdb python3
 
+.PHONY: test-interactive-with-valgrind
+test-interactive-with-valgrind:
+	$(PYTHON) setup.py install --root=$(ROOT) --install-lib=/
+	env PYTHONPATH=$(ROOT) valgrind --tool=memcheck --leak-check=yes python3
 
 .PHONY: clean
 clean:
