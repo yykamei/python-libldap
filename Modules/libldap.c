@@ -59,6 +59,9 @@ LDAPObject_init(LDAPObject *self, PyObject *args, PyObject *kwargs)
 	if (!PyArg_ParseTuple(args, "s", &uri))
 		return -1;
 
+	if (ldap_set_option(NULL, LDAP_OPT_PROTOCOL_VERSION, &protocol) != LDAP_OPT_SUCCESS)
+		return -1;
+
 	LDAP_BEGIN_ALLOW_THREADS
 	rc = ldap_initialize(&ld, uri);
 	LDAP_END_ALLOW_THREADS
@@ -66,8 +69,6 @@ LDAPObject_init(LDAPObject *self, PyObject *args, PyObject *kwargs)
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
 		return -1;
 	}
-
-	ldap_set_option(ld, LDAP_OPT_PROTOCOL_VERSION, &protocol);
 
 	/* Create new instance */
 	self->ldap = ld;
@@ -89,6 +90,8 @@ static PyMethodDef LDAPObject_methods[] = {
 	{"whoami",  (PyCFunction)LDAPObject_whoami, METH_VARARGS, "whoami"},
 	{"passwd",  (PyCFunction)LDAPObject_passwd, METH_VARARGS, "passwd"},
 	{"cancel",  (PyCFunction)LDAPObject_cancel, METH_VARARGS, "cancel"},
+	{"start_tls",  (PyCFunction)LDAPObject_start_tls, METH_VARARGS, "start_tls"},
+	{"set_option",  (PyCFunction)LDAPObject_set_option, METH_VARARGS, "set_option"},
 	{"result",  (PyCFunction)LDAPObject_result, METH_VARARGS, "result"},
 	{NULL, NULL, 0, NULL}        /* Sentinel */
 };

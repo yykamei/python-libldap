@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2015 Yutaka Kamei
 
+# Required Python libraries:
+#   - setuptools
+#
+# Required C libraries:
+#   - libssl
+
 from setuptools import setup, find_packages, Extension
 
 ext_module = Extension('_libldap',
@@ -18,6 +24,8 @@ ext_module = Extension('_libldap',
                                 'Modules/whoami.c',
                                 'Modules/passwd.c',
                                 'Modules/cancel.c',
+                                'Modules/start_tls.c',
+                                'Modules/set_option.c',
                                 'Modules/result.c',
                                 ],
                        libraries=['ldap'],
