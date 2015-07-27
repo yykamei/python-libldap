@@ -25,9 +25,9 @@ typedef struct {
 		PyGILState_Release(gstate);       \
 	}
 
-#define XDECREF_MANY(...)                                          \
-	_XDECREF_MANY(                                                 \
-		(PyObject *[]){__VA_ARGS__},                              \
+#define XDECREF_MANY(...)                                        \
+	_XDECREF_MANY(                                               \
+		(PyObject *[]){__VA_ARGS__},                             \
 		sizeof((PyObject *[]){__VA_ARGS__}) / sizeof(PyObject *) \
 	)
 
