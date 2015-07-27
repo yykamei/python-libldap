@@ -5,7 +5,7 @@
  *
  */
 
-#include "_libldap.h"
+#include "libldap.h"
 
 static PyObject *get_entry(LDAP *ldap, LDAPMessage *msg);
 
