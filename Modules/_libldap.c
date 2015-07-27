@@ -88,7 +88,7 @@ static PyMethodDef LDAPObject_methods[] = {
 /* Type definition */
 static PyTypeObject LDAPType = {
 	PyVarObject_HEAD_INIT(NULL, 0)
-	"_libldap.LDAPObject",             /* tp_name */
+	"_libldap._LDAPObject",         /* tp_name */
 	sizeof(LDAPObject),             /* tp_basicsize */
 	0,                              /* tp_itemsize */
 	(destructor)LDAPObject_dealloc, /* tp_dealloc */
@@ -147,7 +147,7 @@ PyInit__libldap(void)
 	PyModule_AddObject(m, "LDAPError", LDAPError);
 
 	Py_INCREF(&LDAPType);
-	PyModule_AddObject(m, "LDAPObject", (PyObject *)&LDAPType);
+	PyModule_AddObject(m, "_LDAPObject", (PyObject *)&LDAPType);
 
 	return m;
 }
