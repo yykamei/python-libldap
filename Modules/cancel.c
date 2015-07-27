@@ -9,8 +9,9 @@
 
 
 PyObject *
-LDAPObject_abandon(LDAPObject *self, PyObject *args)
+LDAPObject_cancel(LDAPObject *self, PyObject *args)
 {
+	int cancelid;
 	int msgid;
 	LDAPControl **sctrls = NULL;
 	int rc;
@@ -20,17 +21,17 @@ LDAPObject_abandon(LDAPObject *self, PyObject *args)
 		return NULL;
 	}
 
-	if (!PyArg_ParseTuple(args, "i", &msgid))
+	if (!PyArg_ParseTuple(args, "i", &cancelid))
 		return NULL;
 
 	LDAP_BEGIN_ALLOW_THREADS
-	rc = ldap_abandon_ext(self->ldap, msgid, sctrls, NULL);
+	rc = ldap_cancel(self->ldap, cancelid, sctrls, NULL, &msgid);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
 		return NULL;
 	}
-	return PyLong_FromLong(rc);
+	return PyLong_FromLong(msgid);
 }
 
 /* vi: set noexpandtab : */

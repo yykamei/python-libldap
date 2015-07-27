@@ -50,6 +50,7 @@ PyObject *LDAPObject_compare(LDAPObject *self, PyObject *args);
 PyObject *LDAPObject_abandon(LDAPObject *self, PyObject *args);
 PyObject *LDAPObject_whoami(LDAPObject *self, PyObject *args);
 PyObject *LDAPObject_passwd(LDAPObject *self, PyObject *args);
+PyObject *LDAPObject_cancel(LDAPObject *self, PyObject *args);
 PyObject *LDAPObject_result(LDAPObject *self, PyObject *args);
 
 /* vi: set noexpandtab : */
