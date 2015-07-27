@@ -11,8 +11,8 @@
 PyObject *
 LDAPObject_bind(LDAPObject *self, PyObject *args)
 {
-	const char *who;
-	const char *password;
+	char *who;
+	char *password;
 	struct berval passwd = {0, NULL};
 	int rc;
 	int msgid;
@@ -27,7 +27,7 @@ LDAPObject_bind(LDAPObject *self, PyObject *args)
 
 	// ldap_set_option
 	// ldap_start_tls_s
-	passwd.bv_val = ber_strdup(password);
+	passwd.bv_val = password;
 	passwd.bv_len = strlen(passwd.bv_val);
 
 	LDAP_BEGIN_ALLOW_THREADS
