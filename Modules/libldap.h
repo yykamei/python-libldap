@@ -47,6 +47,7 @@ PyObject *LDAPObject_modify(LDAPObject *self, PyObject *args);
 PyObject *LDAPObject_delete(LDAPObject *self, PyObject *args);
 PyObject *LDAPObject_rename(LDAPObject *self, PyObject *args);
 PyObject *LDAPObject_compare(LDAPObject *self, PyObject *args);
+PyObject *LDAPObject_abandon(LDAPObject *self, PyObject *args);
 PyObject *LDAPObject_result(LDAPObject *self, PyObject *args);
 
 /* vi: set noexpandtab : */
