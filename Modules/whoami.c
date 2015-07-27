@@ -22,6 +22,10 @@ LDAPObject_whoami(LDAPObject *self, PyObject *args)
 		return NULL;
 	}
 
+	/* NOTE: Result of this operation returns {'data': 'user', 'data_length': 4}
+	 *       "data_length == 0" means anonymous user
+	 */
+
 	return PyLong_FromLong(msgid);
 }
 
