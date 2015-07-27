@@ -16,7 +16,12 @@ LDAPObject_bind(LDAPObject *self, PyObject *args)
 	struct berval passwd = {0, NULL};
 	int rc;
 	int msgid;
-	
+
+	if (self->ldap == NULL) {
+		PyErr_SetString(LDAPError, "This instance has already been deallocated.");
+		return NULL;
+	}
+
 	if (!PyArg_ParseTuple(args, "ss", &who, &password))
 		return NULL;
 

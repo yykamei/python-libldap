@@ -13,7 +13,13 @@ LDAPObject_delete(LDAPObject *self, PyObject *args)
 {
 	const char *dn;
 	LDAPControl **sctrls = NULL;
-	int rc, msgid;
+	int rc;
+	int msgid;
+
+	if (self->ldap == NULL) {
+		PyErr_SetString(LDAPError, "This instance has already been deallocated.");
+		return NULL;
+	}
 
 	if (!PyArg_ParseTuple(args, "s", &dn))
 		return NULL;

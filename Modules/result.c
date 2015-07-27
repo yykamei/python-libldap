@@ -185,6 +185,11 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 	PyObject *message = NULL;
 	LDAPMessage *msg;
 
+	if (self->ldap == NULL) {
+		PyErr_SetString(LDAPError, "This instance has already been deallocated.");
+		return NULL;
+	}
+
 	if (!PyArg_ParseTuple(args, "|ii", &msgid, &all))
 		return NULL;
 

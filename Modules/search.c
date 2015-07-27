@@ -16,7 +16,13 @@ LDAPObject_search(LDAPObject *self, PyObject *args)
 	char *filter;
 	PyObject *attributes = Py_None;
 	char **attrs = NULL;
-	int rc, msgid;
+	int rc;
+	int msgid;
+
+	if (self->ldap == NULL) {
+		PyErr_SetString(LDAPError, "This instance has already been deallocated.");
+		return NULL;
+	}
 
 	if (!PyArg_ParseTuple(args, "sis|O", &base, &scope, &filter, &attributes))
 		return NULL;

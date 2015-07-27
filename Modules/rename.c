@@ -12,11 +12,17 @@ PyObject *
 LDAPObject_rename(LDAPObject *self, PyObject *args)
 {
 	const char *dn;
-    const char *newrdn;
-    const char *newparent;
-    int deleteoldrdn;
+	const char *newrdn;
+	const char *newparent;
+	int deleteoldrdn;
 	LDAPControl **sctrls = NULL;
-	int rc, msgid;
+	int rc;
+	int msgid;
+
+	if (self->ldap == NULL) {
+		PyErr_SetString(LDAPError, "This instance has already been deallocated.");
+		return NULL;
+	}
 
 	if (!PyArg_ParseTuple(args, "sssi", &dn, &newrdn, &newparent, &deleteoldrdn))
 		return NULL;

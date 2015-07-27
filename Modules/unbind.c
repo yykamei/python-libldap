@@ -9,34 +9,25 @@
 
 
 PyObject *
-LDAPObject_add(LDAPObject *self, PyObject *args)
+LDAPObject_unbind(LDAPObject *self, PyObject *args)
 {
-	const char *dn;
-	PyObject *attributes;
-	LDAPMod **attrs;
 	LDAPControl **sctrls = NULL;
-	int rc, msgid;
+	int rc;
 
 	if (self->ldap == NULL) {
 		PyErr_SetString(LDAPError, "This instance has already been deallocated.");
 		return NULL;
 	}
 
-	if (!PyArg_ParseTuple(args, "sO", &dn, &attributes))
-		return NULL;
-
-	attrs = python2LDAPMods(attributes);
-	if (attrs == NULL)
-		return NULL;
-
 	LDAP_BEGIN_ALLOW_THREADS
-	rc = ldap_add_ext(self->ldap, dn, attrs, sctrls, NULL, &msgid);
+	rc = ldap_unbind_ext(self->ldap, sctrls, NULL);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
 		return NULL;
 	}
-	return PyLong_FromLong(msgid);
+	self->ldap = NULL;
+	Py_RETURN_NONE;
 }
 
 /* vi: set noexpandtab : */

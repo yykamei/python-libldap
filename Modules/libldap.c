@@ -78,6 +78,7 @@ LDAPObject_init(LDAPObject *self, PyObject *args, PyObject *kwargs)
 /* operations definition */
 static PyMethodDef LDAPObject_methods[] = {
 	{"bind",  (PyCFunction)LDAPObject_bind, METH_VARARGS, "bind"},
+	{"unbind",  (PyCFunction)LDAPObject_unbind, METH_VARARGS, "unbind"},
 	{"search",  (PyCFunction)LDAPObject_search, METH_VARARGS, "search"},
 	{"add",  (PyCFunction)LDAPObject_add, METH_VARARGS, "add"},
 	{"modify",  (PyCFunction)LDAPObject_modify, METH_VARARGS, "modify"},

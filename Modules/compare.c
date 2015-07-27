@@ -16,7 +16,13 @@ LDAPObject_compare(LDAPObject *self, PyObject *args)
 	char *value;
 	struct berval bvalue;
 	LDAPControl **sctrls = NULL;
-	int rc, msgid;
+	int rc;
+	int msgid;
+
+	if (self->ldap == NULL) {
+		PyErr_SetString(LDAPError, "This instance has already been deallocated.");
+		return NULL;
+	}
 
 	if (!PyArg_ParseTuple(args, "sss", &dn, &attribute, &value))
 		return NULL;

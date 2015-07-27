@@ -15,7 +15,13 @@ LDAPObject_modify(LDAPObject *self, PyObject *args)
 	PyObject *attributes;
 	LDAPMod **mods;
 	LDAPControl **sctrls = NULL;
-	int rc, msgid;
+	int rc;
+	int msgid;
+
+	if (self->ldap == NULL) {
+		PyErr_SetString(LDAPError, "This instance has already been deallocated.");
+		return NULL;
+	}
 
 	if (!PyArg_ParseTuple(args, "sO", &dn, &attributes))
 		return NULL;
