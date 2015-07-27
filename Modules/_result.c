@@ -32,11 +32,11 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 	rc = ldap_result(self->ldap, msgid, all, NULL, &res);
 	LDAP_END_ALLOW_THREADS
 	if (rc < 0) {
-		XDECREF_MANY(&result, &message);
+		XDECREF_MANY(result, message);
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
 		return NULL;
 	} else if (rc == 0) {
-		XDECREF_MANY(&result, &message);
+		XDECREF_MANY(result, message);
 		PyErr_SetString(LDAPError, ldap_err2string(LDAP_TIMEOUT));
 		return NULL;
 	}
@@ -49,7 +49,7 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 				message = get_entry(self->ldap, msg);
 				if (message == NULL) {
 					ldap_msgfree(res);
-					XDECREF_MANY(&result);
+					XDECREF_MANY(result);
 					return PyErr_NoMemory();
 				}
 				PyList_Append(result, message);
@@ -74,33 +74,33 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 	order = PyList_New(0);
 	values = PyList_New(0);
 	if (entry == NULL || order == NULL || values == NULL) {
-		XDECREF_MANY(&entry, &order, &values);
+		XDECREF_MANY(entry, order, values);
 		return PyErr_NoMemory();
 	}
 
 	/* Get DN */
 	rc = ldap_get_dn_ber(ldap, msg, &ber, &bv);
 	if (rc != LDAP_SUCCESS) {
-		XDECREF_MANY(&entry, &order, &values);
+		XDECREF_MANY(entry, order, values);
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
 		return NULL;
 	}
 
 	/* Set DN and __order__ */
 	if ((PyList_Append(order, PyUnicode_FromString("dn"))) == -1) {
-		XDECREF_MANY(&entry, &order, &values);
+		XDECREF_MANY(entry, order, values);
 		return PyErr_NoMemory();
 	}
 	if ((PyList_Append(values, PyUnicode_FromString(bv.bv_val))) == -1) {
-		XDECREF_MANY(&entry, &order, &values);
+		XDECREF_MANY(entry, order, values);
 		return PyErr_NoMemory();
 	}
 	if (PyDict_SetItemString(entry, "dn", values) == -1) {
-		XDECREF_MANY(&entry, &order, &values);
+		XDECREF_MANY(entry, order, values);
 		return PyErr_NoMemory();
 	}
 	if (PyDict_SetItemString(entry, "__order__", order) == -1) {
-		XDECREF_MANY(&entry, &order, &values);
+		XDECREF_MANY(entry, order, values);
 		return PyErr_NoMemory();
 	}
 
@@ -115,15 +115,15 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 		Py_DECREF(values);
 		values = PyList_New(0);
 		if (values == NULL) {
-			XDECREF_MANY(&entry, &order, &values);
+			XDECREF_MANY(entry, order, values);
 			return PyErr_NoMemory();
 		}
 		if ((PyList_Append(order, PyUnicode_FromString(bv.bv_val))) == -1) {
-			XDECREF_MANY(&entry, &order, &values);
+			XDECREF_MANY(entry, order, values);
 			return PyErr_NoMemory();
 		}
 		if ((PyDict_SetItemString(entry, bv.bv_val, values)) == -1) {
-			XDECREF_MANY(&entry, &order, &values);
+			XDECREF_MANY(entry, order, values);
 			return PyErr_NoMemory();
 		}
 

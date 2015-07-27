@@ -27,16 +27,16 @@ typedef struct {
 
 #define XDECREF_MANY(...)                                          \
 	_XDECREF_MANY(                                                 \
-		(PyObject **[]){__VA_ARGS__},                              \
-		sizeof((PyObject **[]){__VA_ARGS__}) / sizeof(PyObject **) \
+		(PyObject *[]){__VA_ARGS__},                              \
+		sizeof((PyObject *[]){__VA_ARGS__}) / sizeof(PyObject *) \
 	)
 
 extern PyObject *LDAPError;
 
 
 /* Functions */
-void _XDECREF_MANY(PyObject **objs[], size_t count);
-LDAPMod **dict2LDAPMods(PyObject *dict);
+void _XDECREF_MANY(PyObject *objs[], size_t count);
+LDAPMod **python2LDAPMods(PyObject *dict);
 
 /* Methods */
 PyObject *LDAPObject_bind(LDAPObject *self, PyObject *args);

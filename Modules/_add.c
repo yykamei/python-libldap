@@ -20,7 +20,7 @@ LDAPObject_add(LDAPObject *self, PyObject *args)
 	if (!PyArg_ParseTuple(args, "sO", &dn, &attributes))
 		return NULL;
 
-	attrs = dict2LDAPMods(attributes);
+	attrs = python2LDAPMods(attributes);
 	if (attrs == NULL)
 		return NULL;
 
