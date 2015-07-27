@@ -14,7 +14,7 @@ LDAPObject_compare(LDAPObject *self, PyObject *args)
 	const char *dn;
 	const char *attribute;
 	char *value;
-	struct berval bvalue;
+	struct berval bvalue = {0, NULL};
 	LDAPControl **sctrls = NULL;
 	int rc;
 	int msgid;
