@@ -232,6 +232,7 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 			case LDAP_RES_MODIFY:
 			case LDAP_RES_DELETE:
 			case LDAP_RES_MODDN:
+			case LDAP_RES_COMPARE:
 				XDECREF_MANY(result);
 				result = parse_result(self->ldap, msg);
 				if (result == NULL)

@@ -83,6 +83,7 @@ static PyMethodDef LDAPObject_methods[] = {
 	{"modify",  (PyCFunction)LDAPObject_modify, METH_VARARGS, "modify"},
 	{"delete",  (PyCFunction)LDAPObject_delete, METH_VARARGS, "delete"},
 	{"rename",  (PyCFunction)LDAPObject_rename, METH_VARARGS, "rename"},
+	{"compare",  (PyCFunction)LDAPObject_compare, METH_VARARGS, "compare"},
 	{"result",  (PyCFunction)LDAPObject_result, METH_VARARGS, "result"},
 	{NULL, NULL, 0, NULL}        /* Sentinel */
 };
