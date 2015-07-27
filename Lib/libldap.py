@@ -4,7 +4,7 @@
 # NOTE: Argument 'filter' conflicts with built-in 'filter' function
 _filter = filter
 
-from _libldap import LDAPObject
+from _libldap import _LDAPObject
 from collections import OrderedDict as _OrderedDict
 
 __all__ = (
@@ -18,7 +18,7 @@ class _OrderedEntry(_OrderedDict):
         return '{%s}' % (content,)
 
 
-class LDAP(LDAPObject):
+class LDAP(_LDAPObject):
     def search(self, base, scope, filter, ordered_attributes=False):
         msg = super().search(base, scope, filter)
         for entry in super().result(msg):
