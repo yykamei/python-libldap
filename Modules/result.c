@@ -7,59 +7,6 @@
 
 #include "libldap.h"
 
-static PyObject *get_entry(LDAP *ldap, LDAPMessage *msg);
-
-
-PyObject *
-LDAPObject_result(LDAPObject *self, PyObject *args)
-{
-	int msgid = LDAP_RES_ANY;
-	int all = LDAP_MSG_ALL;
-	LDAPMessage *res, *msg;
-	int rc;
-	PyObject *result = NULL, *message = NULL;
-
-	if (!PyArg_ParseTuple(args, "|ii", &msgid, &all))
-		return NULL;
-
-	/* Initialize container */
-	result = PyList_New(0);
-	if (result == NULL)
-		return PyErr_NoMemory();
-
-	/* Get result */
-	LDAP_BEGIN_ALLOW_THREADS
-	rc = ldap_result(self->ldap, msgid, all, NULL, &res);
-	LDAP_END_ALLOW_THREADS
-	if (rc < 0) {
-		XDECREF_MANY(result, message);
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
-		return NULL;
-	} else if (rc == 0) {
-		XDECREF_MANY(result, message);
-		PyErr_SetString(LDAPError, ldap_err2string(LDAP_TIMEOUT));
-		return NULL;
-	}
-
-	for (msg = ldap_first_message(self->ldap, res);
-			msg != NULL;
-			msg = ldap_next_message(self->ldap, msg)) {
-		switch (ldap_msgtype(msg)) {
-			case LDAP_RES_SEARCH_ENTRY:
-				message = get_entry(self->ldap, msg);
-				if (message == NULL) {
-					ldap_msgfree(res);
-					XDECREF_MANY(result);
-					return PyErr_NoMemory();
-				}
-				PyList_Append(result, message);
-				break;
-		}
-	}
-	ldap_msgfree(res);
-	return result;
-}
-
 
 static PyObject *
 get_entry(LDAP *ldap, LDAPMessage *msg)
@@ -142,4 +89,54 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 	return entry;
 }
 
+
+PyObject *
+LDAPObject_result(LDAPObject *self, PyObject *args)
+{
+	int msgid = LDAP_RES_ANY;
+	int all = LDAP_MSG_ALL;
+	LDAPMessage *res, *msg;
+	int rc;
+	PyObject *result = NULL, *message = NULL;
+
+	if (!PyArg_ParseTuple(args, "|ii", &msgid, &all))
+		return NULL;
+
+	/* Initialize container */
+	result = PyList_New(0);
+	if (result == NULL)
+		return PyErr_NoMemory();
+
+	/* Get result */
+	LDAP_BEGIN_ALLOW_THREADS
+	rc = ldap_result(self->ldap, msgid, all, NULL, &res);
+	LDAP_END_ALLOW_THREADS
+	if (rc < 0) {
+		XDECREF_MANY(result, message);
+		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		return NULL;
+	} else if (rc == 0) {
+		XDECREF_MANY(result, message);
+		PyErr_SetString(LDAPError, ldap_err2string(LDAP_TIMEOUT));
+		return NULL;
+	}
+
+	for (msg = ldap_first_message(self->ldap, res);
+			msg != NULL;
+			msg = ldap_next_message(self->ldap, msg)) {
+		switch (ldap_msgtype(msg)) {
+			case LDAP_RES_SEARCH_ENTRY:
+				message = get_entry(self->ldap, msg);
+				if (message == NULL) {
+					ldap_msgfree(res);
+					XDECREF_MANY(result);
+					return PyErr_NoMemory();
+				}
+				PyList_Append(result, message);
+				break;
+		}
+	}
+	ldap_msgfree(res);
+	return result;
+}
 /* vi: set noexpandtab : */
