@@ -41,7 +41,8 @@ LDAPMod **python2LDAPMods(PyObject *dict);
 /* Methods */
 PyObject *LDAPObject_bind(LDAPObject *self, PyObject *args);
 PyObject *LDAPObject_search(LDAPObject *self, PyObject *args);
-PyObject *LDAPObject_result(LDAPObject *self, PyObject *args);
 PyObject *LDAPObject_add(LDAPObject *self, PyObject *args);
+PyObject *LDAPObject_modify(LDAPObject *self, PyObject *args);
+PyObject *LDAPObject_result(LDAPObject *self, PyObject *args);
 
 /* vi: set noexpandtab : */
