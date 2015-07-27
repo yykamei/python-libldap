@@ -36,19 +36,19 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 	/* Set DN and __order__ */
 	if ((PyList_Append(order, PyUnicode_FromString("dn"))) == -1) {
 		XDECREF_MANY(entry, order, values);
-		return PyErr_NoMemory();
+		return NULL;
 	}
 	if ((PyList_Append(values, PyUnicode_FromString(bv.bv_val))) == -1) {
 		XDECREF_MANY(entry, order, values);
-		return PyErr_NoMemory();
+		return NULL;
 	}
 	if (PyDict_SetItemString(entry, "dn", values) == -1) {
 		XDECREF_MANY(entry, order, values);
-		return PyErr_NoMemory();
+		return NULL;
 	}
 	if (PyDict_SetItemString(entry, "__order__", order) == -1) {
 		XDECREF_MANY(entry, order, values);
-		return PyErr_NoMemory();
+		return NULL;
 	}
 
 	/* Parse attributes */
@@ -67,17 +67,20 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 		}
 		if ((PyList_Append(order, PyUnicode_FromString(bv.bv_val))) == -1) {
 			XDECREF_MANY(entry, order, values);
-			return PyErr_NoMemory();
+			return NULL;
 		}
 		if ((PyDict_SetItemString(entry, bv.bv_val, values)) == -1) {
 			XDECREF_MANY(entry, order, values);
-			return PyErr_NoMemory();
+			return NULL;
 		}
 
 		/* Set values */
 		if (bvals) {
 			for (i = 0; bvals[i].bv_val != NULL; i++) {
-				PyList_Append(values, PyUnicode_FromString(bvals[i].bv_val));
+				if ((PyList_Append(values, PyUnicode_FromString(bvals[i].bv_val))) == -1) {
+					XDECREF_MANY(entry, order, values);
+					return NULL;
+				}
 			}
 			ber_memfree(bvals);
 		}
@@ -90,14 +93,97 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 }
 
 
+static PyObject *
+parse_result(LDAP *ldap, LDAPMessage *msg)
+{
+	int rc;
+	int err;
+	char *errormsg = NULL;
+	char **referrals = NULL;
+	LDAPControl **serverctrls = NULL;
+	PyObject *result = NULL;
+	int set_rc;
+	PyObject *refs = NULL;
+
+	LDAP_BEGIN_ALLOW_THREADS
+	rc = ldap_parse_result(ldap, msg, &err, NULL, &errormsg,
+			&referrals, &serverctrls, 0);
+	LDAP_END_ALLOW_THREADS
+	if (rc == LDAP_SUCCESS)
+		rc = err;
+
+	if ((result = PyDict_New()) == NULL)
+		return NULL;
+
+	set_rc = PyDict_SetItemString(result, "return", PyLong_FromLong(rc));
+	if (set_rc == -1) {
+		XDECREF_MANY(result);
+		return NULL;
+	}
+	set_rc = PyDict_SetItemString(result, "message",
+			PyUnicode_FromString(ldap_err2string(rc)));
+	if (set_rc == -1) {
+		XDECREF_MANY(result);
+		return NULL;
+	}
+	if (errormsg) {
+		set_rc = PyDict_SetItemString(result, "error_message",
+				PyUnicode_FromString(errormsg));
+		ldap_memfree(errormsg);
+		if (set_rc == -1) {
+			XDECREF_MANY(result);
+			return NULL;
+		}
+	} else {
+		set_rc = PyDict_SetItemString(result, "error_message", Py_None);
+		if (set_rc == -1) {
+			XDECREF_MANY(result);
+			return NULL;
+		}
+	}
+	if (referrals && *referrals) {
+		int i;
+		if ((refs = PyList_New(0)) == NULL) {
+			XDECREF_MANY(result);
+			return NULL;
+		}
+		for (i = 0; referrals[i]; i++) {
+			set_rc = PyList_Append(refs, PyUnicode_FromString(referrals[i]));
+			if (set_rc == -1) {
+				XDECREF_MANY(result, refs);
+				return NULL;
+			}
+		}
+		set_rc = PyDict_SetItemString(result, "referrals", refs);
+		if (set_rc == -1) {
+			XDECREF_MANY(result, refs);
+			return NULL;
+		}
+	} else {
+		if ((refs = PyList_New(0)) == NULL) {
+			XDECREF_MANY(result);
+			return NULL;
+		}
+		set_rc = PyDict_SetItemString(result, "referrals", refs);
+		if (set_rc == -1) {
+			XDECREF_MANY(result, refs);
+			return NULL;
+		}
+	}
+	return result;
+}
+
+
 PyObject *
 LDAPObject_result(LDAPObject *self, PyObject *args)
 {
 	int msgid = LDAP_RES_ANY;
 	int all = LDAP_MSG_ALL;
-	LDAPMessage *res, *msg;
+	PyObject *result = NULL;
 	int rc;
-	PyObject *result = NULL, *message = NULL;
+	LDAPMessage *res;
+	PyObject *message = NULL;
+	LDAPMessage *msg;
 
 	if (!PyArg_ParseTuple(args, "|ii", &msgid, &all))
 		return NULL;
@@ -112,11 +198,11 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 	rc = ldap_result(self->ldap, msgid, all, NULL, &res);
 	LDAP_END_ALLOW_THREADS
 	if (rc < 0) {
-		XDECREF_MANY(result, message);
+		XDECREF_MANY(result);
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
 		return NULL;
 	} else if (rc == 0) {
-		XDECREF_MANY(result, message);
+		XDECREF_MANY(result);
 		PyErr_SetString(LDAPError, ldap_err2string(LDAP_TIMEOUT));
 		return NULL;
 	}
@@ -130,13 +216,31 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 				if (message == NULL) {
 					ldap_msgfree(res);
 					XDECREF_MANY(result);
-					return PyErr_NoMemory();
+					return NULL;
 				}
-				PyList_Append(result, message);
+				if (PyList_Append(result, message) == -1) {
+					ldap_msgfree(res);
+					XDECREF_MANY(result, message);
+					return NULL;
+				}
 				break;
+			case LDAP_RES_SEARCH_RESULT:
+				/* FIXME */
+				break;
+			case LDAP_RES_BIND:
+			case LDAP_RES_ADD:
+			case LDAP_RES_MODIFY:
+			case LDAP_RES_DELETE:
+			case LDAP_RES_MODDN:
+				XDECREF_MANY(result);
+				result = parse_result(self->ldap, msg);
+				if (result == NULL)
+					return NULL;
+				return result;
 		}
 	}
 	ldap_msgfree(res);
 	return result;
 }
+
 /* vi: set noexpandtab : */

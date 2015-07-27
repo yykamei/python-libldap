@@ -31,7 +31,6 @@ LDAPObject_add(LDAPObject *self, PyObject *args)
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
 		return NULL;
 	}
-
 	return PyLong_FromLong(msgid);
 }
 
