@@ -94,7 +94,7 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 
 
 static PyObject *
-parse_result(LDAP *ldap, LDAPMessage *msg)
+parse_result(LDAP *ldap, LDAPMessage *msg, int with_extended)
 {
 	int rc;
 	int err;
@@ -170,6 +170,34 @@ parse_result(LDAP *ldap, LDAPMessage *msg)
 			return NULL;
 		}
 	}
+
+	if (with_extended) {
+		char *oid;
+		struct berval *data;
+
+		LDAP_BEGIN_ALLOW_THREADS
+		rc = ldap_parse_extended_result(ldap, msg, &oid, &data, 0);
+		LDAP_END_ALLOW_THREADS
+		if (rc != LDAP_SUCCESS) {
+			XDECREF_MANY(result, refs);
+			PyErr_SetString(LDAPError, ldap_err2string(rc));
+			return NULL;
+		}
+		if (oid && data) {
+			printf("%s, %s\n", oid, data->bv_val);
+			ber_memfree(oid);
+			ber_bvfree(data);
+		}
+		if (oid) {
+			set_rc = PyDict_SetItemString(result, "oid", PyUnicode_FromString(oid));
+			ber_memfree(oid);
+		}
+		if (data) {
+			set_rc = PyDict_SetItemString(result, "data", PyUnicode_FromString(data->bv_val));
+			set_rc = PyDict_SetItemString(result, "data_length", PyLong_FromLong(data->bv_len));
+			ber_bvfree(data);
+		}
+	}
 	return result;
 }
 
@@ -239,7 +267,13 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 			case LDAP_RES_MODDN:
 			case LDAP_RES_COMPARE:
 				XDECREF_MANY(result);
-				result = parse_result(self->ldap, msg);
+				result = parse_result(self->ldap, msg, 0);
+				if (result == NULL)
+					return NULL;
+				return result;
+			case LDAP_RES_EXTENDED:
+				XDECREF_MANY(result);
+				result = parse_result(self->ldap, msg, 1);
 				if (result == NULL)
 					return NULL;
 				return result;
