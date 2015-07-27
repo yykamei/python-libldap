@@ -4,12 +4,12 @@
 from setuptools import setup, find_packages, Extension
 
 ext_module = Extension('_libldap',
-                       sources=['Modules/_libldap.c',
-                                'Modules/_common.c',
-                                'Modules/_add.c',
-                                'Modules/_bind.c',
-                                'Modules/_result.c',
-                                'Modules/_search.c',
+                       sources=['Modules/libldap.c',
+                                'Modules/common.c',
+                                'Modules/add.c',
+                                'Modules/bind.c',
+                                'Modules/result.c',
+                                'Modules/search.c',
                                 ],
                        libraries=['ldap'],
                        extra_compile_args=['-g', '-O0'])
