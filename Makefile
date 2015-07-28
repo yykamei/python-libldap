@@ -18,6 +18,10 @@ test-interactive-with-valgrind:
 	$(PYTHON) setup.py install --root=$(ROOT) --install-lib=/
 	env PYTHONPATH=$(ROOT) valgrind --tool=memcheck --leak-check=yes python3
 
+.PHONY: pypi-upload
+pypi-upload:
+	$(PYTHON) setup.py sdist upload
+
 .PHONY: clean
 clean:
 	rm -rf dist build $(ROOT) Lib/libldap.egg-info
