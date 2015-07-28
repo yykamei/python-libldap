@@ -476,9 +476,9 @@ class LDAPAsync(_LDAPObject):
                attrsonly=False,
                timeout=0,
                ordered_attributes=False):
-                               int(attrsonly), timeout)
         try:
             return super().search(base, scope, filter, attributes,
+                                  int(attrsonly), timeout)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
