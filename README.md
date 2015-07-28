@@ -9,7 +9,7 @@ If you want to use libldap wrapper library with Python 3, please try it.
 Install
 =======
 
-Install with *pip install python-libldap*
+Install with **pip install python-libldap**
 
 Documentation
 =============
