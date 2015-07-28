@@ -154,9 +154,9 @@ PyInit__libldap(void)
 	if (m == NULL)
 		return NULL;
 
-	LDAPError = PyErr_NewException("_libldap.LDAPError", NULL, NULL);
+	LDAPError = PyErr_NewException("_libldap._LDAPError", NULL, NULL);
 	Py_INCREF(LDAPError);
-	PyModule_AddObject(m, "LDAPError", LDAPError);
+	PyModule_AddObject(m, "_LDAPError", LDAPError);
 
 	Py_INCREF(&LDAPType);
 	PyModule_AddObject(m, "_LDAPObject", (PyObject *)&LDAPType);
