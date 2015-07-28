@@ -43,7 +43,6 @@ setup(name='python-libldap',
       ext_modules=[ext_module],
       packages=find_packages('Lib'),
       package_dir={'': 'Lib'},
-      py_modules=['libldap'],
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Intended Audience :: Developers',
