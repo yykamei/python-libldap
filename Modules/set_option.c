@@ -103,6 +103,10 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 	}
 
 	rc = ldap_set_option(ctx, option, ptr);
+
+	if (referral_urls)
+		PyMem_RawFree(referral_urls);
+
 	if (rc == LDAP_OPT_ERROR) {
 		PyErr_SetString(LDAPError, "Invalid value is specified");
 		return NULL;

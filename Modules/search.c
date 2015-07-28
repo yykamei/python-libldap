@@ -59,6 +59,8 @@ LDAPObject_search(LDAPObject *self, PyObject *args)
 			attrsonly, sctrls, NULL, tvp, 0, &msgid);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
+		if (attrs)
+			PyMem_RawFree(attrs);
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
 		return NULL;
 	}
