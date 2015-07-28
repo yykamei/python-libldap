@@ -17,6 +17,7 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 	LDAP *ctx = NULL;
 	int rc;
 	int integer = 0;
+	ber_len_t bv_len;
 	char *string = NULL;
 	double timeout;
 	struct timeval tv;
@@ -55,8 +56,16 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 		case LDAP_OPT_X_TLS_CRLCHECK:
 		case LDAP_OPT_X_TLS_PROTOCOL_MIN:
 		case LDAP_OPT_X_TLS_REQUIRE_CERT:
+		case LDAP_OPT_X_SASL_NOCANON:
 			integer = (int)PyLong_AsLong(value);
 			ptr = &integer;
+			break;
+		case LDAP_OPT_X_SASL_MAXBUFSIZE:
+		case LDAP_OPT_X_SASL_SSF_EXTERNAL:
+		case LDAP_OPT_X_SASL_SSF_MAX:
+		case LDAP_OPT_X_SASL_SSF_MIN:
+			bv_len = (ber_len_t)PyLong_AsLong(value);
+			ptr = &bv_len;
 			break;
 		case LDAP_OPT_DEFBASE:
 		case LDAP_OPT_DIAGNOSTIC_MESSAGE:
@@ -70,6 +79,7 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 		case LDAP_OPT_X_TLS_DHFILE:
 		case LDAP_OPT_X_TLS_KEYFILE:
 		case LDAP_OPT_X_TLS_RANDOM_FILE:
+		case LDAP_OPT_X_SASL_SECPROPS:
 			if ((string = PyUnicode_AsUTF8(value)) == NULL)
 				return NULL;
 			ptr = &string;
