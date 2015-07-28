@@ -135,8 +135,11 @@ class LDAPSync(_LDAPObject):
         ------
         LDAPError
         """
-        msgid = super().search(base, scope, filter, attributes,
-                               int(attrsonly), timeout)
+        try:
+            msgid = super().search(base, scope, filter, attributes,
+                                   int(attrsonly), timeout)
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
         try:
             if ordered_attributes:
                 return [_OrderedEntry([(key, entry[key])
@@ -437,4 +440,116 @@ class LDAPSync(_LDAPObject):
 
 
 class LDAPAsync(_LDAPObject):
-    pass  # FIXME
+    """
+    LDAPAsync API is equal to LDAPSync except following methods and attributes.
+
+    * bind_user attribute does not exist
+    * abandon() and cancel() get msgid parameter and abandon/cancel operation
+    * result() get msgid and return result.
+
+    See `help(LDAPSync)`.
+    """
+    def __init__(self, uri):
+        self.uri = uri
+        try:
+            super().__init__(uri)
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def bind(self, who, password):
+        try:
+            return super().bind(who, password)
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def unbind(self, who, password):
+        try:
+            return super().unbind(who, password)
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def search(self,
+               base,
+               scope=0x0000,
+               filter='(objectClass=*)',
+               attributes=None,
+               attrsonly=False,
+               timeout=0,
+               ordered_attributes=False):
+                               int(attrsonly), timeout)
+        try:
+            return super().search(base, scope, filter, attributes,
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def add(self, dn, attributes):
+        try:
+            return super().add(dn, attributes)
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def modify(self, dn, changes):
+        try:
+            return super().modify(dn, changes)
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def delete(self, dn):
+        try:
+            return super().delete(dn)
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def rename(self, dn, newrdn, newparent, deleteoldrdn=False):
+        try:
+            return super().rename(dn, newrdn, newparent, int(deleteoldrdn))
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def compare(self, dn, attribute, value):
+        try:
+            return super().compare(dn, attribute, value)
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def whoami(self):
+        try:
+            return super().whoami()
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def passwd(self, user, oldpw=None, newpw=None):
+        try:
+            return super().passwd(user, oldpw, newpw)
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def start_tls(self):
+        try:
+            super().start_tls()
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def set_option(self, option, value, is_global=False):
+        try:
+            super().set_option(option, value, int(is_global))
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def abandon(self, msgid):
+        try:
+            return super().abandon(msgid)
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def cancel(self, msgid):
+        try:
+            return super().cancel(msgid)
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def result(self, *args, **kwargs):
+        try:
+            return super().result(msgid)
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
