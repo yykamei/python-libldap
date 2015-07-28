@@ -548,8 +548,8 @@ class LDAPAsync(_LDAPObject):
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
-    def result(self, *args, **kwargs):
+    def result(self, msgid, all=True):
         try:
-            return super().result(msgid)
+            return super().result(msgid, int(all))
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
