@@ -183,17 +183,12 @@ parse_result(LDAP *ldap, LDAPMessage *msg, int with_extended)
 			PyErr_SetString(LDAPError, ldap_err2string(rc));
 			return NULL;
 		}
-		if (oid && data) {
-			printf("%s, %s\n", oid, data->bv_val);
-			ber_memfree(oid);
-			ber_bvfree(data);
-		}
 		if (oid) {
 			set_rc = PyDict_SetItemString(result, "oid", PyUnicode_FromString(oid));
 			ber_memfree(oid);
 		}
 		if (data) {
-			set_rc = PyDict_SetItemString(result, "data", PyUnicode_FromString(data->bv_val));
+			set_rc = PyDict_SetItemString(result, "data", PyBytes_FromString(data->bv_val));
 			set_rc = PyDict_SetItemString(result, "data_length", PyLong_FromLong(data->bv_len));
 			ber_bvfree(data);
 		}
