@@ -348,7 +348,6 @@ class LDAPSync(_LDAPObject):
             raise LDAPError(str(e), LDAP_ERROR) from None
 
     def set_option(self, option, value, is_global=False):
-        # FIXME: Not enough description
         """
         Parameters
         ----------
@@ -365,6 +364,59 @@ class LDAPSync(_LDAPObject):
         Raises
         ------
         LDAPError
+
+        Detail
+        ------
+        If option is following, value MUST be boolean.
+
+        * LDAP_OPT_CONNECT_ASYNC
+        * LDAP_OPT_REFERRALS
+        * LDAP_OPT_RESTART
+
+        If option is following, value MUST be int.
+
+        * LDAP_OPT_DEBUG_LEVEL
+        * LDAP_OPT_DEREF
+        * LDAP_OPT_PROTOCOL_VERSION
+        * LDAP_OPT_RESULT_CODE
+        * LDAP_OPT_SIZELIMIT
+        * LDAP_OPT_TIMELIMIT
+        * LDAP_OPT_X_KEEPALIVE_IDLE
+        * LDAP_OPT_X_KEEPALIVE_PROBES
+        * LDAP_OPT_X_KEEPALIVE_INTERVAL
+        * LDAP_OPT_X_TLS_CRLCHECK
+        * LDAP_OPT_X_TLS_PROTOCOL_MIN
+        * LDAP_OPT_X_TLS_REQUIRE_CERT
+        * LDAP_OPT_X_SASL_NOCANON
+        * LDAP_OPT_X_SASL_MAXBUFSIZE
+        * LDAP_OPT_X_SASL_SSF_EXTERNAL
+        * LDAP_OPT_X_SASL_SSF_MAX
+        * LDAP_OPT_X_SASL_SSF_MIN
+
+        If option is following, value MUST be float or int.
+
+        * LDAP_OPT_NETWORK_TIMEOUT
+        * LDAP_OPT_TIMEOUT
+
+        If option is following, value MUST be str.
+
+        * LDAP_OPT_DEFBASE
+        * LDAP_OPT_DIAGNOSTIC_MESSAGE
+        * LDAP_OPT_MATCHED_DN
+        * LDAP_OPT_URI
+        * LDAP_OPT_X_TLS_CACERTDIR
+        * LDAP_OPT_X_TLS_CACERTFILE
+        * LDAP_OPT_X_TLS_CERTFILE
+        * LDAP_OPT_X_TLS_CIPHER_SUITE
+        * LDAP_OPT_X_TLS_CRLFILE
+        * LDAP_OPT_X_TLS_DHFILE
+        * LDAP_OPT_X_TLS_KEYFILE
+        * LDAP_OPT_X_TLS_RANDOM_FILE
+        * LDAP_OPT_X_SASL_SECPROPS
+
+        If option is LDAP_OPT_REFERRAL_URLS, value MUST be [str].
+
+        Other options are not supported.
         """
         try:
             super().set_option(option, value, int(is_global))
