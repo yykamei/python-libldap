@@ -5,6 +5,7 @@
 #   - setuptools
 #
 # Required C libraries:
+#   - libldap
 #   - libssl
 
 from setuptools import setup, find_packages, Extension
