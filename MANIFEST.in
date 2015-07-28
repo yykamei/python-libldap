@@ -1,0 +1,3 @@
+include MANIFEST.in Makefile LICENSE README.md
+include Modules/*.c Modules/*.h
+recursive-include Lib *.py

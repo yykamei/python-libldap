@@ -2,4 +2,5 @@
 *.pyc
 test-stage
 build/
-Lib/libldap.egg-info/
+dist/
+Lib/python_libldap.egg-info/

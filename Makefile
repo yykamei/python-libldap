@@ -20,4 +20,4 @@ test-interactive-with-valgrind:
 
 .PHONY: clean
 clean:
-	rm -rf build $(ROOT) Lib/libldap.egg-info
+	rm -rf dist build $(ROOT) Lib/libldap.egg-info
