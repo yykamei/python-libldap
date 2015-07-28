@@ -115,7 +115,7 @@ parse_result(LDAP *ldap, LDAPMessage *msg, int with_extended)
 	if ((result = PyDict_New()) == NULL)
 		return NULL;
 
-	set_rc = PyDict_SetItemString(result, "return", PyLong_FromLong(rc));
+	set_rc = PyDict_SetItemString(result, "return_code", PyLong_FromLong(rc));
 	if (set_rc == -1) {
 		XDECREF_MANY(result);
 		return NULL;
