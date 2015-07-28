@@ -16,7 +16,9 @@ LDAPObject_passwd(LDAPObject *self, PyObject *args)
 	char *newpw;
 	struct berval bv_user = {0, NULL};
 	struct berval bv_oldpw = {0, NULL};
+	struct berval *bv_oldpwp = NULL;
 	struct berval bv_newpw = {0, NULL};
+	struct berval *bv_newpwp = NULL;
 	LDAPControl **sctrls = NULL;
 	int rc;
 	int msgid;
@@ -26,18 +28,24 @@ LDAPObject_passwd(LDAPObject *self, PyObject *args)
 		return NULL;
 	}
 
-	if (!PyArg_ParseTuple(args, "sss", &user, &oldpw, &newpw))
+	if (!PyArg_ParseTuple(args, "szz", &user, &oldpw, &newpw))
 		return NULL;
 
 	bv_user.bv_val = user;
 	bv_user.bv_len = strlen(user);
-	bv_oldpw.bv_val = oldpw;
-	bv_oldpw.bv_len = strlen(oldpw);
-	bv_newpw.bv_val = newpw;
-	bv_newpw.bv_len = strlen(newpw);
+	if (oldpw) {
+		bv_oldpw.bv_val = oldpw;
+		bv_oldpw.bv_len = strlen(oldpw);
+		bv_oldpwp = &bv_oldpw;
+	}
+	if (newpw) {
+		bv_newpw.bv_val = newpw;
+		bv_newpw.bv_len = strlen(newpw);
+		bv_newpwp = &bv_newpw;
+	}
 
 	LDAP_BEGIN_ALLOW_THREADS
-	rc = ldap_passwd(self->ldap, &bv_user, &bv_oldpw, &bv_newpw, sctrls, NULL, &msgid);
+	rc = ldap_passwd(self->ldap, &bv_user, bv_oldpwp, bv_newpwp, sctrls, NULL, &msgid);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
