@@ -431,6 +431,10 @@ class LDAPSync(_LDAPObject):
         """Not supported because methods of this class are synchronous"""
         raise NotImplementedError('Not supported')
 
+    def result(self, *args, **kwargs):
+        """Not supported because methods of this class are synchronous"""
+        raise NotImplementedError('Not supported')
+
 
 class LDAPAsync(_LDAPObject):
     pass  # FIXME
