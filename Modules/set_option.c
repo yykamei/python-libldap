@@ -13,11 +13,17 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 {
 	int option;
 	PyObject *value;
-	int is_global;
+	int is_global = 0;
 	LDAP *ctx = NULL;
 	int rc;
 	int integer = 0;
-	char *string;
+	char *string = NULL;
+	double timeout;
+	struct timeval tv;
+	struct timeval *tvp = NULL;
+	int i;
+	Py_ssize_t size;
+	char **referral_urls = NULL;
 	void *ptr;
 
 	if (self->ldap == NULL) {
@@ -68,15 +74,28 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 				return NULL;
 			ptr = &string;
 			break;
-		case LDAP_OPT_CONNECT_CB:
-			/* FIXME */
-			break;
 		case LDAP_OPT_NETWORK_TIMEOUT:
 		case LDAP_OPT_TIMEOUT:
-			/* FIXME */
+			if ((timeout = (double)PyFloat_AsDouble(value)) == -1)
+				return NULL;
+			if (timeout > 0) {
+				tvp = &tv;
+				double2timeval(tvp, timeout);
+			} else {
+				tvp = NULL;
+			}
+			ptr = tvp;
 			break;
 		case LDAP_OPT_REFERRAL_URLS:
-			/* FIXME */
+			if (!PyList_Check(value))
+				return NULL;
+			size = PyList_GET_SIZE(value);
+			referral_urls = (char **)PyMem_RawMalloc(sizeof(char *) * (size + 1));
+			for (i = 0; i < size; i++) {
+				referral_urls[i] = PyUnicode_AsUTF8(PyList_GET_ITEM(value, i));
+			}
+			referral_urls[size] = NULL;
+			ptr = referral_urls;
 			break;
 		default:
 			PyErr_SetString(LDAPError, "Specified option is not supported or read-only");
@@ -84,7 +103,10 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 	}
 
 	rc = ldap_set_option(ctx, option, ptr);
-	if (rc != LDAP_OPT_SUCCESS) {
+	if (rc == LDAP_OPT_ERROR) {
+		PyErr_SetString(LDAPError, "Invalid value is specified");
+		return NULL;
+	} else if (rc != LDAP_OPT_SUCCESS) {
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
 		return NULL;
 	}
