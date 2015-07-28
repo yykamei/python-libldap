@@ -8,7 +8,7 @@ from _libldap import _LDAPError, _LDAPObject
 from collections import OrderedDict as _OrderedDict
 
 __all__ = (
-    'LDAP',
+    'LDAPSync',
     'LDAPAsync',
     'LDAPError',
 )
@@ -32,12 +32,12 @@ class _OrderedEntry(_OrderedDict):
         return '{%s}' % (content,)
 
 
-class LDAP(_LDAPObject):
-    """LDAP is libldap wrapper class
+class LDAPSync(_LDAPObject):
+    """LDAPSync is libldap wrapper class
 
     You can use this like this:
 
-    >>> ld = LDAP('ldap://localhost/')
+    >>> ld = LDAPSync('ldap://localhost/')
     >>> ld.bind_user
     'anonymous'
     >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
@@ -354,7 +354,7 @@ class LDAP(_LDAPObject):
         ----------
         option : int
             Available options are located in libldap.constants
-        value : some object
+        value : object
         is_global : bool, optional
 
         Returns
