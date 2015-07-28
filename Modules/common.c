@@ -19,6 +19,14 @@ _XDECREF_MANY(PyObject *objs[], size_t count)
 }
 
 
+void
+double2timeval(struct timeval *tv, double d)
+{
+	tv->tv_usec = (long)(fmod(d, 1.0) * 1000000.0);
+	tv->tv_sec = (long)floor(d);
+}
+
+
 static struct berval *
 str2berval(PyObject *str)
 {
