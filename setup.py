@@ -32,7 +32,7 @@ ext_module = Extension('_libldap',
                        libraries=['ldap'],
                        extra_compile_args=['-g', '-O0'])
 
-setup(name='libldap',
+setup(name='python-libldap',
       license='MIT',
       author='Yutaka Kamei',
       author_email='kamei@ykamei.net',
