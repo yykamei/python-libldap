@@ -30,7 +30,7 @@ LDAPObject_abandon(LDAPObject *self, PyObject *args)
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
 		return NULL;
 	}
-	return PyLong_FromLong(rc);
+	Py_RETURN_NONE;
 }
 
 /* vi: set noexpandtab : */
