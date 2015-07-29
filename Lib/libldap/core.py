@@ -184,11 +184,11 @@ class LDAPSync(_LDAPObject):
         Parameters
         ----------
         dn : str
-        changes : [(str, int, [str])]
+        changes : [(str, [str], int)]
             List of tuple. tuple has three items:
                 attr   - Attribute name
-                mod_op - Modify operation (e.g.: LDAP_MOD_REPLACE)
                 values - List of value
+                mod_op - Modify operation (e.g.: LDAP_MOD_REPLACE)
 
         Returns
         -------
