@@ -36,7 +36,7 @@ extern PyObject *LDAPError;
 
 /* Functions */
 void _XDECREF_MANY(PyObject *objs[], size_t count);
-void double2timeval(struct timeval *tv, double d);
+void int2timeval(struct timeval *tv, int i);
 void free_LDAPMods(LDAPMod **mods);
 LDAPMod **python2LDAPMods(PyObject *list);
 

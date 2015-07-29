@@ -19,7 +19,7 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 	int integer = 0;
 	ber_len_t bv_len;
 	char *string = NULL;
-	double timeout;
+	int timeout;
 	struct timeval tv;
 	struct timeval *tvp = NULL;
 	int i;
@@ -86,11 +86,11 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 			break;
 		case LDAP_OPT_NETWORK_TIMEOUT:
 		case LDAP_OPT_TIMEOUT:
-			if ((timeout = (double)PyFloat_AsDouble(value)) == -1)
+			if ((timeout = (int)PyLong_AsLong(value)) == -1)
 				return NULL;
 			if (timeout > 0) {
 				tvp = &tv;
-				double2timeval(tvp, timeout);
+				int2timeval(tvp, timeout);
 			} else {
 				tvp = NULL;
 			}

@@ -17,7 +17,8 @@ LDAPObject_search(LDAPObject *self, PyObject *args)
 	PyObject *attributes = Py_None;
 	int attrsonly = 0;
 	LDAPControl **sctrls = NULL;
-	double timeout = 0;
+	int timeout = LDAP_NO_LIMIT;
+	int sizelimit = LDAP_NO_LIMIT;
 	struct timeval tv;
 	struct timeval *tvp = NULL;
 	char **attrs = NULL;
@@ -31,13 +32,13 @@ LDAPObject_search(LDAPObject *self, PyObject *args)
 		return NULL;
 	}
 
-	if (!PyArg_ParseTuple(args, "sis|Oid", &base, &scope, &filter,
-				&attributes, &attrsonly, &timeout))
+	if (!PyArg_ParseTuple(args, "sis|Oidi", &base, &scope, &filter,
+				&attributes, &attrsonly, &timeout, &sizelimit))
 		return NULL;
 
 	if (timeout > 0) {
 		tvp = &tv;
-		double2timeval(tvp, timeout);
+		int2timeval(tvp, timeout);
 	} else {
 		tvp = NULL;
 	}
@@ -56,7 +57,7 @@ LDAPObject_search(LDAPObject *self, PyObject *args)
 
 	LDAP_BEGIN_ALLOW_THREADS
 	rc = ldap_search_ext(self->ldap, base, scope, filter, attrs,
-			attrsonly, sctrls, NULL, tvp, 0, &msgid);
+			attrsonly, sctrls, NULL, tvp, sizelimit, &msgid);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
 		if (attrs)

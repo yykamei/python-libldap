@@ -22,11 +22,10 @@ _XDECREF_MANY(PyObject *objs[], size_t count)
 }
 
 
-void
-double2timeval(struct timeval *tv, double d)
+void int2timeval(struct timeval *tv, int i)
 {
-	tv->tv_usec = (long)(fmod(d, 1.0) * 1000000.0);
-	tv->tv_sec = (long)floor(d);
+	tv->tv_usec = 0;
+	tv->tv_sec = (long)i;
 }
 
 void

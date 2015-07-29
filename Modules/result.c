@@ -202,6 +202,9 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 {
 	int msgid = LDAP_RES_ANY;
 	int all = LDAP_MSG_ALL;
+	int timeout = LDAP_NO_LIMIT;
+	struct timeval tv;
+	struct timeval *tvp = NULL;
 	PyObject *result = NULL;
 	int rc;
 	LDAPMessage *res;
@@ -213,8 +216,15 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 		return NULL;
 	}
 
-	if (!PyArg_ParseTuple(args, "|ii", &msgid, &all))
+	if (!PyArg_ParseTuple(args, "|iii", &msgid, &all, &timeout))
 		return NULL;
+
+	if (timeout > 0) {
+		tvp = &tv;
+		int2timeval(tvp, timeout);
+	} else {
+		tvp = NULL;
+	}
 
 	/* Initialize container */
 	result = PyList_New(0);
@@ -223,7 +233,7 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 
 	/* Get result */
 	LDAP_BEGIN_ALLOW_THREADS
-	rc = ldap_result(self->ldap, msgid, all, NULL, &res);
+	rc = ldap_result(self->ldap, msgid, all, tvp, &res);
 	LDAP_END_ALLOW_THREADS
 	if (rc < 0) {
 		XDECREF_MANY(result);
