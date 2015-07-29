@@ -8,12 +8,13 @@ from _libldap import _LDAPError, _LDAPObject
 from collections import OrderedDict as _OrderedDict
 
 __all__ = (
-    'LDAPSync',
-    'LDAPAsync',
+    'LDAP',
     'LDAPError',
 )
 
 LDAP_SUCCESS = 0x00
+LDAP_COMPARE_FALSE = 0x05
+LDAP_COMPARE_TRUE = 0x06
 LDAP_ERROR = -1
 
 
@@ -32,12 +33,12 @@ class _OrderedEntry(_OrderedDict):
         return '{%s}' % (content,)
 
 
-class LDAPSync(_LDAPObject):
-    """LDAPSync is libldap wrapper class
+class LDAP(_LDAPObject):
+    """LDAP is libldap wrapper class
 
     You can use this like this:
 
-    >>> ld = LDAPSync('ldap://localhost/')
+    >>> ld = LDAP('ldap://localhost/')
     >>> ld.bind_user
     'anonymous'
     >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
@@ -426,130 +427,64 @@ class LDAPSync(_LDAPObject):
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
-    def abandon(self, *args, **kwargs):
-        """Not supported because methods of this class are synchronous"""
-        raise NotImplementedError('Not supported')
-
-    def cancel(self, *args, **kwargs):
-        """Not supported because methods of this class are synchronous"""
-        raise NotImplementedError('Not supported')
-
-    def result(self, *args, **kwargs):
-        """Not supported because methods of this class are synchronous"""
-        raise NotImplementedError('Not supported')
-
-
-class LDAPAsync(_LDAPObject):
-    """
-    LDAPAsync API is equal to LDAPSync except following methods and attributes.
-
-    * bind_user attribute does not exist
-    * abandon() and cancel() get msgid parameter and abandon/cancel operation
-    * result() get msgid and return result.
-
-    See `help(LDAPSync)`.
-    """
-    def __init__(self, uri):
-        self.uri = uri
-        try:
-            super().__init__(uri)
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
-    def bind(self, who, password):
-        try:
-            return super().bind(who, password)
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
-    def unbind(self, who, password):
-        try:
-            return super().unbind(who, password)
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
-    def search(self,
-               base,
-               scope=0x0000,
-               filter='(objectClass=*)',
-               attributes=None,
-               attrsonly=False,
-               timeout=0,
-               ordered_attributes=False):
-        try:
-            return super().search(base, scope, filter, attributes,
-                                  int(attrsonly), timeout)
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
-    def add(self, dn, attributes):
-        try:
-            return super().add(dn, attributes)
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
-    def modify(self, dn, changes):
-        try:
-            return super().modify(dn, changes)
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
-    def delete(self, dn):
-        try:
-            return super().delete(dn)
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
-    def rename(self, dn, newrdn, newparent, deleteoldrdn=False):
-        try:
-            return super().rename(dn, newrdn, newparent, int(deleteoldrdn))
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
-    def compare(self, dn, attribute, value):
-        try:
-            return super().compare(dn, attribute, value)
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
-    def whoami(self):
-        try:
-            return super().whoami()
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
-    def passwd(self, user, oldpw=None, newpw=None):
-        try:
-            return super().passwd(user, oldpw, newpw)
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
-    def start_tls(self):
-        try:
-            super().start_tls()
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
-    def set_option(self, option, value, is_global=False):
-        try:
-            super().set_option(option, value, int(is_global))
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-
     def abandon(self, msgid):
+        """
+        Parameters
+        ----------
+        msgid : int
+
+        Returns
+        -------
+        None
+            If operation is succeeded, None object is returned.
+
+        Raises
+        ------
+        LDAPError
+        """
         try:
             return super().abandon(msgid)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
     def cancel(self, msgid):
+        """
+        Parameters
+        ----------
+        msgid : int
+
+        Returns
+        -------
+        None
+            If operation is succeeded, None object is returned.
+
+        Raises
+        ------
+        LDAPError
+        """
         try:
             return super().cancel(msgid)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
-    def result(self, msgid, all=True):
+    def result(self, msgid, all=True, timeout=3):
+        """
+        Parameters
+        ----------
+        msgid : int
+        all : bool
+        timeout : int
+
+        Returns
+        -------
+        dict or list
+            Return result for specified message ID.
+
+        Raises
+        ------
+        LDAPError
+        """
         try:
-            return super().result(msgid, int(all))
+            return super().result(msgid, int(all), timeout)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
