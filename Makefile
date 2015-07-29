@@ -21,7 +21,7 @@ test-interactive-with-valgrind:
 
 
 .PHONY: pypi-upload
-pypi-upload:
+pypi-upload: clean
 	$(PYTHON) setup.py sdist upload
 
 
