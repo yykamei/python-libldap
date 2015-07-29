@@ -57,17 +57,22 @@ class LDAP(_LDAPObject):
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
-    def bind(self, who, password):
+    def bind(self, who, password, async=False):
         """
         Parameters
         ----------
         who : str
         password : str
+        async : bool
+            If True, return result immediately
+            (the default is False, which means operation will
+            done synchronously).
 
         Returns
         -------
-        None
+        None or int
             If operation is succeeded, None object is returned.
+            If async is True, return msgid.
 
         Raises
         ------
@@ -75,6 +80,9 @@ class LDAP(_LDAPObject):
         """
         try:
             msgid = super().bind(who, password)
+            if async:
+                # Not set bind_user
+                return msgid
             result = super().result(msgid)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
@@ -105,6 +113,7 @@ class LDAP(_LDAPObject):
                attributes=None,
                attrsonly=False,
                timeout=0,
+               sizelimit=0,
                ordered_attributes=False):
         """
         Parameters
@@ -122,7 +131,9 @@ class LDAP(_LDAPObject):
         attrsonly : bool, optional
             (the default is False)
         timeout : int or float, optional
-            (the default is 0, which implies No timeout)
+            (the default is 0, which implies unlimited)
+        sizelimit : int, optional
+            (the default is 0, which implies unlimited)
         ordered_attributes : bool, optional
             If ordered_attributes is True, the order of the attributes in entry
             are remembered (the default is False).
@@ -135,10 +146,14 @@ class LDAP(_LDAPObject):
         Raises
         ------
         LDAPError
+
+        Note
+        ----
+        This method operates synchronously.
         """
         try:
             msgid = super().search(base, scope, filter, attributes,
-                                   int(attrsonly), timeout)
+                                   int(attrsonly), timeout, sizelimit)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         try:
@@ -153,7 +168,7 @@ class LDAP(_LDAPObject):
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
-    def add(self, dn, attributes):
+    def add(self, dn, attributes, async=False):
         """
         Parameters
         ----------
@@ -162,11 +177,16 @@ class LDAP(_LDAPObject):
             List of tuple. tuple has two items:
                 attr   - Attribute name
                 values - List of value
+        async : bool
+            If True, return result immediately
+            (the default is False, which means operation will
+            done synchronously).
 
         Returns
         -------
-        None
+        None or int
             If operation is succeeded, None object is returned.
+            If async is True, return msgid.
 
         Raises
         ------
@@ -174,13 +194,15 @@ class LDAP(_LDAPObject):
         """
         try:
             msgid = super().add(dn, attributes)
+            if async:
+                return msgid
             result = super().result(msgid)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         if result['return_code'] != LDAP_SUCCESS:
             raise LDAPError(**result)
 
-    def modify(self, dn, changes):
+    def modify(self, dn, changes, async=False):
         """
         Parameters
         ----------
@@ -190,11 +212,16 @@ class LDAP(_LDAPObject):
                 attr   - Attribute name
                 values - List of value
                 mod_op - Modify operation (e.g.: LDAP_MOD_REPLACE)
+        async : bool
+            If True, return result immediately
+            (the default is False, which means operation will
+            done synchronously).
 
         Returns
         -------
-        None
+        None or int
             If operation is succeeded, None object is returned.
+            If async is True, return msgid.
 
         Raises
         ------
@@ -202,22 +229,29 @@ class LDAP(_LDAPObject):
         """
         try:
             msgid = super().modify(dn, changes)
+            if async:
+                return msgid
             result = super().result(msgid)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         if result['return_code'] != LDAP_SUCCESS:
             raise LDAPError(**result)
 
-    def delete(self, dn):
+    def delete(self, dn, async=False):
         """
         Parameters
         ----------
         dn : str
+        async : bool
+            If True, return result immediately
+            (the default is False, which means operation will
+            done synchronously).
 
         Returns
         -------
-        None
+        None or int
             If operation is succeeded, None object is returned.
+            If async is True, return msgid.
 
         Raises
         ------
@@ -225,13 +259,15 @@ class LDAP(_LDAPObject):
         """
         try:
             msgid = super().delete(dn)
+            if async:
+                return msgid
             result = super().result(msgid)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         if result['return_code'] != LDAP_SUCCESS:
             raise LDAPError(**result)
 
-    def rename(self, dn, newrdn, newparent, deleteoldrdn=False):
+    def rename(self, dn, newrdn, newparent, deleteoldrdn=True, async=False):
         """
         Parameters
         ----------
@@ -239,11 +275,17 @@ class LDAP(_LDAPObject):
         newrdn : str
         newparent : str
         deleteoldrdn : bool
+            (the default is True, which means oldrdn is deleted after renamed)
+        async : bool
+            If True, return result immediately
+            (the default is False, which means operation will
+            done synchronously).
 
         Returns
         -------
-        None
+        None or int
             If operation is succeeded, None object is returned.
+            If async is True, return msgid.
 
         Raises
         ------
@@ -251,6 +293,8 @@ class LDAP(_LDAPObject):
         """
         try:
             msgid = super().rename(dn, newrdn, newparent, int(deleteoldrdn))
+            if async:
+                return msgid
             result = super().result(msgid)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
@@ -267,19 +311,26 @@ class LDAP(_LDAPObject):
 
         Returns
         -------
-        None
-            If operation is succeeded, None object is returned.
+        bool
 
         Raises
         ------
         LDAPError
+
+        Note
+        ----
+        This method operates synchronously.
         """
         try:
             msgid = super().compare(dn, attribute, value)
             result = super().result(msgid)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
-        if result['return_code'] != LDAP_SUCCESS:
+        if result['return_code'] == LDAP_COMPARE_TRUE:
+            return True
+        elif result['return_code'] == LDAP_COMPARE_FALSE:
+            return False
+        else:
             raise LDAPError(**result)
 
     def whoami(self):
@@ -292,6 +343,10 @@ class LDAP(_LDAPObject):
         Raises
         ------
         LDAPError
+
+        Note
+        ----
+        This method operates synchronously.
         """
         try:
             msgid = super().whoami()
@@ -321,6 +376,10 @@ class LDAP(_LDAPObject):
         Raises
         ------
         LDAPError
+
+        Note
+        ----
+        This method operates synchronously.
         """
         try:
             msgid = super().passwd(user, oldpw, newpw)
