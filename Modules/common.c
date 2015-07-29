@@ -7,6 +7,9 @@
 
 #include "libldap.h"
 
+#define TUPLE_SIZE_ADD 2
+#define TUPLE_SIZE_MOD 3
+
 
 void
 _XDECREF_MANY(PyObject *objs[], size_t count)
@@ -26,6 +29,32 @@ double2timeval(struct timeval *tv, double d)
 	tv->tv_sec = (long)floor(d);
 }
 
+void
+free_LDAPMods(LDAPMod **mods)
+{
+	LDAPMod **init_mods = mods;
+	struct berval **bv = NULL;
+	struct berval **init_bv = NULL;
+	int i, j;
+
+	if (init_mods == NULL)
+		return;
+	for (i = 0; *mods; mods++, i++) {
+		if ((*mods)->mod_bvalues) {
+			bv = (*mods)->mod_bvalues;
+			init_bv = bv;
+			for (j = 0; *bv; bv++, j++) {
+				/* Fill the free space with poison */
+				memset(*bv, 0xFF, sizeof(struct berval));
+				PyMem_RawFree(*bv);
+			}
+			PyMem_RawFree(init_bv);
+		}
+		PyMem_RawFree(*mods);
+	}
+	PyMem_RawFree(init_mods);
+}
+
 
 static struct berval *
 str2berval(PyObject *str)
@@ -39,13 +68,11 @@ str2berval(PyObject *str)
 	}
 
 	if (!PyUnicode_Check(str)) {
-		PyMem_RawFree(bv);
 		PyErr_SetString(LDAPError, "Each Item of value MUST be str type");
 		return NULL;
 	}
 	bv->bv_val = PyUnicode_AsUTF8(str);
 	if (bv->bv_val == NULL) {
-		PyMem_RawFree(bv);
 		return NULL;
 	}
 	bv->bv_len = (ber_len_t)strlen(bv->bv_val);
@@ -81,12 +108,11 @@ attribute_spec2LDAPMod(PyObject *attribute, PyObject *value, int mod_op)
 	mod->mod_op = mod_op;
 	mod->mod_type = PyUnicode_AsUTF8(attribute);
 	if (mod->mod_type == NULL) {
-		PyMem_RawFree(mod);
 		return NULL;
 	}
 	mod->mod_bvalues = (struct berval **)PyMem_RawMalloc(sizeof(struct berval *) * (len + 1));
+	memset(mod->mod_bvalues, 0, sizeof(struct berval *) * (len + 1));
 	if (mod ->mod_bvalues == NULL) {
-		PyMem_RawFree(mod);
 		PyErr_NoMemory();
 		return NULL;
 	}
@@ -94,8 +120,6 @@ attribute_spec2LDAPMod(PyObject *attribute, PyObject *value, int mod_op)
 		val = PyList_GET_ITEM(value, i);
 		mod->mod_bvalues[i] = str2berval(val);
 		if (mod->mod_bvalues[i] == NULL) {
-			PyMem_RawFree(mod->mod_bvalues);
-			PyMem_RawFree(mod);
 			return NULL;
 		}
 	}
@@ -127,30 +151,32 @@ python2LDAPMods(PyObject *list)
 		PyErr_NoMemory();
 		return NULL;
 	}
+	memset(mods, 0, sizeof(LDAPMod *) * (len + 1));
 
 	for (i = 0; i < len; i++) {
 		attribute_spec = PyList_GET_ITEM(list, i);
 		if (!PyTuple_Check(attribute_spec)) {
-			PyMem_RawFree(mods);
+			free_LDAPMods(mods);
 			PyErr_SetString(LDAPError, "Each Item of list MUST be tuple type");
 			return NULL;
 		}
 		tuple_size = PyTuple_GET_SIZE(attribute_spec);
-		if (tuple_size == 2) {
+		if (tuple_size == TUPLE_SIZE_ADD) {
 			attribute = PyTuple_GET_ITEM(attribute_spec, 0);
 			value = PyTuple_GET_ITEM(attribute_spec, 1);
 			mod_op = LDAP_MOD_ADD | LDAP_MOD_BVALUES;
-		} else if (tuple_size == 3) {
+		} else if (tuple_size == TUPLE_SIZE_MOD) {
 			attribute = PyTuple_GET_ITEM(attribute_spec, 0);
 			value = PyTuple_GET_ITEM(attribute_spec, 1);
 			mod_op = (int)PyLong_AsLong(PyTuple_GET_ITEM(attribute_spec, 2)) | LDAP_MOD_BVALUES;
 		} else {
-			PyMem_RawFree(mods);
+			free_LDAPMods(mods);
 			PyErr_SetString(LDAPError, "Each tuple item MUST have two or three items");
 			return NULL;
 		}
 		mods[i] = attribute_spec2LDAPMod(attribute, value, mod_op);
 		if (mods[i] == NULL) {
+			free_LDAPMods(mods);
 			return NULL;
 		}
 	}

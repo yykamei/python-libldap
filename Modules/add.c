@@ -32,6 +32,7 @@ LDAPObject_add(LDAPObject *self, PyObject *args)
 	LDAP_BEGIN_ALLOW_THREADS
 	rc = ldap_add_ext(self->ldap, dn, attrs, sctrls, NULL, &msgid);
 	LDAP_END_ALLOW_THREADS
+	free_LDAPMods(attrs);
 	if (rc != LDAP_SUCCESS) {
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
 		return NULL;
