@@ -263,7 +263,14 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 				}
 				break;
 			case LDAP_RES_SEARCH_RESULT:
-				/* FIXME */
+				message = parse_result(self->ldap, msg, 0);
+				if (message == NULL)
+					return NULL;
+				if (PyList_Append(result, message) == -1) {
+					ldap_msgfree(res);
+					XDECREF_MANY(result, message);
+					return NULL;
+				}
 				break;
 			case LDAP_RES_BIND:
 			case LDAP_RES_ADD:

@@ -22,7 +22,8 @@ _XDECREF_MANY(PyObject *objs[], size_t count)
 }
 
 
-void int2timeval(struct timeval *tv, int i)
+void
+int2timeval(struct timeval *tv, int i)
 {
 	tv->tv_usec = 0;
 	tv->tv_sec = (long)i;

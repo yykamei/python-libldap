@@ -114,7 +114,8 @@ class LDAP(_LDAPObject):
                attrsonly=False,
                timeout=0,
                sizelimit=0,
-               ordered_attributes=False):
+               ordered_attributes=False,
+               async=False):
         """
         Parameters
         ----------
@@ -137,6 +138,10 @@ class LDAP(_LDAPObject):
         ordered_attributes : bool, optional
             If ordered_attributes is True, the order of the attributes in entry
             are remembered (the default is False).
+        async : bool
+            If True, return result immediately
+            (the default is False, which means operation will
+            done synchronously).
 
         Returns
         -------
@@ -146,27 +151,16 @@ class LDAP(_LDAPObject):
         Raises
         ------
         LDAPError
-
-        Note
-        ----
-        This method operates synchronously.
         """
         try:
             msgid = super().search(base, scope, filter, attributes,
                                    int(attrsonly), timeout, sizelimit)
+            if async:
+                return msgid
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
-        try:
-            if ordered_attributes:
-                return [_OrderedEntry([(key, entry[key])
-                                       for key in entry['__order__']])
-                        for entry in super().result(msgid)]
-            else:
-                return [dict([(key, value) for key, value in entry.items()
-                              if key != '__order__'])
-                        for entry in super().result(msgid)]
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+        return self.search_result(msgid, timeout=timeout,
+                                  ordered_attributes=ordered_attributes)
 
     def add(self, dn, attributes, async=False):
         """
@@ -533,6 +527,7 @@ class LDAP(_LDAPObject):
         msgid : int
         all : bool
         timeout : int
+            Zero means unlimited (the default is 3)
 
         Returns
         -------
@@ -547,3 +542,39 @@ class LDAP(_LDAPObject):
             return super().result(msgid, int(all), timeout)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def search_result(self, *args, **kwargs):
+        """
+        Return search result by result()
+
+        Parameters
+        ----------
+        *args : tuple
+        **kwargs : dict
+            kwargs can contain following key:
+                ordered_attributes : bool
+                    (the default is False)
+
+        Returns
+        -------
+        list
+            Return result for specified message ID.
+
+        Raises
+        ------
+        LDAPError
+        """
+        if 'ordered_attributes' in kwargs:
+            ordered_attributes = kwargs.pop('ordered_attributes')
+        else:
+            ordered_attributes = False
+        if ordered_attributes:
+            return [_OrderedEntry([(key, entry[key])
+                                   for key in entry['__order__']])
+                    for entry in self.result(*args, **kwargs)
+                    if '__order__' in entry]
+        else:
+            return [dict([(key, value) for key, value in entry.items()
+                          if key != '__order__'])
+                    for entry in self.result(*args, **kwargs)
+                    if '__order__' in entry]
