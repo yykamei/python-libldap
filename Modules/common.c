@@ -35,15 +35,14 @@ free_LDAPMods(LDAPMod **mods)
 	LDAPMod **init_mods = mods;
 	struct berval **bv = NULL;
 	struct berval **init_bv = NULL;
-	int i, j;
 
 	if (init_mods == NULL)
 		return;
-	for (i = 0; *mods; mods++, i++) {
+	for (; *mods; mods++) {
 		if ((*mods)->mod_bvalues) {
 			bv = (*mods)->mod_bvalues;
 			init_bv = bv;
-			for (j = 0; *bv; bv++, j++) {
+			for (; *bv; bv++) {
 				/* Fill the free space with poison */
 				memset(*bv, 0xFF, sizeof(struct berval));
 				PyMem_RawFree(*bv);

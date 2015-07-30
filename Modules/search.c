@@ -32,7 +32,7 @@ LDAPObject_search(LDAPObject *self, PyObject *args)
 		return NULL;
 	}
 
-	if (!PyArg_ParseTuple(args, "sis|Oidi", &base, &scope, &filter,
+	if (!PyArg_ParseTuple(args, "sis|Oiii", &base, &scope, &filter,
 				&attributes, &attrsonly, &timeout, &sizelimit))
 		return NULL;
 

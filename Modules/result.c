@@ -100,14 +100,14 @@ parse_result(LDAP *ldap, LDAPMessage *msg, int with_extended)
 	int err;
 	char *errormsg = NULL;
 	char **referrals = NULL;
-	LDAPControl **serverctrls = NULL;
+	LDAPControl **sctrls = NULL;
 	PyObject *result = NULL;
 	int set_rc;
 	PyObject *refs = NULL;
 
 	LDAP_BEGIN_ALLOW_THREADS
 	rc = ldap_parse_result(ldap, msg, &err, NULL, &errormsg,
-			&referrals, &serverctrls, 0);
+			&referrals, &sctrls, 0);
 	LDAP_END_ALLOW_THREADS
 	if (rc == LDAP_SUCCESS)
 		rc = err;
