@@ -22,6 +22,7 @@ test-interactive-with-valgrind:
 
 .PHONY: pypi-upload
 pypi-upload: clean
+	git branch --list --no-color | grep -F '* master' || exit 1
 	$(PYTHON) setup.py sdist upload
 
 
