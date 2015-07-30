@@ -17,6 +17,16 @@ typedef struct {
 } LDAPObject;
 
 
+typedef struct {
+	PyObject_HEAD
+	LDAPControl **sctrls;
+	LDAPControl **cctrls;
+	int scount;
+	int ccount;
+	struct berval pr_cookie;
+} LDAPObjectControl;
+
+
 #define LDAP_BEGIN_ALLOW_THREADS          \
 	{                                     \
 		PyGILState_STATE gstate;          \
@@ -32,6 +42,7 @@ typedef struct {
 	)
 
 extern PyObject *LDAPError;
+extern PyTypeObject LDAPObjectControlType;
 
 
 /* Functions */
@@ -40,7 +51,7 @@ void int2timeval(struct timeval *tv, int i);
 void free_LDAPMods(LDAPMod **mods);
 LDAPMod **python2LDAPMods(PyObject *list);
 
-/* Instance methods */
+/* LDAPObject Instance methods */
 PyObject *LDAPObject_bind(LDAPObject *self, PyObject *args);
 PyObject *LDAPObject_unbind(LDAPObject *self, PyObject *args);
 PyObject *LDAPObject_search(LDAPObject *self, PyObject *args);

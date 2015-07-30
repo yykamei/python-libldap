@@ -79,7 +79,7 @@ LDAPObject_init(LDAPObject *self, PyObject *args, PyObject *kwargs)
 }
 
 
-/* operations definition */
+/* LDAPObject methods */
 static PyMethodDef LDAPObject_methods[] = {
 	{"bind",  (PyCFunction)LDAPObject_bind, METH_VARARGS, "bind"},
 	{"unbind",  (PyCFunction)LDAPObject_unbind, METH_VARARGS, "unbind"},
@@ -100,8 +100,8 @@ static PyMethodDef LDAPObject_methods[] = {
 };
 
 
-/* Type definition */
-static PyTypeObject LDAPType = {
+/* LDAPObjectType definition */
+static PyTypeObject LDAPObjectType = {
 	PyVarObject_HEAD_INIT(NULL, 0)
 	"_libldap._LDAPObject",         /* tp_name */
 	sizeof(LDAPObject),             /* tp_basicsize */
@@ -150,7 +150,10 @@ PyInit__libldap(void)
 {
 	PyObject *m;
 
-	if (PyType_Ready(&LDAPType) < 0)
+	if (PyType_Ready(&LDAPObjectType) < 0)
+		return NULL;
+
+	if (PyType_Ready(&LDAPObjectControlType) < 0)
 		return NULL;
 
 	m = PyModule_Create(&module);
@@ -161,8 +164,11 @@ PyInit__libldap(void)
 	Py_INCREF(LDAPError);
 	PyModule_AddObject(m, "_LDAPError", LDAPError);
 
-	Py_INCREF(&LDAPType);
-	PyModule_AddObject(m, "_LDAPObject", (PyObject *)&LDAPType);
+	Py_INCREF(&LDAPObjectType);
+	PyModule_AddObject(m, "_LDAPObject", (PyObject *)&LDAPObjectType);
+
+	Py_INCREF(&LDAPObjectControlType);
+	PyModule_AddObject(m, "_LDAPObjectControl", (PyObject *)&LDAPObjectControlType);
 
 	return m;
 }
