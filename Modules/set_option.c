@@ -38,7 +38,6 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 	if (!is_global)
 		ctx = self->ldap;
 	switch(option) {
-		/* FIXME: SASL options are not included */
 		case LDAP_OPT_CONNECT_ASYNC:
 		case LDAP_OPT_REFERRALS:
 		case LDAP_OPT_RESTART:
