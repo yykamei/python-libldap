@@ -102,12 +102,6 @@ class LDAP(_LDAPObject):
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         if result['return_code'] != LDAP_SUCCESS:
-            if controls is not None:
-                kwargs = {}
-                ppolicy_msg = controls.get_info('ppolicy_msg')
-                if ppolicy_msg:
-                    kwargs['ppolicy_msg'] = ppolicy_msg
-                result.update(kwargs)
             raise LDAPError(**result)
         self.bind_user = who
 
@@ -204,7 +198,7 @@ class LDAP(_LDAPObject):
         controls = _LDAPObjectControl()
         controls.add_control(LDAP_CONTROL_PAGEDRESULTS, _pagesize, False)
         initial = True
-        while initial or controls.get_info('pr_cookie') is not None:
+        while initial or controls.get_pr_cookie() is not None:
             initial = False
             try:
                 msgid = super().search(base, scope, filter, attributes,

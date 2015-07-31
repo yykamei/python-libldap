@@ -94,10 +94,11 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 
 
 static int
-parse_ctrls_result(LDAP *ldap, LDAPObjectControl *ldapoc, LDAPControl **sctrls)
+parse_ctrls_result(LDAP *ldap, LDAPObjectControl *ldapoc, LDAPControl **sctrls, PyObject *result)
 {
 	int i;
 	int rc;
+	int set_rc;
 	LDAPControl *ctrl = NULL;
 
 	assert(ldapoc != NULL);
@@ -131,9 +132,16 @@ parse_ctrls_result(LDAP *ldap, LDAPObjectControl *ldapoc, LDAPControl **sctrls)
 				PyErr_SetString(LDAPError, ldap_err2string(rc));
 				return -1;
 			}
-			ldapoc->ppolicy_msg = (char *)ldap_passwordpolicy_err2txt(error);
-			ldapoc->ppolicy_expire = expire;
-			ldapoc->ppolicy_grace = grace;
+			set_rc = PyDict_SetItemString(result, "ppolicy_msg",
+					PyUnicode_FromString(ldap_passwordpolicy_err2txt(error)));
+			if (set_rc == -1)
+				return -1;
+			set_rc = PyDict_SetItemString(result, "ppolicy_expire", PyLong_FromLong(expire));
+			if (set_rc == -1)
+				return -1;
+			set_rc = PyDict_SetItemString(result, "ppolicy_grace", PyLong_FromLong(grace));
+			if (set_rc == -1)
+				return -1;
 		}
 	}
 	return 0;
@@ -218,8 +226,8 @@ parse_result(LDAP *ldap, LDAPMessage *msg, int with_extended, LDAPObjectControl 
 		}
 	}
 
-	if (sctrls && ldapoc) {
-		if (parse_ctrls_result(ldap, ldapoc, sctrls) == -1) {
+	if (sctrls && ldapoc) { /* We handle only server controls */
+		if (parse_ctrls_result(ldap, ldapoc, sctrls, result) == -1) {
 			XDECREF_MANY(result, refs);
 			return NULL;
 		}

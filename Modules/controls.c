@@ -192,32 +192,12 @@ LDAPObjectControl_list_controls(LDAPObjectControl *self, PyObject *args)
 
 
 static PyObject *
-LDAPObjectControl_get_info(LDAPObjectControl *self, PyObject *args)
+LDAPObjectControl_get_pr_cookie(LDAPObjectControl *self, PyObject *args)
 {
-	char *name = NULL;
-
-	if (!PyArg_ParseTuple(args, "s", &name))
-		return NULL;
-
-	if (strcmp(name, "pr_cookie") == 0) {
-		if (self->pr_cookie.bv_len > 0) {
-			return PyBytes_FromStringAndSize(self->pr_cookie.bv_val, self->pr_cookie.bv_len);
-		} else {
-			Py_RETURN_NONE;
-		}
-	} else if (strcmp(name, "ppolicy_msg") == 0) {
-		if (self->ppolicy_msg) {
-			return PyUnicode_FromString(self->ppolicy_msg);
-		} else {
-			Py_RETURN_NONE;
-		}
-	} else if (strcmp(name, "ppolicy_expire") == 0) {
-		return PyLong_FromLong(self->ppolicy_expire);
-	} else if (strcmp(name, "ppolicy_grace") == 0) {
-		return PyLong_FromLong(self->ppolicy_grace);
+	if (self->pr_cookie.bv_len > 0) {
+		return PyBytes_FromStringAndSize(self->pr_cookie.bv_val, self->pr_cookie.bv_len);
 	} else {
-		PyErr_SetString(LDAPError, "Unknown");
-		return NULL;
+		Py_RETURN_NONE;
 	}
 }
 
@@ -258,9 +238,6 @@ LDAPObjectControl_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
 	self->pr_cookie.bv_val = NULL;
 	self->pr_cookie.bv_len = 0;
 	self->pagesize = 0;
-	self->ppolicy_msg = NULL;
-	self->ppolicy_expire = 0;
-	self->ppolicy_grace = 0;
 	return (PyObject *)self;
 }
 
@@ -273,8 +250,8 @@ static PyMethodDef LDAPObjectControl_methods[] = {
 		METH_VARARGS, "remove_control"},
 	{"list_controls",  (PyCFunction)LDAPObjectControl_list_controls,
 		METH_VARARGS, "list_controls"},
-	{"get_info",  (PyCFunction)LDAPObjectControl_get_info,
-		METH_VARARGS, "get_info"},
+	{"get_pr_cookie",  (PyCFunction)LDAPObjectControl_get_pr_cookie,
+		METH_VARARGS, "get_pr_cookie"},
 	{NULL, NULL, 0, NULL}        /* Sentinel */
 };
 

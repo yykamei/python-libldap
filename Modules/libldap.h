@@ -25,9 +25,6 @@ typedef struct {
 	int ccount;
 	struct berval pr_cookie;
 	ber_int_t pagesize;
-	char *ppolicy_msg;
-	ber_int_t ppolicy_expire;
-	ber_int_t ppolicy_grace;
 } LDAPObjectControl;
 
 
