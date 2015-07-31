@@ -439,13 +439,15 @@ class LDAP(_LDAPObject):
         else:
             return 'anonymous'
 
-    def passwd(self, user, oldpw=None, newpw=None):
+    def passwd(self, user, oldpw=None, newpw=None, controls=None):
         """
         Parameters
         ----------
         user : str
         oldpw : str, optional
         newpw : str, optional
+        controls : LDAPControl, optional
+            (the default is None, which implies no controls are set)
 
         Returns
         -------
@@ -461,8 +463,11 @@ class LDAP(_LDAPObject):
         This method operates synchronously.
         """
         try:
-            msgid = super().passwd(user, oldpw, newpw)
-            result = super().result(msgid)
+            if controls is not None:
+                msgid = super().passwd(user, oldpw, newpw, controls)
+            else:
+                msgid = super().passwd(user, oldpw, newpw)
+            result = self.result(msgid, controls=controls)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         if result['return_code'] != LDAP_SUCCESS:
