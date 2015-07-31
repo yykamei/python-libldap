@@ -214,7 +214,7 @@ class LDAP(_LDAPObject):
             yield from self.search_result(msgid, timeout=timeout, controls=controls,
                                           ordered_attributes=ordered_attributes)
 
-    def add(self, dn, attributes, async=False):
+    def add(self, dn, attributes, controls=None, async=False):
         """
         Parameters
         ----------
@@ -223,6 +223,8 @@ class LDAP(_LDAPObject):
             List of tuple. tuple has two items:
                 attr   - Attribute name
                 values - List of value
+        controls : LDAPControl, optional
+            (the default is None, which implies no controls are set)
         async : bool
             If True, return result immediately
             (the default is False, which means operation will
@@ -239,10 +241,13 @@ class LDAP(_LDAPObject):
         LDAPError
         """
         try:
-            msgid = super().add(dn, attributes)
+            if controls is not None:
+                msgid = super().add(dn, attributes, controls)
+            else:
+                msgid = super().add(dn, attributes)
             if async:
                 return msgid
-            result = super().result(msgid)
+            result = self.result(msgid, controls=controls)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         if result['return_code'] != LDAP_SUCCESS:
