@@ -578,11 +578,13 @@ class LDAP(_LDAPObject):
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
-    def abandon(self, msgid):
+    def abandon(self, msgid, controls=None):
         """
         Parameters
         ----------
         msgid : int
+        controls : LDAPControl, optional
+            (the default is None, which implies no controls are set)
 
         Returns
         -------
@@ -594,7 +596,10 @@ class LDAP(_LDAPObject):
         LDAPError
         """
         try:
-            return super().abandon(msgid)
+            if controls is not None:
+                return super().abandon(msgid, controls)
+            else:
+                return super().abandon(msgid)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 

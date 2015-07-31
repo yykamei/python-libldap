@@ -12,7 +12,10 @@ PyObject *
 LDAPObject_abandon(LDAPObject *self, PyObject *args)
 {
 	int msgid;
+	PyObject *controls = NULL;
+	LDAPObjectControl *ldapoc = NULL;
 	LDAPControl **sctrls = NULL;
+	LDAPControl **cctrls = NULL;
 	int rc;
 
 	if (self->ldap == NULL) {
@@ -20,11 +23,17 @@ LDAPObject_abandon(LDAPObject *self, PyObject *args)
 		return NULL;
 	}
 
-	if (!PyArg_ParseTuple(args, "i", &msgid))
+	if (!PyArg_ParseTuple(args, "i|O!", &msgid, &LDAPObjectControlType, &controls))
 		return NULL;
 
+	if (controls) {
+		ldapoc = (LDAPObjectControl *)controls;
+		sctrls = ldapoc->sctrls;
+		cctrls = ldapoc->cctrls;
+	}
+
 	LDAP_BEGIN_ALLOW_THREADS
-	rc = ldap_abandon_ext(self->ldap, msgid, sctrls, NULL);
+	rc = ldap_abandon_ext(self->ldap, msgid, sctrls, cctrls);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
