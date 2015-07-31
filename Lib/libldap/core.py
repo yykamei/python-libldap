@@ -404,8 +404,13 @@ class LDAP(_LDAPObject):
         else:
             raise LDAPError(**result)
 
-    def whoami(self):
+    def whoami(self, controls=None):
         """
+        Parameters
+        ----------
+        controls : LDAPControl, optional
+            (the default is None, which implies no controls are set)
+
         Returns
         -------
         str
@@ -420,8 +425,11 @@ class LDAP(_LDAPObject):
         This method operates synchronously.
         """
         try:
-            msgid = super().whoami()
-            result = super().result(msgid)
+            if controls is not None:
+                msgid = super().whoami(controls)
+            else:
+                msgid = super().whoami()
+            result = self.result(msgid, controls=controls)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         if result['return_code'] != LDAP_SUCCESS:
