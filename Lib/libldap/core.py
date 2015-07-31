@@ -293,11 +293,13 @@ class LDAP(_LDAPObject):
         if result['return_code'] != LDAP_SUCCESS:
             raise LDAPError(**result)
 
-    def delete(self, dn, async=False):
+    def delete(self, dn, controls=None, async=False):
         """
         Parameters
         ----------
         dn : str
+        controls : LDAPControl, optional
+            (the default is None, which implies no controls are set)
         async : bool
             If True, return result immediately
             (the default is False, which means operation will
@@ -314,10 +316,13 @@ class LDAP(_LDAPObject):
         LDAPError
         """
         try:
-            msgid = super().delete(dn)
+            if controls is not None:
+                msgid = super().delete(dn, controls)
+            else:
+                msgid = super().delete(dn)
             if async:
                 return msgid
-            result = super().result(msgid)
+            result = self.result(msgid, controls=controls)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         if result['return_code'] != LDAP_SUCCESS:

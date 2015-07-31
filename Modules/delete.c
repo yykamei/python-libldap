@@ -12,7 +12,10 @@ PyObject *
 LDAPObject_delete(LDAPObject *self, PyObject *args)
 {
 	const char *dn;
+	PyObject *controls = NULL;
+	LDAPObjectControl *ldapoc = NULL;
 	LDAPControl **sctrls = NULL;
+	LDAPControl **cctrls = NULL;
 	int rc;
 	int msgid;
 
@@ -21,11 +24,17 @@ LDAPObject_delete(LDAPObject *self, PyObject *args)
 		return NULL;
 	}
 
-	if (!PyArg_ParseTuple(args, "s", &dn))
+	if (!PyArg_ParseTuple(args, "s|O!", &dn, &LDAPObjectControlType, &controls))
 		return NULL;
 
+	if (controls) {
+		ldapoc = (LDAPObjectControl *)controls;
+		sctrls = ldapoc->sctrls;
+		cctrls = ldapoc->cctrls;
+	}
+
 	LDAP_BEGIN_ALLOW_THREADS
-	rc = ldap_delete_ext(self->ldap, dn, sctrls, NULL, &msgid);
+	rc = ldap_delete_ext(self->ldap, dn, sctrls, cctrls, &msgid);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
