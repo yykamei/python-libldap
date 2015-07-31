@@ -12,7 +12,10 @@ PyObject *
 LDAPObject_cancel(LDAPObject *self, PyObject *args)
 {
 	int cancelid;
+	PyObject *controls = NULL;
+	LDAPObjectControl *ldapoc = NULL;
 	LDAPControl **sctrls = NULL;
+	LDAPControl **cctrls = NULL;
 	int rc;
 
 	if (self->ldap == NULL) {
@@ -20,11 +23,17 @@ LDAPObject_cancel(LDAPObject *self, PyObject *args)
 		return NULL;
 	}
 
-	if (!PyArg_ParseTuple(args, "i", &cancelid))
+	if (!PyArg_ParseTuple(args, "i|O!", &cancelid, &LDAPObjectControlType, &controls))
 		return NULL;
 
+	if (controls) {
+		ldapoc = (LDAPObjectControl *)controls;
+		sctrls = ldapoc->sctrls;
+		cctrls = ldapoc->cctrls;
+	}
+
 	LDAP_BEGIN_ALLOW_THREADS
-	rc = ldap_cancel_s(self->ldap, cancelid, sctrls, NULL);
+	rc = ldap_cancel_s(self->ldap, cancelid, sctrls, cctrls);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
 		PyErr_SetString(LDAPError, ldap_err2string(rc));

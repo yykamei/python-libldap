@@ -603,11 +603,13 @@ class LDAP(_LDAPObject):
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
-    def cancel(self, msgid):
+    def cancel(self, msgid, controls=None):
         """
         Parameters
         ----------
         msgid : int
+        controls : LDAPControl, optional
+            (the default is None, which implies no controls are set)
 
         Returns
         -------
@@ -619,7 +621,10 @@ class LDAP(_LDAPObject):
         LDAPError
         """
         try:
-            return super().cancel(msgid)
+            if controls is not None:
+                return super().cancel(msgid, controls)
+            else:
+                return super().cancel(msgid)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
