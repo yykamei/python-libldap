@@ -367,13 +367,15 @@ class LDAP(_LDAPObject):
         if result['return_code'] != LDAP_SUCCESS:
             raise LDAPError(**result)
 
-    def compare(self, dn, attribute, value):
+    def compare(self, dn, attribute, value, controls=None):
         """
         Parameters
         ----------
         dn : str
         attribute : str
         value : str
+        controls : LDAPControl, optional
+            (the default is None, which implies no controls are set)
 
         Returns
         -------
@@ -388,8 +390,11 @@ class LDAP(_LDAPObject):
         This method operates synchronously.
         """
         try:
-            msgid = super().compare(dn, attribute, value)
-            result = super().result(msgid)
+            if controls is not None:
+                msgid = super().compare(dn, attribute, value, controls)
+            else:
+                msgid = super().compare(dn, attribute, value)
+            result = self.result(msgid, controls=controls)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         if result['return_code'] == LDAP_COMPARE_TRUE:

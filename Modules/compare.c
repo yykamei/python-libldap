@@ -15,7 +15,10 @@ LDAPObject_compare(LDAPObject *self, PyObject *args)
 	const char *attribute;
 	char *value;
 	struct berval bvalue = {0, NULL};
+	PyObject *controls = NULL;
+	LDAPObjectControl *ldapoc = NULL;
 	LDAPControl **sctrls = NULL;
+	LDAPControl **cctrls = NULL;
 	int rc;
 	int msgid;
 
@@ -24,14 +27,21 @@ LDAPObject_compare(LDAPObject *self, PyObject *args)
 		return NULL;
 	}
 
-	if (!PyArg_ParseTuple(args, "sss", &dn, &attribute, &value))
+	if (!PyArg_ParseTuple(args, "sss|O!", &dn, &attribute, &value,
+				&LDAPObjectControlType, &controls))
 		return NULL;
 
 	bvalue.bv_val = value;
 	bvalue.bv_len = strlen(value);
 
+	if (controls) {
+		ldapoc = (LDAPObjectControl *)controls;
+		sctrls = ldapoc->sctrls;
+		cctrls = ldapoc->cctrls;
+	}
+
 	LDAP_BEGIN_ALLOW_THREADS
-	rc = ldap_compare_ext(self->ldap, dn, attribute, &bvalue, sctrls, NULL, &msgid);
+	rc = ldap_compare_ext(self->ldap, dn, attribute, &bvalue, sctrls, cctrls, &msgid);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
