@@ -478,8 +478,13 @@ class LDAP(_LDAPObject):
         else:
             return newpw
 
-    def start_tls(self):
+    def start_tls(self, controls=None):
         """
+        Parameters
+        ----------
+        controls : LDAPControl, optional
+            (the default is None, which implies no controls are set)
+
         Returns
         -------
         None
@@ -490,7 +495,10 @@ class LDAP(_LDAPObject):
         LDAPError
         """
         try:
-            super().start_tls()
+            if controls is not None:
+                super().start_tls(controls)
+            else:
+                super().start_tls()
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 

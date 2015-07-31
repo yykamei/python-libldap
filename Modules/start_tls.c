@@ -11,7 +11,10 @@
 PyObject *
 LDAPObject_start_tls(LDAPObject *self, PyObject *args)
 {
+	PyObject *controls = NULL;
+	LDAPObjectControl *ldapoc = NULL;
 	LDAPControl **sctrls = NULL;
+	LDAPControl **cctrls = NULL;
 	int rc;
 
 	if (self->ldap == NULL) {
@@ -19,8 +22,17 @@ LDAPObject_start_tls(LDAPObject *self, PyObject *args)
 		return NULL;
 	}
 
+	if (!PyArg_ParseTuple(args, "|O!", &LDAPObjectControlType, &controls))
+		return NULL;
+
+	if (controls) {
+		ldapoc = (LDAPObjectControl *)controls;
+		sctrls = ldapoc->sctrls;
+		cctrls = ldapoc->cctrls;
+	}
+
 	LDAP_BEGIN_ALLOW_THREADS
-	rc = ldap_start_tls_s(self->ldap, sctrls, NULL);
+	rc = ldap_start_tls_s(self->ldap, sctrls, cctrls);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
 		PyErr_SetString(LDAPError, ldap_err2string(rc));
