@@ -40,6 +40,43 @@ create_page_control(LDAPObjectControl *self, struct berval *bv, int iscritical)
 }
 
 
+static LDAPControl *
+create_sort_control(LDAPObjectControl *self, struct berval *bv, int iscritical)
+{
+	LDAPControl *ctrl = NULL;
+	int rc;
+	LDAP *ldap;
+	LDAPSortKey **sss_keys = NULL;
+
+	/* Dummy session */
+	rc = ldap_initialize(&ldap, NULL);
+	if (rc != LDAP_SUCCESS) {
+		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		return NULL;
+	}
+
+	/* Create sort keys */
+	rc = ldap_create_sort_keylist(&sss_keys, bv->bv_val);
+	if (rc != LDAP_SUCCESS) {
+		ldap_unbind_ext_s(ldap, NULL, NULL);
+		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		return NULL;
+	}
+
+	rc = ldap_create_sort_control(ldap, sss_keys, iscritical, &ctrl);
+	if (rc != LDAP_SUCCESS) {
+		ldap_unbind_ext_s(ldap, NULL, NULL);
+		ldap_free_sort_keylist(sss_keys);
+		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		return NULL;
+	}
+
+	ldap_unbind_ext_s(ldap, NULL, NULL);
+	ldap_free_sort_keylist(sss_keys);
+	return ctrl;
+}
+
+
 static PyObject *
 LDAPObjectControl_add_control(LDAPObjectControl *self, PyObject *args)
 {
@@ -62,6 +99,12 @@ LDAPObjectControl_add_control(LDAPObjectControl *self, PyObject *args)
 
 	if (strcmp(oid, LDAP_CONTROL_PAGEDRESULTS) == 0) {
 		ctrl = create_page_control(self, bvp, iscritical);
+		if (ctrl == NULL) {
+			ber_bvfree(bvp);
+			return NULL;
+		}
+	} else if (strcmp(oid, LDAP_CONTROL_SORTREQUEST) == 0) {
+		ctrl = create_sort_control(self, bvp, iscritical);
 		if (ctrl == NULL) {
 			ber_bvfree(bvp);
 			return NULL;
