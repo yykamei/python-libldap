@@ -253,7 +253,7 @@ class LDAP(_LDAPObject):
         if result['return_code'] != LDAP_SUCCESS:
             raise LDAPError(**result)
 
-    def modify(self, dn, changes, async=False):
+    def modify(self, dn, changes, controls=None, async=False):
         """
         Parameters
         ----------
@@ -263,6 +263,8 @@ class LDAP(_LDAPObject):
                 attr   - Attribute name
                 values - List of value
                 mod_op - Modify operation (e.g.: LDAP_MOD_REPLACE)
+        controls : LDAPControl, optional
+            (the default is None, which implies no controls are set)
         async : bool
             If True, return result immediately
             (the default is False, which means operation will
@@ -279,10 +281,13 @@ class LDAP(_LDAPObject):
         LDAPError
         """
         try:
-            msgid = super().modify(dn, changes)
+            if controls is not None:
+                msgid = super().modify(dn, changes, controls)
+            else:
+                msgid = super().modify(dn, changes)
             if async:
                 return msgid
-            result = super().result(msgid)
+            result = self.result(msgid, controls=controls)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         if result['return_code'] != LDAP_SUCCESS:
