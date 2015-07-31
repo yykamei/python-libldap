@@ -328,7 +328,7 @@ class LDAP(_LDAPObject):
         if result['return_code'] != LDAP_SUCCESS:
             raise LDAPError(**result)
 
-    def rename(self, dn, newrdn, newparent, deleteoldrdn=True, async=False):
+    def rename(self, dn, newrdn, newparent, deleteoldrdn=True, controls=None, async=False):
         """
         Parameters
         ----------
@@ -337,6 +337,8 @@ class LDAP(_LDAPObject):
         newparent : str
         deleteoldrdn : bool
             (the default is True, which means oldrdn is deleted after renamed)
+        controls : LDAPControl, optional
+            (the default is None, which implies no controls are set)
         async : bool
             If True, return result immediately
             (the default is False, which means operation will
@@ -353,10 +355,13 @@ class LDAP(_LDAPObject):
         LDAPError
         """
         try:
-            msgid = super().rename(dn, newrdn, newparent, int(deleteoldrdn))
+            if controls is not None:
+                msgid = super().rename(dn, newrdn, newparent, int(deleteoldrdn), controls)
+            else:
+                msgid = super().rename(dn, newrdn, newparent, int(deleteoldrdn))
             if async:
                 return msgid
-            result = super().result(msgid)
+            result = self.result(msgid, controls=controls)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         if result['return_code'] != LDAP_SUCCESS:
