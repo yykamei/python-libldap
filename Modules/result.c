@@ -93,8 +93,55 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 }
 
 
+static int
+parse_ctrls_result(LDAP *ldap, LDAPObjectControl *ldapoc, LDAPControl **sctrls)
+{
+	int i;
+	int rc;
+	LDAPControl *ctrl = NULL;
+
+	assert(ldapoc != NULL);
+	assert(sctrls != NULL);
+
+	for (i = 0; sctrls[i]; i++) {
+		if (strcmp(sctrls[i]->ldctl_oid, LDAP_CONTROL_PAGEDRESULTS) == 0) {
+			struct berval value;
+			ber_int_t estimate;
+			rc = ldap_parse_pageresponse_control(ldap, sctrls[i],
+					&estimate, &ldapoc->pr_cookie);
+			if (rc != LDAP_SUCCESS) {
+				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				return -1;
+			}
+			ctrl = ldap_control_find(LDAP_CONTROL_PAGEDRESULTS, ldapoc->sctrls, NULL);
+			rc = ldap_create_page_control_value(ldap, ldapoc->pagesize,
+					&ldapoc->pr_cookie, &value);
+			if (rc != LDAP_SUCCESS) {
+				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				return -1;
+			}
+			ctrl->ldctl_value.bv_val = value.bv_val;
+			ctrl->ldctl_value.bv_len = value.bv_len;
+		} else if (strcmp(sctrls[i]->ldctl_oid, LDAP_CONTROL_PASSWORDPOLICYRESPONSE) == 0) {
+			ber_int_t expire;
+			ber_int_t grace;
+			LDAPPasswordPolicyError error;
+			rc = ldap_parse_passwordpolicy_control(ldap, sctrls[i], &expire, &grace, &error);
+			if (rc != LDAP_SUCCESS) {
+				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				return -1;
+			}
+			ldapoc->ppolicy_msg = (char *)ldap_passwordpolicy_err2txt(error);
+			ldapoc->ppolicy_expire = expire;
+			ldapoc->ppolicy_grace = grace;
+		}
+	}
+	return 0;
+}
+
+
 static PyObject *
-parse_result(LDAP *ldap, LDAPMessage *msg, int with_extended)
+parse_result(LDAP *ldap, LDAPMessage *msg, int with_extended, LDAPObjectControl *ldapoc)
 {
 	int rc;
 	int err;
@@ -171,6 +218,13 @@ parse_result(LDAP *ldap, LDAPMessage *msg, int with_extended)
 		}
 	}
 
+	if (sctrls && ldapoc) {
+		if (parse_ctrls_result(ldap, ldapoc, sctrls) == -1) {
+			XDECREF_MANY(result, refs);
+			return NULL;
+		}
+	}
+
 	if (with_extended) {
 		char *oid;
 		struct berval *data;
@@ -203,6 +257,8 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 	int msgid = LDAP_RES_ANY;
 	int all = LDAP_MSG_ALL;
 	int timeout = LDAP_NO_LIMIT;
+	PyObject *controls = NULL;
+	LDAPObjectControl *ldapoc = NULL;
 	struct timeval tv;
 	struct timeval *tvp = NULL;
 	PyObject *result = NULL;
@@ -216,7 +272,8 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 		return NULL;
 	}
 
-	if (!PyArg_ParseTuple(args, "|iii", &msgid, &all, &timeout))
+	if (!PyArg_ParseTuple(args, "|iiiO!", &msgid, &all, &timeout,
+				&LDAPObjectControlType, &controls))
 		return NULL;
 
 	if (timeout > 0) {
@@ -224,6 +281,10 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 		int2timeval(tvp, timeout);
 	} else {
 		tvp = NULL;
+	}
+
+	if (controls) {
+		ldapoc = (LDAPObjectControl *)controls;
 	}
 
 	/* Initialize container */
@@ -263,7 +324,7 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 				}
 				break;
 			case LDAP_RES_SEARCH_RESULT:
-				message = parse_result(self->ldap, msg, 0);
+				message = parse_result(self->ldap, msg, 0, ldapoc);
 				if (message == NULL)
 					return NULL;
 				if (PyList_Append(result, message) == -1) {
@@ -279,13 +340,13 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 			case LDAP_RES_MODDN:
 			case LDAP_RES_COMPARE:
 				XDECREF_MANY(result);
-				result = parse_result(self->ldap, msg, 0);
+				result = parse_result(self->ldap, msg, 0, ldapoc);
 				if (result == NULL)
 					return NULL;
 				return result;
 			case LDAP_RES_EXTENDED:
 				XDECREF_MANY(result);
-				result = parse_result(self->ldap, msg, 1);
+				result = parse_result(self->ldap, msg, 1, ldapoc);
 				if (result == NULL)
 					return NULL;
 				return result;

@@ -4,11 +4,13 @@
 # NOTE: Argument 'filter' conflicts with built-in 'filter' function
 _filter = filter
 
-from _libldap import _LDAPError, _LDAPObject
+from _libldap import _LDAPError, _LDAPObject, _LDAPObjectControl
+from .constants import LDAP_CONTROL_PAGEDRESULTS
 from collections import OrderedDict as _OrderedDict
 
 __all__ = (
     'LDAP',
+    'LDAPControl',
     'LDAPError',
 )
 
@@ -22,9 +24,17 @@ class LDAPError(Exception):
     def __init__(self, message, return_code, *args, **kwargs):
         self.message = message
         self.return_code = return_code
+        self.args = args
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+    def __repr__(self):
+        additional_info = ' %s' % (getattr(self, 'ppolicy_msg', ''),)
+        return 'LDAPError(%s (%d)%s)' % (self.message, self.return_code, additional_info)
 
     def __str__(self):
-        return '%s (%d)' % (self.message, self.return_code)
+        additional_info = ' %s' % (getattr(self, 'ppolicy_msg', ''),)
+        return '%s (%d)%s' % (self.message, self.return_code, additional_info)
 
 
 class _OrderedEntry(_OrderedDict):
@@ -57,12 +67,14 @@ class LDAP(_LDAPObject):
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
-    def bind(self, who, password, async=False):
+    def bind(self, who, password, controls=None, async=False):
         """
         Parameters
         ----------
         who : str
         password : str
+        controls : LDAPControl, optional
+            (the default is None, which implies no controls are set)
         async : bool
             If True, return result immediately
             (the default is False, which means operation will
@@ -79,14 +91,23 @@ class LDAP(_LDAPObject):
         LDAPError
         """
         try:
-            msgid = super().bind(who, password)
+            if controls is not None:
+                msgid = super().bind(who, password, controls)
+            else:
+                msgid = super().bind(who, password)
             if async:
                 # Not set bind_user
                 return msgid
-            result = super().result(msgid)
+            result = self.result(msgid, controls=controls)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
         if result['return_code'] != LDAP_SUCCESS:
+            if controls is not None:
+                kwargs = {}
+                ppolicy_msg = controls.get_info('ppolicy_msg')
+                if ppolicy_msg:
+                    kwargs['ppolicy_msg'] = ppolicy_msg
+                result.update(kwargs)
             raise LDAPError(**result)
         self.bind_user = who
 
@@ -114,6 +135,7 @@ class LDAP(_LDAPObject):
                attrsonly=False,
                timeout=0,
                sizelimit=0,
+               controls=None,
                ordered_attributes=False,
                async=False):
         """
@@ -135,6 +157,8 @@ class LDAP(_LDAPObject):
             (the default is 0, which implies unlimited)
         sizelimit : int, optional
             (the default is 0, which implies unlimited)
+        controls : LDAPControl, optional
+            (the default is None, which implies no controls are set)
         ordered_attributes : bool, optional
             If ordered_attributes is True, the order of the attributes in entry
             are remembered (the default is False).
@@ -153,14 +177,42 @@ class LDAP(_LDAPObject):
         LDAPError
         """
         try:
-            msgid = super().search(base, scope, filter, attributes,
-                                   int(attrsonly), timeout, sizelimit)
+            if controls is not None:
+                msgid = super().search(base, scope, filter, attributes,
+                                       int(attrsonly), timeout, sizelimit, controls)
+            else:
+                msgid = super().search(base, scope, filter, attributes,
+                                       int(attrsonly), timeout, sizelimit)
             if async:
                 return msgid
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
-        return self.search_result(msgid, timeout=timeout,
+        return self.search_result(msgid, timeout=timeout, controls=controls,
                                   ordered_attributes=ordered_attributes)
+
+    def paged_search(self,
+               base,
+               scope=0x0000,
+               filter='(objectClass=*)',
+               attributes=None,
+               attrsonly=False,
+               timeout=0,
+               sizelimit=0,
+               pagesize=100,
+               ordered_attributes=False):
+        _pagesize = ('%d' % (pagesize,)).encode('utf-8')
+        controls = _LDAPObjectControl()
+        controls.add_control(LDAP_CONTROL_PAGEDRESULTS, _pagesize, False)
+        initial = True
+        while initial or controls.get_info('pr_cookie') is not None:
+            initial = False
+            try:
+                msgid = super().search(base, scope, filter, attributes,
+                                       int(attrsonly), timeout, sizelimit, controls)
+            except _LDAPError as e:
+                raise LDAPError(str(e), LDAP_ERROR) from None
+            yield from self.search_result(msgid, timeout=timeout, controls=controls,
+                                          ordered_attributes=ordered_attributes)
 
     def add(self, dn, attributes, async=False):
         """
@@ -520,7 +572,7 @@ class LDAP(_LDAPObject):
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
-    def result(self, msgid, all=True, timeout=3):
+    def result(self, msgid, all=True, timeout=3, controls=None):
         """
         Parameters
         ----------
@@ -539,7 +591,10 @@ class LDAP(_LDAPObject):
         LDAPError
         """
         try:
-            return super().result(msgid, int(all), timeout)
+            if controls is not None:
+                return super().result(msgid, int(all), timeout, controls)
+            else:
+                return super().result(msgid, int(all), timeout)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 
@@ -568,13 +623,19 @@ class LDAP(_LDAPObject):
             ordered_attributes = kwargs.pop('ordered_attributes')
         else:
             ordered_attributes = False
+        results = self.result(*args, **kwargs)
+        if results:
+            if results[-1]['return_code'] != LDAP_SUCCESS:
+                raise LDAPError(**results[-1])
         if ordered_attributes:
             return [_OrderedEntry([(key, entry[key])
                                    for key in entry['__order__']])
-                    for entry in self.result(*args, **kwargs)
-                    if '__order__' in entry]
+                    for entry in results if '__order__' in entry]
         else:
             return [dict([(key, value) for key, value in entry.items()
                           if key != '__order__'])
-                    for entry in self.result(*args, **kwargs)
-                    if '__order__' in entry]
+                    for entry in results if '__order__' in entry]
+
+
+class LDAPControl(_LDAPObjectControl):
+    pass
