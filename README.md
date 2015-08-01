@@ -24,6 +24,11 @@ License
 
 Under the MIT license.
 
+Bug tracker
+===========
+
+If you have any suggestions or bug reports please report them to the issue tracker at https://github.com/yykamei/python-libldap/issues .
+
 Quick start
 ===========
 
