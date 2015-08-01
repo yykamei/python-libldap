@@ -10,9 +10,9 @@ Requirements
 ============
 
 * `Python >= 3.4`
-* libldap
-* libssl
-* libsasl2
+* `libldap`
+* `libssl`
+* `libsasl2`
 
 Install
 =======
@@ -55,7 +55,7 @@ Add operation
 Modify operation
 ----------------
 
-    >>> from libldap import LDAP
+    >>> from libldap import LDAP, LDAP_MOD_REPLACE
     >>> ld = LDAP('ldap://localhost/')
     >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
     >>> ld.modify('cn=group1,ou=Groups,dc=example,dc=com', [
