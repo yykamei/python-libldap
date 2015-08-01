@@ -35,8 +35,6 @@ Quick start
 Simple search operation
 -----------------------
 
-After installing, you can use this library like this:
-
     >>> from libldap import LDAP, LDAP_SCOPE_SUB
     >>> ld = LDAP('ldap://localhost/')
     >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
