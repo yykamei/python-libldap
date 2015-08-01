@@ -7,6 +7,7 @@
 # Required C libraries:
 #   - libldap
 #   - libssl
+#   - libsasl2
 
 from setuptools import setup, find_packages, Extension
 
@@ -39,7 +40,7 @@ setup(name='python-libldap',
       author='Yutaka Kamei',
       author_email='kamei@ykamei.net',
       url='https://github.com/yykamei/python-libldap',
-      version='0.7.7',
+      version='0.7.8',
       description='A Python binding for libldap',
       ext_modules=[ext_module],
       packages=find_packages('Lib'),
