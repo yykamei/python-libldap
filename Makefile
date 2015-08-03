@@ -8,6 +8,12 @@ test-interactive:
 	env PYTHONPATH=$(ROOT) $(PYTHON)
 
 
+.PHONY: test-unittest
+test-unittest:
+	$(PYTHON) setup.py install --root=$(ROOT) --install-lib=/
+	env PYTHONPATH=$(ROOT) $(PYTHON) -m unittest discover --verbose
+
+
 .PHONY: test-interactive-with-gdb
 test-interactive-with-gdb:
 	$(PYTHON) setup.py install --root=$(ROOT) --install-lib=/
