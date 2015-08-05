@@ -84,6 +84,7 @@ LDAPObjectControl_add_control(LDAPObjectControl *self, PyObject *args)
 	Py_buffer view = {NULL, NULL};
 	int iscritical = 0;
 	int is_client_control = 0;
+	struct berval bv = {0, NULL};
 	struct berval *bvp = NULL;
 	LDAPControl *ctrl;
 	LDAPControl **ctrls;
@@ -94,24 +95,31 @@ LDAPObjectControl_add_control(LDAPObjectControl *self, PyObject *args)
 	if (!PyArg_ParseTuple(args, "s|y*ii", &oid, &view, &iscritical, &is_client_control))
 		return NULL;
 
-	if (view.buf != NULL)
-		bvp = ber_bvstrdup((const char *)view.buf);
+	if (view.buf != NULL) {
+		bv.bv_val = (char *)view.buf;
+		bv.bv_len = (ber_len_t)view.len;
+		bvp = &bv;
+	}
 
 	if (strcmp(oid, LDAP_CONTROL_PAGEDRESULTS) == 0) {
 		ctrl = create_page_control(self, bvp, iscritical);
 		if (ctrl == NULL) {
-			ber_bvfree(bvp);
+			PyBuffer_Release(&view);
 			return NULL;
 		}
 	} else if (strcmp(oid, LDAP_CONTROL_SORTREQUEST) == 0) {
 		ctrl = create_sort_control(self, bvp, iscritical);
 		if (ctrl == NULL) {
-			ber_bvfree(bvp);
+			PyBuffer_Release(&view);
 			return NULL;
 		}
 	} else {
 		rc = ldap_control_create(oid, iscritical, bvp, 0, &ctrl);
 		if (rc != LDAP_SUCCESS) {
+			if (ctrl != NULL) {
+				PyBuffer_Release(&view);
+				ldap_control_free(ctrl);
+			}
 			PyErr_SetString(LDAPError, ldap_err2string(rc));
 			return NULL;
 		}
@@ -128,6 +136,7 @@ LDAPObjectControl_add_control(LDAPObjectControl *self, PyObject *args)
 	}
 
 	if (ctrls && ldap_control_find(oid, ctrls, NULL)) {
+		PyBuffer_Release(&view);
 		ldap_control_free(ctrl);
 		PyErr_Format(LDAPError, "OID %s is already registered", oid);
 		return NULL;
@@ -135,11 +144,13 @@ LDAPObjectControl_add_control(LDAPObjectControl *self, PyObject *args)
 	*count += 1;
 	*lctrls = (LDAPControl **)realloc(ctrls, sizeof(LDAPControl *) * (*count + 1));
 	if (*lctrls == NULL) {
+		PyBuffer_Release(&view);
 		ldap_control_free(ctrl);
 		return PyErr_NoMemory();
 	}
 	(*lctrls)[*count-1] = ctrl;
 	(*lctrls)[*count] = NULL;
+	PyBuffer_Release(&view);
 
 	Py_RETURN_NONE;
 }
