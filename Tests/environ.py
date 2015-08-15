@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2015 Yutaka Kamei
 
-server_info = {
+Environment = {
     'localhost': {
         'uri_389': 'ldap://localhost/',
         'uri_636': 'ldaps://localhost/',
