@@ -5,9 +5,9 @@ from uuid import uuid4
 
 
 Environment = {
-    'localhost': {  # Require ppolicy overlay
-        'uri_389': 'ldap://localhost/',
-        'uri_636': 'ldaps://localhost/',
+    'ldap-server': {  # Require ppolicy overlay
+        'uri_389': 'ldap://ldap-server/',
+        'uri_636': 'ldaps://ldap-server/',
         'suffix': 'dc=example,dc=com',
         'root_dn': 'cn=master,dc=example,dc=com',
         'root_pw': 'secret',
@@ -18,7 +18,7 @@ Environment = {
 }
 
 
-def create_user_entry(name=None, test_target_host='localhost', relax=False):
+def create_user_entry(name=None, test_target_host='ldap-server', relax=False):
     if name is None:
         name = 'test-%s' % (uuid4().hex,)
     env = Environment[test_target_host]

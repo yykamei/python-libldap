@@ -7,14 +7,14 @@ import unittest
 from datetime import datetime
 from types import GeneratorType
 
-from .environ import Environment, create_user_entry
+from .environ import Environment, cacert_file, create_user_entry
 from libldap import LDAP, LDAPControl, LDAPError
 from libldap.constants import *
 
 
 class LDAPBindTests(unittest.TestCase):
     def setUp(self):
-        server = os.environ.get('TEST_SERVER', 'localhost')
+        server = os.environ.get('TEST_SERVER', 'ldap-server')
         self.env = Environment[server]
 
     def test_bind(self):
@@ -52,7 +52,7 @@ class LDAPBindTests(unittest.TestCase):
 
 class LDAPSearchTests(unittest.TestCase):
     def setUp(self):
-        server = os.environ.get('TEST_SERVER', 'localhost')
+        server = os.environ.get('TEST_SERVER', 'ldap-server')
         self.env = Environment[server]
 
     def test_search_base(self):
@@ -96,7 +96,7 @@ class LDAPSearchTests(unittest.TestCase):
 
 class LDAPAddTests(unittest.TestCase):
     def setUp(self):
-        server = os.environ.get('TEST_SERVER', 'localhost')
+        server = os.environ.get('TEST_SERVER', 'ldap-server')
         self.env = Environment[server]
         (dn, attributes) = create_user_entry()
         self.new_user_dn = dn
@@ -132,7 +132,7 @@ class LDAPAddTests(unittest.TestCase):
 
 class LDAPModifyTests(unittest.TestCase):
     def setUp(self):
-        server = os.environ.get('TEST_SERVER', 'localhost')
+        server = os.environ.get('TEST_SERVER', 'ldap-server')
         self.env = Environment[server]
 
     def test_modify(self):
@@ -169,7 +169,7 @@ class LDAPModifyTests(unittest.TestCase):
 
 class LDAPDeleteTests(unittest.TestCase):
     def setUp(self):
-        server = os.environ.get('TEST_SERVER', 'localhost')
+        server = os.environ.get('TEST_SERVER', 'ldap-server')
         self.env = Environment[server]
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
@@ -193,7 +193,7 @@ class LDAPDeleteTests(unittest.TestCase):
 
 class LDAPRenameTests(unittest.TestCase):
     def setUp(self):
-        server = os.environ.get('TEST_SERVER', 'localhost')
+        server = os.environ.get('TEST_SERVER', 'ldap-server')
         self.env = Environment[server]
 
     def test_rename(self):
@@ -228,9 +228,19 @@ class LDAPRenameTests(unittest.TestCase):
         # re-rename
         ld.rename('%s,%s' % (newrdn, newparent), self.env['modify_user'].split(',', 1)[0], newparent)
 
+    def test_rename_without_parent(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        (newrdn, newparent) = self.env['modify_user'].split(',', 1)
+        newrdn += '-newrdn'
+        ld.rename(self.env['modify_user'], newrdn)
+        # re-rename
+        ld.rename('%s,%s' % (newrdn, newparent), self.env['modify_user'].split(',', 1)[0], newparent)
+
+
 class LDAPCompareTests(unittest.TestCase):
     def setUp(self):
-        server = os.environ.get('TEST_SERVER', 'localhost')
+        server = os.environ.get('TEST_SERVER', 'ldap-server')
         self.env = Environment[server]
         self.compare_attribute = 'description'
         self.compare_value = 'This value will be compared'
@@ -254,7 +264,7 @@ class LDAPCompareTests(unittest.TestCase):
 
 class LDAPWhoAmITests(unittest.TestCase):
     def setUp(self):
-        server = os.environ.get('TEST_SERVER', 'localhost')
+        server = os.environ.get('TEST_SERVER', 'ldap-server')
         self.env = Environment[server]
 
     def test_whoami(self):
@@ -266,7 +276,7 @@ class LDAPWhoAmITests(unittest.TestCase):
 
 class LDAPPasswdTests(unittest.TestCase):
     def setUp(self):
-        server = os.environ.get('TEST_SERVER', 'localhost')
+        server = os.environ.get('TEST_SERVER', 'ldap-server')
         self.env = Environment[server]
 
     def test_passwd(self):
