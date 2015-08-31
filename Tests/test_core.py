@@ -102,6 +102,11 @@ class LDAPAddTests(unittest.TestCase):
         self.new_user_dn = dn
         self.new_user_attributes = attributes
 
+    def tearDown(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        ld.delete(self.new_user_dn)
+
     def test_add(self):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
@@ -163,9 +168,6 @@ class LDAPModifyTests(unittest.TestCase):
 
 
 class LDAPDeleteTests(unittest.TestCase):
-    # Strictly, this class is not unittest
-    # because it is tested with add() method.
-
     def setUp(self):
         server = os.environ.get('TEST_SERVER', 'localhost')
         self.env = Environment[server]
