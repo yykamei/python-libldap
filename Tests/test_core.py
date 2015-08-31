@@ -2,6 +2,7 @@
 # Copyright (C) 2015 Yutaka Kamei
 
 import os
+import time
 import unittest
 from datetime import datetime
 from types import GeneratorType
@@ -186,3 +187,41 @@ class LDAPDeleteTests(unittest.TestCase):
         msgid = ld.delete(self.old_user_dn, async=True)
         result = ld.result(msgid)
         self.assertEqual(result['return_code'], 0)
+
+
+class LDAPRenameTests(unittest.TestCase):
+    def setUp(self):
+        server = os.environ.get('TEST_SERVER', 'localhost')
+        self.env = Environment[server]
+
+    def test_rename(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        (newrdn, newparent) = self.env['modify_user'].split(',', 1)
+        newrdn += '-newrdn'
+        ld.rename(self.env['modify_user'], newrdn, newparent)
+        # re-rename
+        ld.rename('%s,%s' % (newrdn, newparent), self.env['modify_user'].split(',', 1)[0], newparent)
+
+    def test_rename_async(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        (newrdn, newparent) = self.env['modify_user'].split(',', 1)
+        newrdn += '-newrdn'
+        msgid = ld.rename(self.env['modify_user'], newrdn, newparent, async=True)
+        result = ld.result(msgid)
+        self.assertEqual(result['return_code'], 0)
+        # re-rename
+        ld.rename('%s,%s' % (newrdn, newparent), self.env['modify_user'].split(',', 1)[0], newparent)
+
+    def test_rename_oldrdn(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        (newrdn, newparent) = self.env['modify_user'].split(',', 1)
+        newrdn += '-newrdn'
+        ld.rename(self.env['modify_user'], newrdn, newparent, deleteoldrdn=False, async=True)
+        time.sleep(0.3)
+        entry = ld.search('%s,%s' % (newrdn, newparent), attributes=['uid'])[0]
+        self.assertEqual(len(entry['uid']), 2)
+        # re-rename
+        ld.rename('%s,%s' % (newrdn, newparent), self.env['modify_user'].split(',', 1)[0], newparent)

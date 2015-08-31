@@ -13,7 +13,7 @@ Environment = {
         'root_pw': 'secret',
         'auth_user': 'cn=auth,ou=Users,dc=example,dc=com',
         'auth_pw': 'secret',
-        'modify_user': 'uid=test-modify,ou=Users,dc=example,dc=com',
+        'modify_user': 'uid=modify,ou=Users,dc=example,dc=com',
     }
 }
 
