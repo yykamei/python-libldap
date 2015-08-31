@@ -2,6 +2,7 @@
 # Copyright (C) 2015 Yutaka Kamei
 
 from uuid import uuid4
+from pathlib import Path
 
 
 Environment = {
@@ -16,6 +17,7 @@ Environment = {
         'modify_user': 'uid=modify,ou=Users,dc=example,dc=com',
     }
 }
+cacert_file = (Path(__file__).parent / 'cacert.pem').absolute()
 
 
 def create_user_entry(name=None, test_target_host='ldap-server', relax=False):

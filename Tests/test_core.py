@@ -288,3 +288,20 @@ class LDAPPasswdTests(unittest.TestCase):
         # re-passwd
         ld.passwd(self.env['auth_user'], newpassword, self.env['auth_pw'])
         ld.bind(self.env['auth_user'], self.env['auth_pw'])
+
+
+class LDAPTlsTests(unittest.TestCase):
+    def setUp(self):
+        server = os.environ.get('TEST_SERVER', 'ldap-server')
+        self.env = Environment[server]
+
+    def test_tls_bind(self):
+        ld = LDAP(self.env['uri_636'])
+        ld.set_option(LDAP_OPT_X_TLS_CACERTFILE, str(cacert_file), is_global=True)
+        ld.bind(self.env['auth_user'], self.env['auth_pw'])
+
+    def test_start_tls_bind(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.set_option(LDAP_OPT_X_TLS_CACERTFILE, str(cacert_file), is_global=True)
+        ld.start_tls()
+        ld.bind(self.env['auth_user'], self.env['auth_pw'])
