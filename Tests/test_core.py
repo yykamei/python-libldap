@@ -250,3 +250,15 @@ class LDAPCompareTests(unittest.TestCase):
         ld.bind(self.env['root_dn'], self.env['root_pw'])
         result = ld.compare(self.env['modify_user'], self.compare_attribute, 'dummy')
         self.assertFalse(result)
+
+
+class LDAPWhoAmITests(unittest.TestCase):
+    def setUp(self):
+        server = os.environ.get('TEST_SERVER', 'localhost')
+        self.env = Environment[server]
+
+    def test_whoami(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['auth_user'], self.env['auth_pw'])
+        result = ld.whoami()
+        self.assertEqual('dn:' + self.env['auth_user'], result)
