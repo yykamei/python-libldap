@@ -37,6 +37,7 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 
 	if (!is_global)
 		ctx = self->ldap;
+
 	switch(option) {
 		case LDAP_OPT_CONNECT_ASYNC:
 		case LDAP_OPT_REFERRALS:
@@ -81,7 +82,7 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 		case LDAP_OPT_X_SASL_SECPROPS:
 			if ((string = PyUnicode_AsUTF8(value)) == NULL)
 				return NULL;
-			ptr = &string;
+			ptr = string;
 			break;
 		case LDAP_OPT_NETWORK_TIMEOUT:
 		case LDAP_OPT_TIMEOUT:
@@ -111,7 +112,9 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 			return NULL;
 	}
 
+	LDAP_BEGIN_ALLOW_THREADS
 	rc = ldap_set_option(ctx, option, ptr);
+	LDAP_END_ALLOW_THREADS
 
 	if (referral_urls)
 		PyMem_RawFree(referral_urls);
