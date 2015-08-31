@@ -322,13 +322,14 @@ class LDAP(_LDAPObject):
         if result['return_code'] != LDAP_SUCCESS:
             raise LDAPError(**result)
 
-    def rename(self, dn, newrdn, newparent, deleteoldrdn=True, controls=None, async=False):
+    def rename(self, dn, newrdn, newparent=None, deleteoldrdn=True, controls=None, async=False):
         """
         Parameters
         ----------
         dn : str
         newrdn : str
         newparent : str
+            (ths default is same parent with old dn)
         deleteoldrdn : bool
             (the default is True, which means oldrdn is deleted after renamed)
         controls : LDAPControl, optional
@@ -348,6 +349,11 @@ class LDAP(_LDAPObject):
         ------
         LDAPError
         """
+        if newparent is None:
+            try:
+                newparent = dn.split(',', 1)[1]
+            except IndexError:
+                raise LDAPError('Invalid DN syntax', 34)
         try:
             if controls is not None:
                 msgid = super().rename(dn, newrdn, newparent, int(deleteoldrdn), controls)
