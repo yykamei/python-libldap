@@ -5,7 +5,7 @@ import os
 import unittest
 from types import GeneratorType
 
-from .environ import Environment
+from .environ import Environment, create_user_entry
 from libldap import LDAP, LDAPControl, LDAPError
 from libldap.constants import *
 
@@ -93,3 +93,37 @@ class LDAPSearchTests(unittest.TestCase):
         gen = ld.paged_search(self.env['suffix'], LDAP_SCOPE_SUB, pagesize=1)
         self.assertIsInstance(gen, GeneratorType)
         [x for x in gen]
+
+
+class LDAPAddTests(unittest.TestCase):
+    def setUp(self):
+        server = os.environ.get('TEST_SERVER', 'localhost')
+        self.env = Environment[server]
+        (dn, attributes) = create_user_entry()
+        self.new_user_dn = dn
+        self.new_user_attributes = attributes
+
+    def tearDown(self):
+        pass
+
+    def test_add(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        ld.add(self.new_user_dn, self.new_user_attributes)
+
+    def test_add_async(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        msgid = ld.add(self.new_user_dn, self.new_user_attributes, async=True)
+        result = ld.result(msgid)
+        self.assertEqual(result['return_code'], 0)
+
+    def test_add_with_relax(self):
+        (dn, attributes) = create_user_entry(relax=True)
+        self.new_user_dn = dn
+        self.new_user_attributes = attributes
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        c = LDAPControl()
+        c.add_control(LDAP_CONTROL_RELAX)
+        ld.add(self.new_user_dn, self.new_user_attributes, controls=c)
