@@ -227,3 +227,26 @@ class LDAPRenameTests(unittest.TestCase):
         self.assertEqual(len(entry['uid']), 2)
         # re-rename
         ld.rename('%s,%s' % (newrdn, newparent), self.env['modify_user'].split(',', 1)[0], newparent)
+
+class LDAPCompareTests(unittest.TestCase):
+    def setUp(self):
+        server = os.environ.get('TEST_SERVER', 'localhost')
+        self.env = Environment[server]
+        self.compare_attribute = 'description'
+        self.compare_value = 'This value will be compared'
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        ld.modify(self.env['modify_user'],
+                  [(self.compare_attribute, [self.compare_value], LDAP_MOD_REPLACE)])
+
+    def test_compare(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        result = ld.compare(self.env['modify_user'], self.compare_attribute, self.compare_value)
+        self.assertTrue(result)
+
+    def test_compare_fail(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        result = ld.compare(self.env['modify_user'], self.compare_attribute, 'dummy')
+        self.assertFalse(result)
