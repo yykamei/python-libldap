@@ -3,6 +3,7 @@
 
 import os
 import unittest
+from datetime import datetime
 from types import GeneratorType
 
 from .environ import Environment, create_user_entry
@@ -127,3 +128,43 @@ class LDAPAddTests(unittest.TestCase):
         c = LDAPControl()
         c.add_control(LDAP_CONTROL_RELAX)
         ld.add(self.new_user_dn, self.new_user_attributes, controls=c)
+
+
+class LDAPAddTests(unittest.TestCase):
+    def setUp(self):
+        server = os.environ.get('TEST_SERVER', 'localhost')
+        self.env = Environment[server]
+
+    def tearDown(self):
+        pass
+
+    def test_modify(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        dtime = datetime.utcnow().strftime('%Y%m%d%H%M%S.%fZ')
+        changes = [
+            ('description', ['Modified at %s' % (dtime,)], LDAP_MOD_REPLACE)
+        ]
+        ld.modify(self.env['modify_user'], changes)
+
+    def test_modify_async(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        dtime = datetime.utcnow().strftime('%Y%m%d%H%M%S.%fZ')
+        changes = [
+            ('description', ['Modified at %s' % (dtime,)], LDAP_MOD_REPLACE)
+        ]
+        msgid = ld.modify(self.env['modify_user'], changes, async=True)
+        result = ld.result(msgid)
+        self.assertEqual(result['return_code'], 0)
+
+    def test_modify_with_relax(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        c = LDAPControl()
+        c.add_control(LDAP_CONTROL_RELAX)
+        dtime = datetime.utcnow().strftime('%Y%m%d%H%M%S.%fZ')
+        changes = [
+            ('pwdAccountLockedTime', [dtime], LDAP_MOD_REPLACE)
+        ]
+        ld.modify(self.env['modify_user'], changes, controls=c)
