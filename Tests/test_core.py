@@ -54,9 +54,6 @@ class LDAPSearchTests(unittest.TestCase):
         server = os.environ.get('TEST_SERVER', 'localhost')
         self.env = Environment[server]
 
-    def tearDown(self):
-        pass
-
     def test_search_base(self):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
@@ -104,9 +101,6 @@ class LDAPAddTests(unittest.TestCase):
         self.new_user_dn = dn
         self.new_user_attributes = attributes
 
-    def tearDown(self):
-        pass
-
     def test_add(self):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
@@ -134,9 +128,6 @@ class LDAPModifyTests(unittest.TestCase):
     def setUp(self):
         server = os.environ.get('TEST_SERVER', 'localhost')
         self.env = Environment[server]
-
-    def tearDown(self):
-        pass
 
     def test_modify(self):
         ld = LDAP(self.env['uri_389'])
