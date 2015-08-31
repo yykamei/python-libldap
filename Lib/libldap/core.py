@@ -522,7 +522,7 @@ class LDAP(_LDAPObject):
 
         Detail
         ------
-        If option is following, value MUST be boolean.
+        If option is following, value MUST be bool.
 
         * LDAP_OPT_CONNECT_ASYNC
         * LDAP_OPT_REFERRALS
@@ -575,6 +575,95 @@ class LDAP(_LDAPObject):
         """
         try:
             super().set_option(option, value, int(is_global))
+        except _LDAPError as e:
+            raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def get_option(self, option, is_global=False):
+        """
+        Parameters
+        ----------
+        option : int
+            Available options are located in libldap.constants
+        is_global : bool, optional
+
+        Returns
+        -------
+        int, str, [str] or None
+            Return value varies by option parameter of get_option().
+
+        Raises
+        ------
+        LDAPError
+
+        Detail
+        ------
+        If option is following, return value is bool.
+
+        * LDAP_OPT_CONNECT_ASYNC
+        * LDAP_OPT_REFERRALS
+        * LDAP_OPT_RESTART
+
+        If option is following, return value is int.
+
+        * LDAP_OPT_DEBUG_LEVEL
+        * LDAP_OPT_DEREF
+        * LDAP_OPT_DESC
+        * LDAP_OPT_PROTOCOL_VERSION
+        * LDAP_OPT_RESULT_CODE
+        * LDAP_OPT_SESSION_REFCNT
+        * LDAP_OPT_SIZELIMIT
+        * LDAP_OPT_TIMELIMIT
+        * LDAP_OPT_X_KEEPALIVE_IDLE
+        * LDAP_OPT_X_KEEPALIVE_PROBES
+        * LDAP_OPT_X_KEEPALIVE_INTERVAL
+        * LDAP_OPT_X_TLS_CRLCHECK
+        * LDAP_OPT_X_TLS_NEWCTX
+        * LDAP_OPT_X_TLS_PROTOCOL_MIN
+        * LDAP_OPT_X_TLS_REQUIRE_CERT
+        * LDAP_OPT_X_SASL_NOCANON
+
+        If option is following, return value is float.
+
+        * LDAP_OPT_NETWORK_TIMEOUT
+        * LDAP_OPT_TIMEOUT
+
+        If option is following, return value is str.
+
+        * LDAP_OPT_DEFBASE
+        * LDAP_OPT_DIAGNOSTIC_MESSAGE
+        * LDAP_OPT_MATCHED_DN
+        * LDAP_OPT_URI
+        * LDAP_OPT_X_TLS_CACERTDIR
+        * LDAP_OPT_X_TLS_CACERTFILE
+        * LDAP_OPT_X_TLS_CERTFILE
+        * LDAP_OPT_X_TLS_CIPHER_SUITE
+        * LDAP_OPT_X_TLS_CRLFILE
+        * LDAP_OPT_X_TLS_DHFILE
+        * LDAP_OPT_X_TLS_KEYFILE
+        * LDAP_OPT_X_TLS_RANDOM_FILE
+        * LDAP_OPT_X_SASL_AUTHCID
+        * LDAP_OPT_X_SASL_AUTHZID
+        * LDAP_OPT_X_SASL_MECH
+        * LDAP_OPT_X_SASL_MECHLIST
+        * LDAP_OPT_X_SASL_REALM
+        * LDAP_OPT_X_SASL_SECPROPS
+        * LDAP_OPT_X_SASL_USERNAME
+
+        If option is LDAP_OPT_REFERRAL_URLS, return value is [str].
+
+        If option is LDAP_OPT_API_INFO, return value is dict. return value
+        has following key-value:
+            + api_info_version: API Info Version
+            + api_version: API Version
+            + api_protocol_max: Protocol Max
+            + api_extensions:  Extensions
+            + api_vendor_name: Vendor Name
+            + api_vendor_version: Vendor Version
+
+        Other options are not supported.
+        """
+        try:
+            return super().get_option(option, int(is_global))
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 

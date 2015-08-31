@@ -95,6 +95,7 @@ static PyMethodDef LDAPObject_methods[] = {
 	{"cancel",  (PyCFunction)LDAPObject_cancel, METH_VARARGS, "cancel"},
 	{"start_tls",  (PyCFunction)LDAPObject_start_tls, METH_VARARGS, "start_tls"},
 	{"set_option",  (PyCFunction)LDAPObject_set_option, METH_VARARGS, "set_option"},
+	{"get_option",  (PyCFunction)LDAPObject_get_option, METH_VARARGS, "get_option"},
 	{"result",  (PyCFunction)LDAPObject_result, METH_VARARGS, "result"},
 	{NULL, NULL, 0, NULL}        /* Sentinel */
 };
