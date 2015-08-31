@@ -130,7 +130,7 @@ class LDAPAddTests(unittest.TestCase):
         ld.add(self.new_user_dn, self.new_user_attributes, controls=c)
 
 
-class LDAPAddTests(unittest.TestCase):
+class LDAPModifyTests(unittest.TestCase):
     def setUp(self):
         server = os.environ.get('TEST_SERVER', 'localhost')
         self.env = Environment[server]
