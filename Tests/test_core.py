@@ -159,3 +159,30 @@ class LDAPModifyTests(unittest.TestCase):
             ('pwdAccountLockedTime', [dtime], LDAP_MOD_REPLACE)
         ]
         ld.modify(self.env['modify_user'], changes, controls=c)
+
+
+class LDAPDeleteTests(unittest.TestCase):
+    # Strictly, this class is not unittest
+    # because it is tested with add() method.
+
+    def setUp(self):
+        server = os.environ.get('TEST_SERVER', 'localhost')
+        self.env = Environment[server]
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        (dn, attributes) = create_user_entry()
+        self.old_user_dn = dn
+        self.old_user_attributes = attributes
+        ld.add(self.old_user_dn, self.old_user_attributes)
+
+    def test_delete(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        ld.delete(self.old_user_dn)
+
+    def test_delete_async(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        msgid = ld.delete(self.old_user_dn, async=True)
+        result = ld.result(msgid)
+        self.assertEqual(result['return_code'], 0)
