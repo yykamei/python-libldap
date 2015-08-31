@@ -262,3 +262,19 @@ class LDAPWhoAmITests(unittest.TestCase):
         ld.bind(self.env['auth_user'], self.env['auth_pw'])
         result = ld.whoami()
         self.assertEqual('dn:' + self.env['auth_user'], result)
+
+
+class LDAPPasswdTests(unittest.TestCase):
+    def setUp(self):
+        server = os.environ.get('TEST_SERVER', 'localhost')
+        self.env = Environment[server]
+
+    def test_passwd(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['auth_user'], self.env['auth_pw'])
+        newpassword = 'NewPassword'
+        ld.passwd(self.env['auth_user'], self.env['auth_pw'], newpassword)
+        ld.bind(self.env['auth_user'], newpassword)
+        # re-passwd
+        ld.passwd(self.env['auth_user'], newpassword, self.env['auth_pw'])
+        ld.bind(self.env['auth_user'], self.env['auth_pw'])
