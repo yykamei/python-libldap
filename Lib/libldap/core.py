@@ -328,10 +328,10 @@ class LDAP(_LDAPObject):
         ----------
         dn : str
         newrdn : str
-        newparent : str
-            (ths default is same parent with old dn)
+        newparent : str, optional
+            (ths default is None, which implies same parent with old dn is set)
         deleteoldrdn : bool
-            (the default is True, which means oldrdn is deleted after renamed)
+            (the default is True, which implies oldrdn is deleted after renamed)
         controls : LDAPControl, optional
             (the default is None, which implies no controls are set)
         async : bool
