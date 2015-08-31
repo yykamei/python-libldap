@@ -3,6 +3,7 @@
 
 import os
 import unittest
+from types import GeneratorType
 
 from .environ import Environment
 from libldap import LDAP, LDAPControl, LDAPError
@@ -65,3 +66,30 @@ class LDAPSearchTests(unittest.TestCase):
         ld.bind(self.env['root_dn'], self.env['root_pw'])
         r = ld.search(self.env['suffix'], LDAP_SCOPE_SUB, filter='cn=auth')
         self.assertEqual(len(r), 1)
+
+    def test_search_attributes(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        r = ld.search(self.env['suffix'], LDAP_SCOPE_SUB, filter='cn=auth', attributes=['cn'])
+        self.assertIn('cn', r[0])
+        self.assertNotIn('objectClass', r[0])
+
+    def test_search_attributes(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        r = ld.search(self.env['suffix'], LDAP_SCOPE_SUB, filter='cn=auth', attrsonly=True)
+        self.assertEqual(len(r[0]['cn']), 0)
+
+    def test_search_sizelimit(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        with self.assertRaises(LDAPError) as cm:
+            r = ld.search(self.env['suffix'], LDAP_SCOPE_SUB, sizelimit=1)
+        self.assertEqual(cm.exception.return_code, 4)  # Size limit exceeded (4)
+
+    def test_paged_search(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        gen = ld.paged_search(self.env['suffix'], LDAP_SCOPE_SUB, pagesize=1)
+        self.assertIsInstance(gen, GeneratorType)
+        [x for x in gen]
