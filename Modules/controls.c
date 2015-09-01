@@ -102,12 +102,22 @@ LDAPObjectControl_add_control(LDAPObjectControl *self, PyObject *args)
 	}
 
 	if (strcmp(oid, LDAP_CONTROL_PAGEDRESULTS) == 0) {
+		if (bvp == NULL) {
+			PyBuffer_Release(&view);
+			PyErr_SetString(LDAPError, "LDAP_CONTROL_PAGEDRESULTS requires value");
+			return NULL;
+		}
 		ctrl = create_page_control(self, bvp, iscritical);
 		if (ctrl == NULL) {
 			PyBuffer_Release(&view);
 			return NULL;
 		}
 	} else if (strcmp(oid, LDAP_CONTROL_SORTREQUEST) == 0) {
+		if (bvp == NULL) {
+			PyBuffer_Release(&view);
+			PyErr_SetString(LDAPError, "LDAP_CONTROL_SORTREQUEST requires value");
+			return NULL;
+		}
 		ctrl = create_sort_control(self, bvp, iscritical);
 		if (ctrl == NULL) {
 			PyBuffer_Release(&view);

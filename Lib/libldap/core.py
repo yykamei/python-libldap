@@ -955,9 +955,5 @@ class LDAPControl(_LDAPObjectControl):
     .. todo::
 
         Hide _LDAPObjectControl methods.
-
-    .. todo::
-
-        segfault
     """
     pass
