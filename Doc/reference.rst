@@ -7,3 +7,4 @@ python-libldap API reference
 
 .. autoclass:: libldap.core.LDAPControl
     :members:
+    :member-order: bysource

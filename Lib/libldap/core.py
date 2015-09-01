@@ -796,5 +796,13 @@ class LDAP(_LDAPObject):
 
 
 class LDAPControl(_LDAPObjectControl):
-    # FIXME
+    """
+    .. todo::
+
+        Hide _LDAPObjectControl methods.
+
+    .. todo::
+
+        segfault
+    """
     pass
