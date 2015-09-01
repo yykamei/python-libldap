@@ -12,7 +12,7 @@ This class has following LDAP operation methods.
 
 * bind_
 * unbind_
-* search
+* search_
 * paged_search
 * add
 * modify
@@ -77,6 +77,16 @@ unbind
 
 This is the method for LDAP unbind operation. This terminates the current association,
 and free the resources.
+
+    >>> from libldap import LDAP
+    >>> ld = LDAP('ldap://localhost')
+    >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
+    >>> ld.unbind()
+
+search
+------
+
+This is the method for LDAP search operation. This terminates the current association,
 
 LDAPControl
 ===========

@@ -11,7 +11,8 @@ Contents:
 .. toctree::
    :maxdepth: 3
 
-   manual.rst
+   manual
+   reference
 
 
 
