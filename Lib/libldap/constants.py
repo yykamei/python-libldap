@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2015 Yutaka Kamei
+"""libldap.constants module
+
+This module provides LDAP constant variables.
+"""
 
 # LDAP Scopes
 LDAP_SCOPE_BASE = 0x0000

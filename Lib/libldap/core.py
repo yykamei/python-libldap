@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2015 Yutaka Kamei
+"""libldap.core module
+
+This module provides LDAP core operations.
+"""
 
 # NOTE: Argument 'filter' conflicts with built-in 'filter' function
 _filter = filter

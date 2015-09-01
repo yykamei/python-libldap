@@ -1,5 +1,10 @@
 PYTHON = /usr/bin/env python3
-ROOT   = ./test-stage
+ROOT   = $(realpath .)/test-stage
+
+.PHONY: doc-html
+doc-html:
+	$(PYTHON) setup.py install --root=$(ROOT) --install-lib=/
+	env PYTHONPATH=$(ROOT) make html -C Doc
 
 
 .PHONY: test-interactive
@@ -35,3 +40,4 @@ pypi-upload: clean
 .PHONY: clean
 clean:
 	rm -rf dist build $(ROOT) Lib/libldap.egg-info
+	make clean -C Doc

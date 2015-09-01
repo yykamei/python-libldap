@@ -4,3 +4,4 @@ test-stage
 build/
 dist/
 Lib/python_libldap.egg-info/
+Doc/_build

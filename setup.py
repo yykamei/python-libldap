@@ -9,6 +9,10 @@
 #   - libssl
 #   - libsasl2
 
+import os.path
+with open(os.path.join(os.path.dirname(__file__), 'Version')) as f:
+    __version__ = f.read().strip()
+
 from setuptools import setup, find_packages, Extension
 
 ext_module = Extension('_libldap',
@@ -41,7 +45,7 @@ setup(name='python-libldap',
       author='Yutaka Kamei',
       author_email='kamei@ykamei.net',
       url='https://github.com/yykamei/python-libldap',
-      version='0.8.1',
+      version=__version__,
       description='A Python binding for libldap',
       ext_modules=[ext_module],
       packages=find_packages('Lib'),
