@@ -1,6 +1,7 @@
 PYTHON = /usr/bin/env python3
 ROOT   = $(realpath .)/test-stage
 
+
 .PHONY: doc-html
 doc-html:
 	$(PYTHON) setup.py install --root=$(ROOT) --install-lib=/
