@@ -38,7 +38,7 @@ ext_module = Extension('_libldap',
                                 ],
                        include_dirs=['Modules'],
                        libraries=['ldap_r'],
-                       extra_compile_args=['-g', '-O0'])
+                       extra_compile_args=['-g', '-O2'])
 
 setup(name='python-libldap',
       license='MIT',

@@ -13,6 +13,16 @@ Requirements
 * `libldap`
 * `libssl`
 * `libsasl2`
+* `libffi`
+
+Build Requirements
+==================
+
+* `Python developer package >= 3.4`
+* `libldap developer package`
+* `libssl developer package`
+* `libsasl2 developer package`
+* `libffi developer package`
 
 Install
 =======
