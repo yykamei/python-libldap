@@ -120,10 +120,6 @@ class LDAP(_LDAPObject):
             super().unbind()
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
-        try:
-            super().__init__(self.uri)  # Re-use this instance
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
 
     def search(self,
                base,

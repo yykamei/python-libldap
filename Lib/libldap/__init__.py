@@ -2,7 +2,7 @@
 # Copyright (C) 2015 Yutaka Kamei
 """libldap package
 
-*libldap* is libldap Python binding.
+**libldap** is libldap Python binding.
 Following objects are exposed.
 
 LDAP
@@ -10,8 +10,8 @@ LDAP
 
 This class has following LDAP operation methods.
 
-* bind
-* unbind
+* bind_
+* unbind_
 * search
 * paged_search
 * add
@@ -32,8 +32,8 @@ This class has following LDAP operation methods.
 bind
 -----
 
-Method for LDAP bind operation. If you do not use this method,
-the relative instance will operate anonymously.
+This is the method for LDAP bind operation. If you do not use this method,
+the relative LDAP_ instance will operate anonymously.
 For example:
 
     >>> from libldap import LDAP
@@ -72,6 +72,12 @@ control like this:
      'referrals': [],
      'return_code': 49}
 
+unbind
+------
+
+This is the method for LDAP unbind operation. This terminates the current association,
+and free the resources.
+
 LDAPControl
 ===========
 
@@ -91,3 +97,5 @@ For example:
 
 from .core import *
 from .constants import *
+
+# vi: setfiletype rst :
