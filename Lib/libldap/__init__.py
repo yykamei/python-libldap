@@ -139,7 +139,7 @@ You can only specified attributes by **attributes** parameter. If `*` or None ar
 specified, all attributes are fetched. **attrsonly** parameter fetchs attribute names
 only (value is empty list).
 
-You can specify **timelimit** and **sizelimit** parameter. See ldap.conf(5).
+You can specify **timeout** and **sizelimit** parameter. See ldap.conf(5).
 
 **controls** parameter can be set. Following is LDAP_CONTROL_SORTREQUEST example:
 

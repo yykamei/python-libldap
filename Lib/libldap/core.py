@@ -47,11 +47,10 @@ class _OrderedEntry(_OrderedDict):
 class LDAP(_LDAPObject):
     """LDAP is libldap wrapper class
 
-    Parameters:
-        uri : str
-            LDAP URI (e.g. `'ldap://localhost'`, `'ldaps://localhost'`, `'ldapi://localhost'`)
+    :param str uri:
+        LDAP URI (e.g. `'ldap://localhost'`, `'ldaps://localhost'`, `'ldapi://localhost'`)
 
-    Raises:
+    :raises:
         LDAPError
     """
 
@@ -65,21 +64,31 @@ class LDAP(_LDAPObject):
 
     def bind(self, who, password, controls=None, async=False):
         """
-        Parameters:
-            who : str
-                Who bind to
-            password : str
-                Password
-            controls : LDAPControl, optional
-                LDAP Controls (the default is None, which implies no controls are set)
-            async : bool, optional
-                Flag for asynchronous or not (the default is False,
-                which implies operation will done synchronously)
+        :param who:
+            Who bind to
+        :param password:
+            Password
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set)
+        :param async:
+            Flag for asynchronous or not (the default is False,
+            which implies operation will done synchronously)
 
-        Returns:
+        :type who:
+            str
+        :type password:
+            str
+        :type controls:
+            LDAPControl or None
+        :type async:
+            bool
+
+        :returns:
+            Nothing or message ID
+        :rtype:
             None or int
 
-        Raises:
+        :raises:
             LDAPError
         """
         try:
@@ -99,10 +108,12 @@ class LDAP(_LDAPObject):
 
     def unbind(self):
         """
-        Returns:
+        :returns:
+            Nothing
+        :rtype:
             None
 
-        Raises:
+        :raises:
             LDAPError
         """
         try:
@@ -126,40 +137,62 @@ class LDAP(_LDAPObject):
                ordered_attributes=False,
                async=False):
         """
-        Parameters:
-            base: str
-                DN of the entry at which to start the search.
-            scope: int, optional
-                Scope of the search.
-                it must be LDAP_SCOPE_BASE, LDAP_SCOPE_ONE, LDAP_SCOPE_SUB or
-                LDAP_SCOPE_CHILDREN (the default is LDAP_SCOPE_BASE).
-            filter : str, optional
-                 LDAP filter (the default is '(objectClass=*)')
-            attributes : [str] or None, optional
-                Attributes for fetching from LDAP server (the default is None,
-                which implies '*')
-            attrsonly : bool, optional
-                Flag for gettting value or not (the default is False)
-            timeout : int or float, optional
-                Timeout for search operation (the default is 0, which implies unlimited)
-            sizelimit : int, optional
-                Sizelimit for search operation (the default is 0, which implies unlimited)
-            controls : LDAPControl, optional
-                LDAP Controls (the default is None, which implies no controls are set)
-            ordered_attributes : bool, optional
-                Flag for attributes order is fixed or not
-                (the default is False, which implies attributes order in entry is
-                not remembered)
-            async : bool
-                Flag for asynchronous or not (the default is False,
-                which implies operation will done synchronously)
-                Synchronous operation returns LDAP responses immediately
+        :param base:
+            DN of the entry at which to start the search.
+        :param scope:
+            Scope of the search.
+            it must be LDAP_SCOPE_BASE, LDAP_SCOPE_ONE, LDAP_SCOPE_SUB or
+            LDAP_SCOPE_CHILDREN (the default is LDAP_SCOPE_BASE).
+        :param filter:
+             LDAP filter (the default is '(objectClass=*)')
+        :param attributes:
+            Attributes for fetching from LDAP server (the default is None,
+            which implies '*')
+        :param attrsonly:
+            Flag for gettting value or not (the default is False)
+        :param timeout:
+            Timeout for search operation (the default is 0, which implies unlimited)
+        :param sizelimit:
+            Sizelimit for search operation (the default is 0, which implies unlimited)
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set)
+        :param ordered_attributes:
+            Flag for attributes order is fixed or not
+            (the default is False, which implies attributes order in entry is
+            not remembered)
+        :param async:
+            Flag for asynchronous or not (the default is False,
+            which implies operation will done synchronously)
+            Synchronous operation returns LDAP responses immediately
 
-        Returns:
+        :type base:
+            str
+        :type scope:
+            int
+        :type filter:
+            str
+        :type attributes:
+             [str] or None
+        :type attrsonly:
+            bool
+        :type timeout:
+            int
+        :type sizelimit:
+            int
+        :type controls:
+            LDAPControl or None
+        :type ordered_attributes:
+            bool
+        :type async:
+            bool
+
+
+        :returns:
+            List of entries or message ID
+        :rtype:
             list or int
-                List of entries or message ID (async=True)
 
-        Raises:
+        :raises:
             LDAPError
         """
         try:
@@ -187,41 +220,54 @@ class LDAP(_LDAPObject):
                pagesize=100,
                ordered_attributes=False):
         """
-        Parameters:
-            base: str
-                DN of the entry at which to start the search.
-            scope: int, optional
-                Scope of the search.
-                it must be LDAP_SCOPE_BASE, LDAP_SCOPE_ONE, LDAP_SCOPE_SUB or
-                LDAP_SCOPE_CHILDREN (the default is LDAP_SCOPE_BASE).
-            filter : str, optional
-                 LDAP filter (the default is '(objectClass=*)')
-            attributes : [str] or None, optional
-                Attributes for fetching from LDAP server (the default is None,
-                which implies '*')
-            attrsonly : bool, optional
-                Flag for gettting value or not (the default is False)
-            timeout : int or float, optional
-                Timeout for search operation (the default is 0, which implies unlimited)
-            sizelimit : int, optional
-                Sizelimit for search operation (the default is 0, which implies unlimited)
-            pagesize : int, optional
-                LDAP page size (the default is 100, which implies LDAP search request
-                is done by 100 LDAP entries)
-            ordered_attributes : bool, optional
-                Flag for attributes order is fixed or not
-                (the default is False, which implies attributes order in entry is
-                not remembered)
-            async : bool
-                Flag for asynchronous or not (the default is False,
-                which implies operation will done synchronously)
-                Synchronous operation returns LDAP responses immediately
+        :param base:
+            DN of the entry at which to start the search.
+        :param scope:
+            Scope of the search.
+            it must be LDAP_SCOPE_BASE, LDAP_SCOPE_ONE, LDAP_SCOPE_SUB or
+            LDAP_SCOPE_CHILDREN (the default is LDAP_SCOPE_BASE).
+        :param filter:
+             LDAP filter (the default is '(objectClass=*)')
+        :param attributes:
+            Attributes for fetching from LDAP server (the default is None,
+            which implies '*')
+        :param attrsonly:
+            Flag for gettting value or not (the default is False)
+        :param timeout:
+            Timeout for search operation (the default is 0, which implies unlimited)
+        :param sizelimit:
+            Sizelimit for search operation (the default is 0, which implies unlimited)
+        :param pagesize:
+            LDAP page size (the default is 100, which implies LDAP search request
+            is done by 100 LDAP entries)
+        :param ordered_attributes:
+            Flag for attributes order is fixed or not
+            (the default is False, which implies attributes order in entry is
+            not remembered)
 
-        Yield:
-            dict
-                LDAP entries
+        :type base:
+            str
+        :type scope:
+            int
+        :type filter:
+            str
+        :type attributes:
+             [str] or None
+        :type attrsonly:
+            bool
+        :type timeout:
+            int
+        :type sizelimit:
+            int
+        :type pagesize:
+            int
+        :type ordered_attributes:
+            bool
 
-        Raises:
+        :yield:
+            LDAP entries (each item is dict)
+
+        :raises:
             LDAPError
         """
 
@@ -241,25 +287,35 @@ class LDAP(_LDAPObject):
 
     def add(self, dn, attributes, controls=None, async=False):
         """
-        Parameters:
-            dn : str
-                DN
-            attributes : [(str, [str])]
-                List of tuple. tuple has two items:
-                    attr   - Attribute name
-                    values - List of value
-            controls : LDAPControl, optional
-                LDAP Controls (the default is None, which implies no controls are set)
-            async : bool
-                Flag for asynchronous or not (the default is False,
-                which implies operation will done synchronously)
+        :param dn:
+            DN
+        :param attributes:
+            List of tuple. tuple has two items:
 
-        Returns:
+            * attr   - Attribute name
+            * values - List of value
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set)
+        :param async:
+            Flag for asynchronous or not (the default is False,
+            which implies operation will done synchronously)
+
+        :type dn:
+            str
+        :type attributes:
+            [(str, [str])]
+        :type controls:
+            LDAPControl or None
+        :type async:
+            bool
+
+        :returns:
+            If operation is succeeded, None object is returned.
+            If async is True, return message ID.
+        :rtype:
             None or int
-                If operation is succeeded, None object is returned.
-                If async is True, return message ID.
 
-        Raises:
+        :raises:
             LDAPError
         """
         try:
@@ -277,26 +333,36 @@ class LDAP(_LDAPObject):
 
     def modify(self, dn, changes, controls=None, async=False):
         """
-        Parameters:
-            dn : str
-                DN
-            changes : [(str, [str], int)]
-                List of tuple. tuple has three items:
-                    attr   - Attribute name
-                    values - List of value
-                    mod_op - Modify operation (e.g.: LDAP_MOD_REPLACE)
-            controls : LDAPControl, optional
-                LDAP Controls (the default is None, which implies no controls are set)
-            async : bool
-                Flag for asynchronous or not (the default is False,
-                which implies operation will done synchronously)
+        :param dn:
+            DN
+        :param changes:
+            List of tuple. tuple has three items:
 
-        Returns:
+            * attr   - Attribute name
+            * values - List of value
+            * mod_op - Modify operation (e.g.: LDAP_MOD_REPLACE)
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set)
+        :param async:
+            Flag for asynchronous or not (the default is False,
+            which implies operation will done synchronously)
+
+        :type dn:
+            str
+        :type changes:
+            [(str, [str], int)]
+        :type controls:
+            LDAPControl or None
+        :type async:
+            bool
+
+        :returns:
+            If operation is succeeded, None object is returned.
+            If async is True, return message ID.
+        :rtype:
             None or int
-                If operation is succeeded, None object is returned.
-                If async is True, return message ID.
 
-        Raises:
+        :raises:
             LDAPError
         """
         try:
@@ -314,21 +380,28 @@ class LDAP(_LDAPObject):
 
     def delete(self, dn, controls=None, async=False):
         """
-        Parameters:
-            dn : str
-                DN
-            controls : LDAPControl, optional
-                LDAP Controls (the default is None, which implies no controls are set)
-            async : bool
-                Flag for asynchronous or not (the default is False,
-                which implies operation will done synchronously)
+        :param dn:
+            DN
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set)
+        :param async:
+            Flag for asynchronous or not (the default is False,
+            which implies operation will done synchronously)
 
-        Returns:
+        :type dn:
+            str
+        :type controls:
+            LDAPControl or None
+        :type async:
+            bool
+
+        :returns:
+            If operation is succeeded, None object is returned.
+            If async is True, return message ID.
+        :rtype:
             None or int
-                If operation is succeeded, None object is returned.
-                If async is True, return message ID.
 
-        Raises:
+        :raises:
             LDAPError
         """
         try:
@@ -346,29 +419,42 @@ class LDAP(_LDAPObject):
 
     def rename(self, dn, newrdn, newparent=None, deleteoldrdn=True, controls=None, async=False):
         """
-        Parameters:
-            dn : str
-                DN
-            newrdn : str
-                New RDN
-            newparent : str, optional
-                New Parent DN (ths default is None, which implies same parent
-                with old dn is set)
-            deleteoldrdn : bool
-                Flag for deleting old rdn attribute or not (the default is True,
-                which implies oldrdn is deleted after renamed)
-            controls : LDAPControl, optional
-                LDAP Controls (the default is None, which implies no controls are set)
-            async : bool
-                Flag for asynchronous or not (the default is False,
-                which implies operation will done synchronously)
+        :param dn:
+            DN
+        :param newrdn:
+            New RDN
+        :param newparent:
+            New Parent DN (ths default is None, which implies same parent
+            with old dn is set)
+        :param deleteoldrdn:
+            Flag for deleting old rdn attribute or not (the default is True,
+            which implies oldrdn is deleted after renamed)
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set)
+        :param async:
+            Flag for asynchronous or not (the default is False,
+            which implies operation will done synchronously)
 
-        Returns:
+        :type dn:
+            str
+        :type newrdn:
+            str
+        :type newparent:
+            str or None
+        :type deleteoldrdn:
+            bool
+        :type controls:
+            LDAPControl or None
+        :type async:
+            bool
+
+        :returns:
+            If operation is succeeded, None object is returned.
+            If async is True, return message ID.
+        :rtype:
             None or int
-                If operation is succeeded, None object is returned.
-                If async is True, return message ID.
 
-        Raises:
+        :raises:
             LDAPError
         """
         if newparent is None:
@@ -391,20 +477,30 @@ class LDAP(_LDAPObject):
 
     def compare(self, dn, attribute, value, controls=None):
         """
-        Parameters:
-            dn : str
-                DN
-            attribute : str
-                Attribute for comparing
-            value : str
-                Value for comparing
-            controls : LDAPControl, optional
-                LDAP Controls (the default is None, which implies no controls are set)
+        :param dn:
+            DN
+        :param attribute:
+            Attribute for comparing
+        :param value:
+            Value for comparing
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set)
 
-        Returns:
+        :type dn:
+            str
+        :type attribute:
+            str
+        :type value:
+            str
+        :type controls:
+            LDAPControl or None
+
+        :returns:
+            Attribute and value found in specified DN or not
+        :rtype:
             bool
 
-        Raises:
+        :raises:
             LDAPError
 
         .. note::
@@ -428,15 +524,18 @@ class LDAP(_LDAPObject):
 
     def whoami(self, controls=None):
         """
-        Parameters:
-            controls : LDAPControl, optional
-                LDAP Controls (the default is None, which implies no controls are set)
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set)
 
-        Returns:
+        :type controls:
+            LDAPControl or None
+
+        :returns:
+            If operation is succeeded, DN is returned.
+        :rtype:
             str
-                If operation is succeeded, DN is returned.
 
-        Raises:
+        :raises:
             LDAPError
 
         .. note::
@@ -460,23 +559,32 @@ class LDAP(_LDAPObject):
 
     def passwd(self, user, oldpw=None, newpw=None, controls=None):
         """
-        Parameters:
-            user : str
-                DN of user
-            oldpw : str, optional
-                Old password of *user* (the default is None, which implies
-                authentication will be skipped)
-            newpw : str, optional
-                New password of *user* (the default is None, which implies
-                password will be created by randomly)
-            controls : LDAPControl, optional
-                LDAP Controls (the default is None, which implies no controls are set)
+        :param user:
+            DN of user
+        :param oldpw:
+            Old password of *user* (the default is None, which implies
+            authentication will be skipped)
+        :param newpw:
+            New password of *user* (the default is None, which implies
+            password will be created by randomly)
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set)
 
-        Returns:
+        :type user:
             str
-                If operation is succeeded, New password is returned.
+        :type oldpw:
+            str or None
+        :type newpw:
+            str or None
+        :type controls:
+            LDAPControl or None
 
-        Raises:
+        :returns:
+            If operation is succeeded, New password is returned.
+        :rtype:
+            str
+
+        :raises:
             LDAPError
 
         .. note::
@@ -501,15 +609,18 @@ class LDAP(_LDAPObject):
 
     def start_tls(self, controls=None):
         """
-        Parameters:
-            controls : LDAPControl, optional
-                LDAP Controls (the default is None, which implies no controls are set)
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set)
 
-        Returns:
+        :type controls:
+            LDAPControl or None
+
+        :returns:
+            If operation is succeeded, None object is returned.
+        :rtype:
             None
-                If operation is succeeded, None object is returned.
 
-        Raises:
+        :raises:
             LDAPError
         """
         try:
@@ -522,20 +633,27 @@ class LDAP(_LDAPObject):
 
     def set_option(self, option, value, is_global=False):
         """
-        Parameters:
-            option : int
-                LDAP option. Available options are located in libldap.constants
-            value : object
-                LDAP option value
-            is_global : bool, optional
-                Flag for LDAP option is set globally or not (the default is False,
-                which implies LDAP option is set in this context)
+        :param option:
+            LDAP option. Available options are located in libldap.constants
+        :param value:
+            LDAP option value
+        :param is_global:
+            Flag for LDAP option is set globally or not (the default is False,
+            which implies LDAP option is set in this context)
 
-        Returns:
+        :type option:
+            int
+        :type value:
+            object
+        :type is_global:
+            bool
+
+        :returns:
+            If operation is succeeded, None object is returned.
+        :rtype:
             None
-                If operation is succeeded, None object is returned.
 
-        Raises:
+        :raises:
             LDAPError
 
         .. tip::
@@ -598,18 +716,23 @@ class LDAP(_LDAPObject):
 
     def get_option(self, option, is_global=False):
         """
-        Parameters:
-            option : int
-                LDAP option. Available options are located in libldap.constants
-            is_global : bool, optional
-                Flag for LDAP option is set globally or not (the default is False,
-                which implies LDAP option is set in this context)
+        :param option:
+            LDAP option. Available options are located in libldap.constants
+        :param is_global:
+            Flag for LDAP option is set globally or not (the default is False,
+            which implies LDAP option is set in this context)
 
-        Returns:
+        :type option:
+            int
+        :type is_global:
+            bool
+
+        :returns:
+            Return value varies by option parameter of get_option().
+        :rtype:
             int, str, [str] or None
-                Return value varies by option parameter of get_option().
 
-        Raises:
+        :raises:
             LDAPError
 
         .. tip::
@@ -687,17 +810,22 @@ class LDAP(_LDAPObject):
 
     def abandon(self, msgid, controls=None):
         """
-        Parameters:
-            msgid : int
-                Message ID
-            controls : LDAPControl, optional
-                LDAP Controls (the default is None, which implies no controls are set)
+        :param msgid:
+            Message ID
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set)
 
-        Returns:
+        :type msgid:
+            int
+        :type controls:
+            LDAPControl or None
+
+        :returns:
+            If operation is succeeded, None object is returned.
+        :rtype:
             None
-                If operation is succeeded, None object is returned.
 
-        Raises:
+        :raises:
             LDAPError
         """
         try:
@@ -710,17 +838,22 @@ class LDAP(_LDAPObject):
 
     def cancel(self, msgid, controls=None):
         """
-        Parameters:
-            msgid : int
-                Message ID
-            controls : LDAPControl, optional
-                LDAP Controls (the default is None, which implies no controls are set)
+        :param msgid:
+            Message ID
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set)
 
-        Returns:
+        :type msgid:
+            int
+        :type controls:
+            LDAPControl or None
+
+        :returns:
+            If operation is succeeded, None object is returned.
+        :rtype:
             None
-                If operation is succeeded, None object is returned.
 
-        Raises:
+        :raises:
             LDAPError
         """
         try:
@@ -733,22 +866,41 @@ class LDAP(_LDAPObject):
 
     def result(self, msgid, all=True, timeout=3, controls=None):
         """
-        Parameters:
-            msgid : int
-                Message ID
-            all : bool, optional
-                Flag for responsing all responses with msgid or not (the default
-                is True, which implies all responses with msgid is returned)
-            timeout : int
-                Timeout for result() method. Zero means wait foreve
-                (the default is 3, which implies wait 3 seconds)
+        :param msgid:
+            Message ID
+        :param all:
+            Flag for responsing all responses with msgid or not (the default
+            is True, which implies all responses with msgid is returned)
+        :param timeout:
+            Timeout for result() method. Zero means wait foreve
+            (the default is 3, which implies wait 3 seconds)
+        :param controls:
+            LDAP Controls (the default is None, which implies no controls are set).
+            If controls is set and LDAP response has control message, return value
+            has control key-value.
 
-        Returns:
+        :type msgid:
+            int
+        :type all:
+            int
+        :type timeout:
+            int
+        :type controls:
+            LDAPControl or None
+
+        :returns:
+            Return result for specified message ID.
+        :rtype:
             dict or list
-                Return result for specified message ID.
 
-        Raises:
+        :raises:
             LDAPError
+
+        .. note::
+
+            If you have done search() asynchronously, you should use search_result()
+            instead of result(). result() get raw data, raw data has __order__ key,
+            which has attribute order.
         """
         try:
             if controls is not None:
@@ -760,21 +912,24 @@ class LDAP(_LDAPObject):
 
     def search_result(self, *args, **kwargs):
         """
-        Return search result by result()
+        :param `*args`:
+            Arguments for result()
+        :param `**kwargs`:
+            kwargs can contain following key:
 
-        Parameters:
-            `*args` : tuple
-                Arguments for result()
-            `**kwargs` : dict
-                kwargs can contain following key:
-                    ordered_attributes : bool
-                        (the default is False)
+                * ordered_attributes : bool (the default is False)
 
-        Returns:
+        :type `*args`:
+            tuple
+        :type `**kwargs`:
+            dict
+
+        :returns:
+            Return result for specified message ID.
+        :rtype:
             list
-                Return result for specified message ID.
 
-        Raises:
+        :raises:
             LDAPError
         """
         if 'ordered_attributes' in kwargs:
