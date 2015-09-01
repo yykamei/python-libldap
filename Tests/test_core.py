@@ -144,6 +144,12 @@ class LDAPModifyTests(unittest.TestCase):
         ]
         ld.modify(self.env['modify_user'], changes)
 
+    def test_modify_mod_delete(self):
+        ld = LDAP(self.env['uri_389'])
+        ld.bind(self.env['root_dn'], self.env['root_pw'])
+        changes = [('description', [], LDAP_MOD_DELETE)]
+        ld.modify(self.env['modify_user'], changes)
+
     def test_modify_async(self):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
