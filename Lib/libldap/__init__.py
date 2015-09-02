@@ -37,7 +37,7 @@ the relative LDAP_ instance will operate anonymously.
 
 For example:
 
-.. code::
+.. code-block:: python
 
     >>> from libldap import LDAP
     >>> ld = LDAP('ldap://localhost')
@@ -46,7 +46,7 @@ For example:
 This method supports asynchronous operation by passing async=True parameter.
 Asynchronous operation returns message ID. You can use it like this:
 
-.. code::
+.. code-block:: python
 
     >>> from pprint import pprint
     >>> from libldap import LDAP
@@ -61,7 +61,7 @@ Asynchronous operation returns message ID. You can use it like this:
 If LDAP server has ppolicy overlay, you can set LDAP_CONTROL_PASSWORDPOLICYREQUEST
 control like this:
 
-.. code::
+.. code-block:: python
 
     >>> from pprint import pprint
     >>> from libldap import LDAP, LDAPControl, LDAP_CONTROL_PASSWORDPOLICYREQUEST
@@ -85,7 +85,7 @@ unbind
 This is the method for LDAP unbind operation. This terminates the current association,
 and free the resources.
 
-.. code::
+.. code-block:: python
 
     >>> from libldap import LDAP
     >>> ld = LDAP('ldap://localhost')
@@ -99,7 +99,7 @@ This is the method for LDAP search operation. Required parameter is *base*.
 
 For example:
 
-.. code::
+.. code-block:: python
 
     >>> from pprint import pprint
     >>> from libldap import LDAP, LDAP_SCOPE_SUB
@@ -148,7 +148,7 @@ you can get ordered attributes by **ordered_attributes** parameter.
 
 search() method support LDAP_CONTROL_SORTREQUEST. You can use like this:
 
-.. code::
+.. code-block:: python
 
     >>> from pprint import pprint
     >>> from libldap import LDAP, LDAPControl, LDAP_CONTROL_SORTREQUEST
@@ -170,7 +170,7 @@ This is the method for LDAP search operation with LDAP_CONTROL_PAGEDRESULTS.
 Of course, you can use LDAP_CONTROL_PAGEDRESULTS with search_() method, but
 paged_search() is generator.
 
-.. code::
+.. code-block:: python
 
     >>> from libldap import LDAP, LDAP_SCOPE_SUB
     >>> ld = LDAP('ldap://localhost')
@@ -186,7 +186,7 @@ You can LDAP control extension by using this class.
 
 For example:
 
-.. code::
+.. code-block:: python
 
     >>> from libldap import LDAP, LDAPControl, LDAP_CONTROL_RELAX
     >>> c = LDAPControl()
