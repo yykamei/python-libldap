@@ -14,7 +14,7 @@ This class has following LDAP operation methods.
 * unbind_
 * search_
 * paged_search_
-* add
+* add_
 * modify
 * delete
 * rename
@@ -178,6 +178,52 @@ paged_search() is generator.
     >>> entries = ld.paged_search('dc=example,dc=com', LDAP_SCOPE_SUB)
     >>> entries
     <generator object paged_search at 0x7f8d8714fa20>
+
+add
+---
+
+This is the method for LDAP add operation. Add method requires dn and
+LDAP attributes parameters. LDAP attributes type is [(str, [str])].
+
+Following is LDIF entry.
+
+
+::
+
+    dn: cn=group1,ou=Groups,dc=example,dc=com
+    objectClass: top
+    objectClass: posixGroup
+    cn: group1
+    gidNumber: 100
+    description Test Group 1
+
+
+If you add above entry, convert into following Python code.
+
+.. code-block:: python
+
+    [
+        ('objectClass', ['top', 'posixGroup']),
+        ('cn', ['group1']),
+        ('gidNumber', ['100']),
+        ('description', ['Test Group 1']),
+    ]
+
+
+Example.
+
+.. code-block:: python
+
+    >>> from libldap import LDAP, LDAP_SCOPE_SUB
+    >>> ld = LDAP('ldap://localhost')
+    >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
+    >>> ld.add('cn=group1,ou=Groups,dc=example,dc=com', [
+    ...     ('objectClass', ['top', 'posixGroup']),
+    ...     ('cn', ['group1']),
+    ...     ('gidNumber', ['100']),
+    ...     ('description', ['Test Group 1']),
+    ... ])
+
 
 LDAPControl
 ===========
