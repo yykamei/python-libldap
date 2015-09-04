@@ -12,12 +12,14 @@ Requirements
 
 * `Python >= 3.4`
 * `libldap`
+* `libsasl2`
 
 Build Requirements
 ==================
 
 * `Python developer package >= 3.4`
 * `libldap developer package`
+* `libsasl2 developer package`
 
 Install
 =======

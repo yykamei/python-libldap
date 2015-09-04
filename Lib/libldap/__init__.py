@@ -15,7 +15,7 @@ This class has following LDAP operation methods.
 * search_
 * paged_search_
 * add_
-* modify
+* modify_
 * delete
 * rename
 * compare
@@ -185,8 +185,7 @@ add
 This is the method for LDAP add operation. Add method requires dn and
 LDAP attributes parameters. LDAP attributes type is [(str, [str])].
 
-Following is LDIF entry.
-
+Following is LDIF entry that we want to add.
 
 ::
 
@@ -223,6 +222,47 @@ Example.
     ...     ('gidNumber', ['100']),
     ...     ('description', ['Test Group 1']),
     ... ])
+
+
+modify
+------
+
+This is the method for LDAP modify operation. Modify method requires dn and
+changes parameters. Changes type is [(str, [str], int)].
+
+Following is LDIF entry that we want to modify.
+
+::
+
+    dn: cn=group1,ou=Groups,dc=example,dc=com
+    changetype: modify
+    add: memberUid
+    memberUid: user1
+    -
+    replace: description
+    description: Test Group One
+
+If you modify above entry, convert into following Python code.
+
+.. code-block:: python
+
+    [
+        ('memberUid', ['user1'], LDAP_MOD_ADD),
+        ('description', ['Test Group One'], LDAP_MOD_REPLACE),
+    ]
+
+Example.
+
+.. code-block:: python
+
+    >>> from libldap import LDAP, LDAP_MOD_ADD, LDAP_MOD_REPLACE
+    >>> ld = LDAP('ldap://localhost')
+    >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
+    >>> ld.modify('cn=group1,ou=Groups,dc=example,dc=com', [
+    ...     ('memberUid', ['user1'], LDAP_MOD_ADD),
+    ...     ('description', ['Test Group One'], LDAP_MOD_REPLACE),
+    ... ])
+
 
 
 LDAPControl
