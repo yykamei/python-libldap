@@ -17,7 +17,7 @@ This class has following LDAP operation methods.
 * add_
 * modify_
 * delete_
-* rename
+* rename_
 * compare
 * whoami
 * passwd
@@ -276,6 +276,28 @@ Example.
     >>> ld = LDAP('ldap://localhost')
     >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
     >>> ld.delete('cn=group1,ou=Groups,dc=example,dc=com')
+
+rename
+------
+
+This is the method for LDAP rename operation. Rename method requires dn and
+newrdn parameters. newparent and deleteoldrdn are optional parameters. if
+newparent parameter is None, newparent is same suffix with dn parameter.
+
+Example.
+
+.. code-block:: python
+
+    >>> from libldap import LDAP
+    >>> ld = LDAP('ldap://localhost')
+    >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
+    >>> ld.rename('uid=test-user,ou=Users,dc=example,dc=com', 'cn=test-user')
+
+.. note::
+
+    If deleteoldrdn is True, old RDN attribute will be deleted. This may cause
+    'Object class violation (65)' Exception. Default deleteoldrdn value is False.
+
 
 LDAPControl
 ===========
