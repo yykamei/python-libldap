@@ -16,7 +16,7 @@ This class has following LDAP operation methods.
 * paged_search_
 * add_
 * modify_
-* delete
+* delete_
 * rename
 * compare
 * whoami
@@ -263,7 +263,19 @@ Example.
     ...     ('description', ['Test Group One'], LDAP_MOD_REPLACE),
     ... ])
 
+delete
+-------
 
+This is the method for LDAP delete operation. Delete method requires dn parameter.
+
+Example.
+
+.. code-block:: python
+
+    >>> from libldap import LDAP
+    >>> ld = LDAP('ldap://localhost')
+    >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
+    >>> ld.delete('cn=group1,ou=Groups,dc=example,dc=com')
 
 LDAPControl
 ===========
