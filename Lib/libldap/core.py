@@ -417,7 +417,7 @@ class LDAP(_LDAPObject):
         if result['return_code'] != LDAP_SUCCESS:
             raise LDAPError(**result)
 
-    def rename(self, dn, newrdn, newparent=None, deleteoldrdn=True, controls=None, async=False):
+    def rename(self, dn, newrdn, newparent=None, deleteoldrdn=False, controls=None, async=False):
         """
         :param dn:
             DN
@@ -428,7 +428,7 @@ class LDAP(_LDAPObject):
             with old dn is set)
         :param deleteoldrdn:
             Flag for deleting old rdn attribute or not (the default is True,
-            which implies oldrdn is deleted after renamed)
+            which implies oldrdn is not deleted after renaming)
         :param controls:
             LDAP Controls (the default is None, which implies no controls are set)
         :param async:
