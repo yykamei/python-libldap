@@ -19,7 +19,7 @@ This class has following LDAP operation methods.
 * delete_
 * rename_
 * compare_
-* whoami
+* whoami_
 * passwd
 * start_tls
 * set_option
@@ -315,6 +315,23 @@ Example.
     >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
     >>> ld.compare('cn=group1,ou=Groups,dc=example,dc=com', 'description', 'Test Group 1')
     True
+
+whoami
+------
+
+This is the method for LDAP whoami extended operation.
+If LDAP instance executes whoami() before binding, 'anonymous' string value is
+returned.
+
+Example.
+
+.. code-block:: python
+
+    >>> from libldap import LDAP
+    >>> ld = LDAP('ldap://localhost')
+    >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
+    >>> ld.whoami()
+    'dn:cn=master,dc=example,dc=com'
 
 LDAPControl
 ===========
