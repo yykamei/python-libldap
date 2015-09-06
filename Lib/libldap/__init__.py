@@ -18,7 +18,7 @@ This class has following LDAP operation methods.
 * modify_
 * delete_
 * rename_
-* compare
+* compare_
 * whoami
 * passwd
 * start_tls
@@ -298,6 +298,23 @@ Example.
     If deleteoldrdn is True, old RDN attribute will be deleted. This may cause
     'Object class violation (65)' Exception. Default deleteoldrdn value is False.
 
+
+compare
+--------
+
+This is the method for LDAP compare operation. Compare method requires dn, attribute
+and value parameters. It returns boolean, specified attribute description and value
+to compare to those found in the entry or not.
+
+Example.
+
+.. code-block:: python
+
+    >>> from libldap import LDAP
+    >>> ld = LDAP('ldap://localhost')
+    >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
+    >>> ld.compare('cn=group1,ou=Groups,dc=example,dc=com', 'description', 'Test Group 1')
+    True
 
 LDAPControl
 ===========
