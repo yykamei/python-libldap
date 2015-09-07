@@ -303,7 +303,7 @@ class LDAP(_LDAPObject):
         :type dn:
             str
         :type attributes:
-            [(str, [str])]
+            [(str, [str])] or [(str, [bytes])]
         :type controls:
             LDAPControl or None
         :type async:
@@ -350,7 +350,7 @@ class LDAP(_LDAPObject):
         :type dn:
             str
         :type changes:
-            [(str, [str], int)]
+            [(str, [str], int)] or [(str, [bytes], int)]
         :type controls:
             LDAPControl or None
         :type async:

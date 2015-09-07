@@ -66,12 +66,16 @@ str2berval(PyObject *str)
 		return NULL;
 	}
 
-	if (!PyUnicode_Check(str)) {
-		PyErr_SetString(LDAPError, "Each Item of value MUST be str type");
-		return NULL;
-	}
-	bv->bv_val = PyUnicode_AsUTF8(str);
-	if (bv->bv_val == NULL) {
+	if (PyUnicode_Check(str)) {  /* str -> (char *) */
+		bv->bv_val = PyUnicode_AsUTF8(str);
+		if (bv->bv_val == NULL)
+			return NULL;
+	} else if (PyBytes_Check(str)) {  /* bytes -> (char *) */
+		bv->bv_val = PyBytes_AsString(str);
+		if (bv->bv_val == NULL)
+			return NULL;
+	} else {
+		PyErr_SetString(LDAPError, "Each Item of value MUST be str or bytes type");
 		return NULL;
 	}
 	bv->bv_len = (ber_len_t)strlen(bv->bv_val);
