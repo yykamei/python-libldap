@@ -106,31 +106,33 @@ For example:
     >>> ld = LDAP('ldap://localhost')
     >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
     >>> entries = ld.search('dc=example,dc=com', LDAP_SCOPE_SUB, '(|(uid=user1)(uid=user2))')
+    >>> [entry.dn for entry in entries]
+    ['uid=user1,ou=Users,dc=example,dc=com', 'uid=user2,ou=Users,dc=example,dc=com']
     >>> pprint(entries)
-    [{'cn': ['user1'],
-      'dn': ['uid=user1,ou=Users,dc=example,dc=com'],
-      'gidNumber': ['100'],
-      'givenName': ['ONE'],
-      'homeDirectory': ['/home/user1'],
-      'loginShell': ['/bin/bash'],
-      'objectClass': ['inetOrgPerson', 'posixAccount', 'pwdPolicy'],
-      'pwdAttribute': ['userPassword'],
-      'sn': ['USER'],
-      'uid': ['user1'],
-      'uidNumber': ['1001'],
-      'userPassword': ['secret']},
-     {'cn': ['user2'],
-      'dn': ['uid=user2,ou=Users,dc=example,dc=com'],
-      'gidNumber': ['100'],
-      'givenName': ['TWO'],
-      'homeDirectory': ['/home/user2'],
-      'loginShell': ['/bin/bash'],
-      'mail': ['user2@example.com'],
-      'objectClass': ['top', 'person', 'posixAccount', 'inetOrgPerson'],
-      'sn': ['User'],
-      'uid': ['user2'],
-      'uidNumber': ['1000'],
-      'userPassword': ['{SSHA}6ggrZqsOKRkj3wbBp/GB4tMpbgi+l2JLs3oWCA==']}]
+    [{'cn': [b'user1'],
+      'gidNumber': [b'100'],
+      'givenName': [b'ONE'],
+      'homeDirectory': [b'/home/user1'],
+      'loginShell': [b'/bin/bash'],
+      'objectClass': [b'inetOrgPerson', b'posixAccount', b'pwdPolicy'],
+      'pwdAttribute': [b'userPassword'],
+      'sn': [b'USER'],
+      'uid': [b'user1'],
+      'uidNumber': [b'1001'],
+      'userPassword': [b'secret']},
+     {'cn': [b'user2'],
+      'gidNumber': [b'100'],
+      'givenName': [b'TWO'],
+      'homeDirectory': [b'/home/user2'],
+      'loginShell': [b'/bin/bash'],
+      'mail': [b'user2@example.com'],
+      'objectClass': [b'top', b'person', b'posixAccount', b'inetOrgPerson'],
+      'sn': [b'\xe3\x83\xa6\xe3\x83\xbc\xe3\x82\xb6\xe3\x83\xbc'],
+      'uid': [b'user2'],
+      'uidNumber': [b'1002'],
+      'userPassword': [b'{SSHA}j3mvviOTZ1Or8dtvn/PRVjX1igZFnUnp']}]
+
+
 
 Each entry is dict type and value type is list. **dn** attribute is also included
 in entry object.
@@ -160,8 +162,7 @@ search() method support LDAP_CONTROL_SORTREQUEST. You can use like this:
     ...                     '(|(uid=user1)(uid=user2))', attributes=['uidNumber'],
     ...                     controls=c)
     >>> pprint(entries)
-    [{'dn': ['uid=user2,ou=Users,dc=example,dc=com'], 'uidNumber': ['1000']},
-     {'dn': ['uid=user1,ou=Users,dc=example,dc=com'], 'uidNumber': ['1001']}]
+    [{uidNumber: [b'1000']}, {uidNumber: [b'1001']}, {uidNumber: [b'1001']}]
 
 paged_search
 -------------

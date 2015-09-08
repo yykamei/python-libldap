@@ -34,18 +34,11 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 	}
 
 	/* Set DN and __order__ */
-	if ((PyList_Append(order, PyUnicode_FromString("dn"))) == -1) {
+	if (PyDict_SetItemString(entry, "dn", PyUnicode_FromString(bv.bv_val)) == -1) {
 		XDECREF_MANY(entry, order, values);
 		return NULL;
 	}
-	if ((PyList_Append(values, PyUnicode_FromString(bv.bv_val))) == -1) {
-		XDECREF_MANY(entry, order, values);
-		return NULL;
-	}
-	if (PyDict_SetItemString(entry, "dn", values) == -1) {
-		XDECREF_MANY(entry, order, values);
-		return NULL;
-	}
+
 	if (PyDict_SetItemString(entry, "__order__", order) == -1) {
 		XDECREF_MANY(entry, order, values);
 		return NULL;
@@ -77,7 +70,7 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 		/* Set values */
 		if (bvals) {
 			for (i = 0; bvals[i].bv_val != NULL; i++) {
-				if ((PyList_Append(values, PyUnicode_FromString(bvals[i].bv_val))) == -1) {
+				if ((PyList_Append(values, PyBytes_FromString(bvals[i].bv_val))) == -1) {
 					XDECREF_MANY(entry, order, values);
 					return NULL;
 				}

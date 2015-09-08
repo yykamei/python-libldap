@@ -38,7 +38,21 @@ class LDAPError(Exception):
         return '%s (%d)%s' % (self.message, self.return_code, additional_info)
 
 
+class _DictEntry(dict):
+    def __init__(self, dn, *args, **kwargs):
+        self.dn = dn
+        super().__init__(*args, **kwargs)
+
+    def __repr__(self):
+        content = ', '.join(['%s: %s' % (x, y) for x, y in self.items()])
+        return '{%s}' % (content,)
+
+
 class _OrderedEntry(_OrderedDict):
+    def __init__(self, dn, *args, **kwargs):
+        self.dn = dn
+        super().__init__(*args, **kwargs)
+
     def __repr__(self):
         content = ', '.join(['%s: %s' % (x, y) for x, y in self.items()])
         return '{%s}' % (content,)
@@ -925,9 +939,12 @@ class LDAP(_LDAPObject):
             dict
 
         :returns:
-            Return result for specified message ID.
+            Return LDAP entries for specified message ID.
         :rtype:
-            list
+            [_DictEntry] or [_OrderedEntry]
+
+            _OrderedEntry and _DictEntry are classes which inherit
+            dict or OrderedDict. They have 'dn' attribute.
 
         :raises:
             LDAPError
@@ -941,12 +958,10 @@ class LDAP(_LDAPObject):
             if results[-1]['return_code'] != LDAP_SUCCESS:
                 raise LDAPError(**results[-1])
         if ordered_attributes:
-            return [_OrderedEntry([(key, entry[key])
-                                   for key in entry['__order__']])
+            return [_OrderedEntry(entry.pop('dn'), [(key, entry[key]) for key in entry['__order__']])
                     for entry in results if '__order__' in entry]
         else:
-            return [dict([(key, value) for key, value in entry.items()
-                          if key != '__order__'])
+            return [_DictEntry(entry.pop('dn'), [(key, value) for key, value in entry.items() if key != '__order__'])
                     for entry in results if '__order__' in entry]
 
 
