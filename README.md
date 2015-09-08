@@ -36,14 +36,6 @@ Bug tracker
 
 If you have any suggestions or bug reports please report them to the issue tracker at https://github.com/yykamei/python-libldap/issues .
 
-Changes
-=======
-
-0.8.5 release
---------------
-
-* Change deleteoldrdn default value from True to False in LDAP.rename()
-
 Quick start
 ===========
 
@@ -89,3 +81,18 @@ Delete operation
     >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
     >>> ld.delete('cn=group1,ou=Groups,dc=example,dc=com')
     >>>
+
+Changes
+=======
+
+0.8.6 release
+-------------
+
+* Change LDAP entries value type from str to bytes
+* Change LDAP entry object (object has 'dn' attribute)
+
+0.8.5 release
+--------------
+
+* Change deleteoldrdn default value from True to False in LDAP.rename()
+
