@@ -10,6 +10,7 @@ LDAP
 
 This class has following LDAP operation methods.
 
+* `__init__`_
 * bind_
 * unbind_
 * search_
@@ -28,6 +29,34 @@ This class has following LDAP operation methods.
 * cancel
 * result
 * search_result
+
+__init__
+--------
+
+LDAP constructor receives uri parameter.
+Example.
+
+    >>> from libldap import LDAP
+    >>> ld = LDAP('ldap://localhost')
+
+LDAP class supports context manager. You can write your code like this:
+
+    >>> from libldap import LDAP, LDAP_SCOPE_BASE
+    >>> with LDAP('ldap://localhost') as ld:
+    ...   ld.bind('cn=master,dc=example,dc=com', 'secret')
+    ...   ld.search('dc=example,dc=com', LDAP_SCOPE_BASE)
+    ...
+
+If LDAP constructor receives bind_user and bind_password parameters
+when you use context manager, LDAP instance executes bind() method automatically.
+Otherwise LDAP instance is still anonymous.
+
+    >>> from libldap import LDAP, LDAP_SCOPE_BASE
+    >>> with LDAP('ldap://localhost', 'cn=master,dc=example,dc=com', 'secret') as ld:
+    ...   ld.search('dc=example,dc=com', LDAP_SCOPE_BASE)
+    ...
+
+After closing **with statement**, LDAP instance executes unbind() method.
 
 bind
 -----

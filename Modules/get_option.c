@@ -76,7 +76,6 @@ LDAPObject_get_option(LDAPObject *self, PyObject *args)
 			break;
 		case LDAP_OPT_X_SASL_MAXBUFSIZE:
 		case LDAP_OPT_X_SASL_SSF:
-		case LDAP_OPT_X_SASL_SSF_EXTERNAL:
 		case LDAP_OPT_X_SASL_SSF_MAX:
 		case LDAP_OPT_X_SASL_SSF_MIN:
 			LDAP_BEGIN_ALLOW_THREADS

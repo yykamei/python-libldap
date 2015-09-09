@@ -62,19 +62,30 @@ class LDAP(_LDAPObject):
     """LDAP is libldap wrapper class
 
     :param str uri:
-        LDAP URI (e.g. `'ldap://localhost'`, `'ldaps://localhost'`, `'ldapi://localhost'`)
+        LDAP URI (e.g. `'ldap://localhost'`, `'ldaps://localhost'`, `'ldapi:///'`)
 
     :raises:
         LDAPError
     """
 
-    def __init__(self, uri):
-        self.uri = uri
+    def __init__(self, uri, bind_user=None, bind_password=None):
         self.bind_user = 'anonymous'
+        self.__bind_password = None
+        if bind_user and bind_password:
+            self.bind_user = bind_user
+            self.__bind_password = bind_password
         try:
             super().__init__(uri)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
+
+    def __enter__(self):
+        if self.bind_user and self.__bind_password:
+            self.bind(self.bind_user, self.__bind_password)
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.unbind()
 
     def bind(self, who, password, controls=None, async=False):
         """
@@ -132,10 +143,6 @@ class LDAP(_LDAPObject):
         """
         try:
             super().unbind()
-        except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
-        try:
-            super().__init__(self.uri)  # Re-use this instance
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 

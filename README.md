@@ -85,6 +85,11 @@ Delete operation
 Changes
 =======
 
+0.8.7 release
+-------------
+
+* LDAP class supports context manager
+
 0.8.6 release
 -------------
 
