@@ -88,8 +88,8 @@ Changes
 0.8.6 release
 -------------
 
-* Change LDAP entries value type from str to bytes
-* Change LDAP entry object (object has 'dn' attribute)
+* Change LDAP entries value type from str to bytes in LDAP.search_result()
+* Change LDAP entry object (object has 'dn' attribute) in LDAP.search_result()
 
 0.8.5 release
 --------------
