@@ -21,7 +21,7 @@ This class has following LDAP operation methods.
 * rename_
 * compare_
 * whoami_
-* passwd
+* passwd_
 * start_tls
 * set_option
 * get_option
@@ -362,6 +362,32 @@ Example.
     >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
     >>> ld.whoami()
     'dn:cn=master,dc=example,dc=com'
+
+passwd
+-------
+
+This is the method for LDAP passwd extended operation.
+Passwd method requires user parameter. oldpw and newpw parameters are optional.
+If oldpw is None, authentication will be skipped. If newpw is None, random password
+will be set.
+
+Passwd method returns new password if succeeded.
+
+.. code-block:: python
+
+    >>> from libldap import LDAP
+    >>> ld = LDAP('ldap://localhost')
+    >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
+    >>> ld.passwd('uid=user3,ou=Users,dc=example,dc=com')
+    'VWE4zPvT'
+    >>> ld.passwd('uid=user3,ou=Users,dc=example,dc=com', 'VWE4zPvT')
+    'PcMnf6uY'
+    >>> ld.passwd('uid=user3,ou=Users,dc=example,dc=com', 'invalid')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "/home/kamei/git/python-libldap/test-stage/libldap/core.py", line 624, in passwd
+        raise LDAPError(**result)
+    libldap.core.LDAPError: Server is unwilling to perform (53)
 
 LDAPControl
 ===========
