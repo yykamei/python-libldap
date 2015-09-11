@@ -7,6 +7,11 @@ python-libldap is a Python binding for *libldap* (LDAP client library).
 This project requires Python version 3.4 or later (not Python 2).
 If you want to use libldap wrapper library with Python 3, please try it.
 
+Documentation
+=============
+
+https://yykamei.github.io/python-libldap/
+
 Requirements
 ============
 
