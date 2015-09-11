@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>python-libldap &mdash; python-libldap 0.8.6 documentation</title>
+  <title>python-libldap &mdash; python-libldap 0.8.7 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="python-libldap 0.8.6 documentation" href="index.html"/>
+    <link rel="top" title="python-libldap 0.8.7 documentation" href="index.html"/>
         <link rel="next" title="python-libldap API reference" href="reference.html"/>
         <link rel="prev" title="Welcome to python-libldap’s documentation!" href="index.html"/> 
 
@@ -85,6 +85,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#rename">rename</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#compare">compare</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#whoami">whoami</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#passwd">passwd</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ldapcontrol">LDAPControl</a></li>
@@ -146,7 +147,7 @@ Following objects are exposed.</p>
 <li><a class="reference internal" href="#rename">rename</a></li>
 <li><a class="reference internal" href="#compare">compare</a></li>
 <li><a class="reference internal" href="#whoami">whoami</a></li>
-<li>passwd</li>
+<li><a class="reference internal" href="#passwd">passwd</a></li>
 <li>start_tls</li>
 <li>set_option</li>
 <li>get_option</li>
@@ -434,6 +435,29 @@ returned.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="passwd">
+<h3>passwd<a class="headerlink" href="#passwd" title="Permalink to this headline">¶</a></h3>
+<p>This is the method for LDAP passwd extended operation.
+Passwd method requires user parameter. oldpw and newpw parameters are optional.
+If oldpw is None, authentication will be skipped. If newpw is None, random password
+will be set.</p>
+<p>Passwd method returns new password if succeeded.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">passwd</span><span class="p">(</span><span class="s">&#39;uid=user3,ou=Users,dc=example,dc=com&#39;</span><span class="p">)</span>
+<span class="go">&#39;VWE4zPvT&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">passwd</span><span class="p">(</span><span class="s">&#39;uid=user3,ou=Users,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;VWE4zPvT&#39;</span><span class="p">)</span>
+<span class="go">&#39;PcMnf6uY&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">passwd</span><span class="p">(</span><span class="s">&#39;uid=user3,ou=Users,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;invalid&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+  File <span class="nb">&quot;/home/kamei/git/python-libldap/test-stage/libldap/core.py&quot;</span>, line <span class="m">624</span>, in <span class="n">passwd</span>
+    <span class="k">raise</span> <span class="n">LDAPError</span><span class="p">(</span><span class="o">**</span><span class="n">result</span><span class="p">)</span>
+<span class="gr">libldap.core.LDAPError</span>: <span class="n">Server is unwilling to perform (53)</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="ldapcontrol">
 <h2>LDAPControl<a class="headerlink" href="#ldapcontrol" title="Permalink to this headline">¶</a></h2>
@@ -491,7 +515,7 @@ returned.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6',
+            VERSION:'0.8.7',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
