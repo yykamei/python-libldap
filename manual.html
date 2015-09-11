@@ -1,0 +1,521 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>python-libldap &mdash; python-libldap 0.8.6 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="python-libldap 0.8.6 documentation" href="index.html"/>
+        <link rel="next" title="python-libldap API reference" href="reference.html"/>
+        <link rel="prev" title="Welcome to python-libldap’s documentation!" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> python-libldap
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">python-libldap</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ldap">LDAP</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#init">__init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bind">bind</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unbind">unbind</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search">search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#paged-search">paged_search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#add">add</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#modify">modify</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delete">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rename">rename</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compare">compare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#whoami">whoami</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ldapcontrol">LDAPControl</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">python-libldap API reference</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">python-libldap</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>python-libldap</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-libldap">
+<span id="python-libldap"></span><h1>python-libldap<a class="headerlink" href="#module-libldap" title="Permalink to this headline">¶</a></h1>
+<p>libldap package</p>
+<p><strong>libldap</strong> is libldap Python binding.
+Following objects are exposed.</p>
+<div class="section" id="ldap">
+<h2>LDAP<a class="headerlink" href="#ldap" title="Permalink to this headline">¶</a></h2>
+<p>This class has following LDAP operation methods.</p>
+<ul class="simple">
+<li><a class="reference internal" href="#init">__init__</a></li>
+<li><a class="reference internal" href="#bind">bind</a></li>
+<li><a class="reference internal" href="#unbind">unbind</a></li>
+<li><a class="reference internal" href="#search">search</a></li>
+<li><a class="reference internal" href="#paged-search">paged_search</a></li>
+<li><a class="reference internal" href="#add">add</a></li>
+<li><a class="reference internal" href="#modify">modify</a></li>
+<li><a class="reference internal" href="#delete">delete</a></li>
+<li><a class="reference internal" href="#rename">rename</a></li>
+<li><a class="reference internal" href="#compare">compare</a></li>
+<li><a class="reference internal" href="#whoami">whoami</a></li>
+<li>passwd</li>
+<li>start_tls</li>
+<li>set_option</li>
+<li>get_option</li>
+<li>abandon</li>
+<li>cancel</li>
+<li>result</li>
+<li>search_result</li>
+</ul>
+<div class="section" id="init">
+<h3>__init__<a class="headerlink" href="#init" title="Permalink to this headline">¶</a></h3>
+<p>LDAP constructor receives uri parameter.
+Example.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>LDAP class supports context manager. You can write your code like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span><span class="p">,</span> <span class="n">LDAP_SCOPE_BASE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ld</span><span class="p">:</span>
+<span class="gp">... </span>  <span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">... </span>  <span class="n">ld</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;dc=example,dc=com&#39;</span><span class="p">,</span> <span class="n">LDAP_SCOPE_BASE</span><span class="p">)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>If LDAP constructor receives bind_user and bind_password parameters
+when you use context manager, LDAP instance executes bind() method automatically.
+Otherwise LDAP instance is still anonymous.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span><span class="p">,</span> <span class="n">LDAP_SCOPE_BASE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">,</span> <span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ld</span><span class="p">:</span>
+<span class="gp">... </span>  <span class="n">ld</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;dc=example,dc=com&#39;</span><span class="p">,</span> <span class="n">LDAP_SCOPE_BASE</span><span class="p">)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>After closing <strong>with statement</strong>, LDAP instance executes unbind() method.</p>
+</div>
+<div class="section" id="bind">
+<h3>bind<a class="headerlink" href="#bind" title="Permalink to this headline">¶</a></h3>
+<p>This is the method for LDAP bind operation. If you do not use this method,
+the relative <a class="reference internal" href="#ldap">LDAP</a> instance will operate anonymously.</p>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This method supports asynchronous operation by passing async=True parameter.
+Asynchronous operation returns message ID. You can use it like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msgid</span> <span class="o">=</span> <span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">,</span> <span class="n">async</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">ld</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">msgid</span><span class="p">)</span>
+<span class="go">{&#39;error_message&#39;: None,</span>
+<span class="go"> &#39;message&#39;: &#39;Invalid credentials&#39;,</span>
+<span class="go"> &#39;referrals&#39;: [],</span>
+<span class="go"> &#39;return_code&#39;: 49}</span>
+</pre></div>
+</div>
+<p>If LDAP server has ppolicy overlay, you can set LDAP_CONTROL_PASSWORDPOLICYREQUEST
+control like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span><span class="p">,</span> <span class="n">LDAPControl</span><span class="p">,</span> <span class="n">LDAP_CONTROL_PASSWORDPOLICYREQUEST</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">LDAPControl</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span><span class="n">LDAP_CONTROL_PASSWORDPOLICYREQUEST</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msgid</span> <span class="o">=</span> <span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">async</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">ld</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">msgid</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="go">{&#39;error_message&#39;: None,</span>
+<span class="go"> &#39;message&#39;: &#39;Invalid credentials&#39;,</span>
+<span class="go"> &#39;ppolicy_expire&#39;: -1,</span>
+<span class="go"> &#39;ppolicy_grace&#39;: -1,</span>
+<span class="go"> &#39;ppolicy_msg&#39;: &#39;Account locked&#39;,</span>
+<span class="go"> &#39;referrals&#39;: [],</span>
+<span class="go"> &#39;return_code&#39;: 49}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="unbind">
+<h3>unbind<a class="headerlink" href="#unbind" title="Permalink to this headline">¶</a></h3>
+<p>This is the method for LDAP unbind operation. This terminates the current association,
+and free the resources.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">unbind</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="search">
+<h3>search<a class="headerlink" href="#search" title="Permalink to this headline">¶</a></h3>
+<p>This is the method for LDAP search operation. Required parameter is <em>base</em>.</p>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span><span class="p">,</span> <span class="n">LDAP_SCOPE_SUB</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">entries</span> <span class="o">=</span> <span class="n">ld</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;dc=example,dc=com&#39;</span><span class="p">,</span> <span class="n">LDAP_SCOPE_SUB</span><span class="p">,</span> <span class="s">&#39;(|(uid=user1)(uid=user2))&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">entry</span><span class="o">.</span><span class="n">dn</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">]</span>
+<span class="go">[&#39;uid=user1,ou=Users,dc=example,dc=com&#39;, &#39;uid=user2,ou=Users,dc=example,dc=com&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span>
+<span class="go">[{&#39;cn&#39;: [b&#39;user1&#39;],</span>
+<span class="go">  &#39;gidNumber&#39;: [b&#39;100&#39;],</span>
+<span class="go">  &#39;givenName&#39;: [b&#39;ONE&#39;],</span>
+<span class="go">  &#39;homeDirectory&#39;: [b&#39;/home/user1&#39;],</span>
+<span class="go">  &#39;loginShell&#39;: [b&#39;/bin/bash&#39;],</span>
+<span class="go">  &#39;objectClass&#39;: [b&#39;inetOrgPerson&#39;, b&#39;posixAccount&#39;, b&#39;pwdPolicy&#39;],</span>
+<span class="go">  &#39;pwdAttribute&#39;: [b&#39;userPassword&#39;],</span>
+<span class="go">  &#39;sn&#39;: [b&#39;USER&#39;],</span>
+<span class="go">  &#39;uid&#39;: [b&#39;user1&#39;],</span>
+<span class="go">  &#39;uidNumber&#39;: [b&#39;1001&#39;],</span>
+<span class="go">  &#39;userPassword&#39;: [b&#39;secret&#39;]},</span>
+<span class="go"> {&#39;cn&#39;: [b&#39;user2&#39;],</span>
+<span class="go">  &#39;gidNumber&#39;: [b&#39;100&#39;],</span>
+<span class="go">  &#39;givenName&#39;: [b&#39;TWO&#39;],</span>
+<span class="go">  &#39;homeDirectory&#39;: [b&#39;/home/user2&#39;],</span>
+<span class="go">  &#39;loginShell&#39;: [b&#39;/bin/bash&#39;],</span>
+<span class="go">  &#39;mail&#39;: [b&#39;user2@example.com&#39;],</span>
+<span class="go">  &#39;objectClass&#39;: [b&#39;top&#39;, b&#39;person&#39;, b&#39;posixAccount&#39;, b&#39;inetOrgPerson&#39;],</span>
+<span class="go">  &#39;sn&#39;: [b&#39;ã¦ã¼ã¶ã¼&#39;],</span>
+<span class="go">  &#39;uid&#39;: [b&#39;user2&#39;],</span>
+<span class="go">  &#39;uidNumber&#39;: [b&#39;1002&#39;],</span>
+<span class="go">  &#39;userPassword&#39;: [b&#39;{SSHA}j3mvviOTZ1Or8dtvn/PRVjX1igZFnUnp&#39;]}]</span>
+</pre></div>
+</div>
+<p>Each entry is dict type and value type is list. <strong>dn</strong> attribute is also included
+in entry object.</p>
+<p>You can only specified attributes by <strong>attributes</strong> parameter. If <cite>*</cite> or None are
+specified, all attributes are fetched. <strong>attrsonly</strong> parameter fetchs attribute names
+only (value is empty list).</p>
+<p>You can specify <strong>timeout</strong> and <strong>sizelimit</strong> parameter. See ldap.conf(5).</p>
+<p><strong>controls</strong> parameter can be set. Following is LDAP_CONTROL_SORTREQUEST example:</p>
+<p>Although LDAP client MUST NOT expect attributes order will be fixed,
+you can get ordered attributes by <strong>ordered_attributes</strong> parameter.</p>
+<p>search() method support LDAP_CONTROL_SORTREQUEST. You can use like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span><span class="p">,</span> <span class="n">LDAPControl</span><span class="p">,</span> <span class="n">LDAP_CONTROL_SORTREQUEST</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">LDAPControl</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span><span class="n">LDAP_CONTROL_SORTREQUEST</span><span class="p">,</span> <span class="n">b</span><span class="s">&#39;uidNumber&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">entries</span> <span class="o">=</span> <span class="n">ld</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;dc=example,dc=com&#39;</span><span class="p">,</span> <span class="n">LDAP_SCOPE_SUB</span><span class="p">,</span>
+<span class="gp">... </span>                    <span class="s">&#39;(|(uid=user1)(uid=user2))&#39;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;uidNumber&#39;</span><span class="p">],</span>
+<span class="gp">... </span>                    <span class="n">controls</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span>
+<span class="go">[{uidNumber: [b&#39;1000&#39;]}, {uidNumber: [b&#39;1001&#39;]}, {uidNumber: [b&#39;1001&#39;]}]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="paged-search">
+<h3>paged_search<a class="headerlink" href="#paged-search" title="Permalink to this headline">¶</a></h3>
+<p>This is the method for LDAP search operation with LDAP_CONTROL_PAGEDRESULTS.
+Of course, you can use LDAP_CONTROL_PAGEDRESULTS with search_() method, but
+paged_search() is generator.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span><span class="p">,</span> <span class="n">LDAP_SCOPE_SUB</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">entries</span> <span class="o">=</span> <span class="n">ld</span><span class="o">.</span><span class="n">paged_search</span><span class="p">(</span><span class="s">&#39;dc=example,dc=com&#39;</span><span class="p">,</span> <span class="n">LDAP_SCOPE_SUB</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">entries</span>
+<span class="go">&lt;generator object paged_search at 0x7f8d8714fa20&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add">
+<h3>add<a class="headerlink" href="#add" title="Permalink to this headline">¶</a></h3>
+<p>This is the method for LDAP add operation. Add method requires dn and
+LDAP attributes parameters. LDAP attributes type is [(str, [str])].</p>
+<p>Following is LDIF entry that we want to add.</p>
+<div class="highlight-python"><div class="highlight"><pre>dn: cn=group1,ou=Groups,dc=example,dc=com
+objectClass: top
+objectClass: posixGroup
+cn: group1
+gidNumber: 100
+description Test Group 1
+</pre></div>
+</div>
+<p>If you add above entry, convert into following Python code.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span>
+    <span class="p">(</span><span class="s">&#39;objectClass&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;top&#39;</span><span class="p">,</span> <span class="s">&#39;posixGroup&#39;</span><span class="p">]),</span>
+    <span class="p">(</span><span class="s">&#39;cn&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;group1&#39;</span><span class="p">]),</span>
+    <span class="p">(</span><span class="s">&#39;gidNumber&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;100&#39;</span><span class="p">]),</span>
+    <span class="p">(</span><span class="s">&#39;description&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;Test Group 1&#39;</span><span class="p">]),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Example.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span><span class="p">,</span> <span class="n">LDAP_SCOPE_SUB</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;cn=group1,ou=Groups,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s">&#39;objectClass&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;top&#39;</span><span class="p">,</span> <span class="s">&#39;posixGroup&#39;</span><span class="p">]),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s">&#39;cn&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;group1&#39;</span><span class="p">]),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s">&#39;gidNumber&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;100&#39;</span><span class="p">]),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s">&#39;description&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;Test Group 1&#39;</span><span class="p">]),</span>
+<span class="gp">... </span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="modify">
+<h3>modify<a class="headerlink" href="#modify" title="Permalink to this headline">¶</a></h3>
+<p>This is the method for LDAP modify operation. Modify method requires dn and
+changes parameters. Changes type is [(str, [str], int)].</p>
+<p>Following is LDIF entry that we want to modify.</p>
+<div class="highlight-python"><div class="highlight"><pre>dn: cn=group1,ou=Groups,dc=example,dc=com
+changetype: modify
+add: memberUid
+memberUid: user1
+-
+replace: description
+description: Test Group One
+</pre></div>
+</div>
+<p>If you modify above entry, convert into following Python code.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span>
+    <span class="p">(</span><span class="s">&#39;memberUid&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;user1&#39;</span><span class="p">],</span> <span class="n">LDAP_MOD_ADD</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;description&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;Test Group One&#39;</span><span class="p">],</span> <span class="n">LDAP_MOD_REPLACE</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Example.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span><span class="p">,</span> <span class="n">LDAP_MOD_ADD</span><span class="p">,</span> <span class="n">LDAP_MOD_REPLACE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">modify</span><span class="p">(</span><span class="s">&#39;cn=group1,ou=Groups,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s">&#39;memberUid&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;user1&#39;</span><span class="p">],</span> <span class="n">LDAP_MOD_ADD</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s">&#39;description&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;Test Group One&#39;</span><span class="p">],</span> <span class="n">LDAP_MOD_REPLACE</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delete">
+<h3>delete<a class="headerlink" href="#delete" title="Permalink to this headline">¶</a></h3>
+<p>This is the method for LDAP delete operation. Delete method requires dn parameter.</p>
+<p>Example.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s">&#39;cn=group1,ou=Groups,dc=example,dc=com&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rename">
+<h3>rename<a class="headerlink" href="#rename" title="Permalink to this headline">¶</a></h3>
+<p>This is the method for LDAP rename operation. Rename method requires dn and
+newrdn parameters. newparent and deleteoldrdn are optional parameters. if
+newparent parameter is None, newparent is same suffix with dn parameter.</p>
+<p>Example.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s">&#39;uid=test-user,ou=Users,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;cn=test-user&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If deleteoldrdn is True, old RDN attribute will be deleted. This may cause
+&#8216;Object class violation (65)&#8217; Exception. Default deleteoldrdn value is False.</p>
+</div>
+</div>
+<div class="section" id="compare">
+<h3>compare<a class="headerlink" href="#compare" title="Permalink to this headline">¶</a></h3>
+<p>This is the method for LDAP compare operation. Compare method requires dn, attribute
+and value parameters. It returns boolean, specified attribute description and value
+to compare to those found in the entry or not.</p>
+<p>Example.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s">&#39;cn=group1,ou=Groups,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;description&#39;</span><span class="p">,</span> <span class="s">&#39;Test Group 1&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="whoami">
+<h3>whoami<a class="headerlink" href="#whoami" title="Permalink to this headline">¶</a></h3>
+<p>This is the method for LDAP whoami extended operation.
+If LDAP instance executes whoami() before binding, &#8216;anonymous&#8217; string value is
+returned.</p>
+<p>Example.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">whoami</span><span class="p">()</span>
+<span class="go">&#39;dn:cn=master,dc=example,dc=com&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="ldapcontrol">
+<h2>LDAPControl<a class="headerlink" href="#ldapcontrol" title="Permalink to this headline">¶</a></h2>
+<p>You can LDAP control extension by using this class.</p>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span><span class="p">,</span> <span class="n">LDAPControl</span><span class="p">,</span> <span class="n">LDAP_CONTROL_RELAX</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">LDAPControl</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span><span class="n">LDAP_CONTROL_RELAX</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">modify</span><span class="p">(</span><span class="s">&#39;cn=test,dc=example,dc=com&#39;</span><span class="p">,</span>
+<span class="gp">... </span>          <span class="p">[(</span><span class="s">&#39;pwdAccountLockedTime&#39;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">LDAP_MOD_DELETE</span><span class="p">)],</span> <span class="n">controls</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="reference.html" class="btn btn-neutral float-right" title="python-libldap API reference" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to python-libldap’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Yutaka Kamei.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.6',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

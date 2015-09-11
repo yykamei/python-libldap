@@ -1,0 +1,887 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>python-libldap API reference &mdash; python-libldap 0.8.6 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="python-libldap 0.8.6 documentation" href="index.html"/>
+        <link rel="prev" title="python-libldap" href="manual.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> python-libldap
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="manual.html">python-libldap</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="manual.html#ldap">LDAP</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="manual.html#init">__init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual.html#bind">bind</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual.html#unbind">unbind</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual.html#search">search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual.html#paged-search">paged_search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual.html#add">add</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual.html#modify">modify</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual.html#delete">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual.html#rename">rename</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual.html#compare">compare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual.html#whoami">whoami</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manual.html#ldapcontrol">LDAPControl</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">python-libldap API reference</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">python-libldap</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>python-libldap API reference</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="python-libldap-api-reference">
+<h1>python-libldap API reference<a class="headerlink" href="#python-libldap-api-reference" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="libldap.core.LDAP">
+<em class="property">class </em><code class="descclassname">libldap.core.</code><code class="descname">LDAP</code><span class="sig-paren">(</span><em>uri</em>, <em>bind_user=None</em>, <em>bind_password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP" title="Permalink to this definition">¶</a></dt>
+<dd><p>LDAP is libldap wrapper class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>uri</strong> (<em>str</em>) &#8211; LDAP URI (e.g. <cite>&#8216;ldap://localhost&#8217;</cite>, <cite>&#8216;ldaps://localhost&#8217;</cite>, <cite>&#8216;ldapi:///&#8217;</cite>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">LDAPError</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="libldap.core.LDAP.bind">
+<code class="descname">bind</code><span class="sig-paren">(</span><em>who</em>, <em>password</em>, <em>controls=None</em>, <em>async=False</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.bind" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>who</strong> (<em>str</em>) &#8211; Who bind to</li>
+<li><strong>password</strong> (<em>str</em>) &#8211; Password</li>
+<li><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set)</li>
+<li><strong>async</strong> (<em>bool</em>) &#8211; Flag for asynchronous or not (the default is False,
+which implies operation will done synchronously)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Nothing or message ID</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None or int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.unbind">
+<code class="descname">unbind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.unbind" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Nothing</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">LDAPError</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>base</em>, <em>scope=0</em>, <em>filter='(objectClass=*)'</em>, <em>attributes=None</em>, <em>attrsonly=False</em>, <em>timeout=0</em>, <em>sizelimit=0</em>, <em>controls=None</em>, <em>ordered_attributes=False</em>, <em>async=False</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.search" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>base</strong> (<em>str</em>) &#8211; DN of the entry at which to start the search.</li>
+<li><strong>scope</strong> (<em>int</em>) &#8211; Scope of the search.
+it must be LDAP_SCOPE_BASE, LDAP_SCOPE_ONE, LDAP_SCOPE_SUB or
+LDAP_SCOPE_CHILDREN (the default is LDAP_SCOPE_BASE).</li>
+<li><strong>filter</strong> (<em>str</em>) &#8211; LDAP filter (the default is &#8216;(objectClass=*)&#8217;)</li>
+<li><strong>attributes</strong> (<em>[str] or None</em>) &#8211; Attributes for fetching from LDAP server (the default is None,
+which implies &#8216;*&#8217;)</li>
+<li><strong>attrsonly</strong> (<em>bool</em>) &#8211; Flag for gettting value or not (the default is False)</li>
+<li><strong>timeout</strong> (<em>int</em>) &#8211; Timeout for search operation (the default is 0, which implies unlimited)</li>
+<li><strong>sizelimit</strong> (<em>int</em>) &#8211; Sizelimit for search operation (the default is 0, which implies unlimited)</li>
+<li><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set)</li>
+<li><strong>ordered_attributes</strong> (<em>bool</em>) &#8211; Flag for attributes order is fixed or not
+(the default is False, which implies attributes order in entry is
+not remembered)</li>
+<li><strong>async</strong> (<em>bool</em>) &#8211; Flag for asynchronous or not (the default is False,
+which implies operation will done synchronously)
+Synchronous operation returns LDAP responses immediately</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of entries or message ID</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list or int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.paged_search">
+<code class="descname">paged_search</code><span class="sig-paren">(</span><em>base</em>, <em>scope=0</em>, <em>filter='(objectClass=*)'</em>, <em>attributes=None</em>, <em>attrsonly=False</em>, <em>timeout=0</em>, <em>sizelimit=0</em>, <em>pagesize=100</em>, <em>ordered_attributes=False</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.paged_search" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>base</strong> (<em>str</em>) &#8211; DN of the entry at which to start the search.</li>
+<li><strong>scope</strong> (<em>int</em>) &#8211; Scope of the search.
+it must be LDAP_SCOPE_BASE, LDAP_SCOPE_ONE, LDAP_SCOPE_SUB or
+LDAP_SCOPE_CHILDREN (the default is LDAP_SCOPE_BASE).</li>
+<li><strong>filter</strong> (<em>str</em>) &#8211; LDAP filter (the default is &#8216;(objectClass=*)&#8217;)</li>
+<li><strong>attributes</strong> (<em>[str] or None</em>) &#8211; Attributes for fetching from LDAP server (the default is None,
+which implies &#8216;*&#8217;)</li>
+<li><strong>attrsonly</strong> (<em>bool</em>) &#8211; Flag for gettting value or not (the default is False)</li>
+<li><strong>timeout</strong> (<em>int</em>) &#8211; Timeout for search operation (the default is 0, which implies unlimited)</li>
+<li><strong>sizelimit</strong> (<em>int</em>) &#8211; Sizelimit for search operation (the default is 0, which implies unlimited)</li>
+<li><strong>pagesize</strong> (<em>int</em>) &#8211; LDAP page size (the default is 100, which implies LDAP search request
+is done by 100 LDAP entries)</li>
+<li><strong>ordered_attributes</strong> (<em>bool</em>) &#8211; Flag for attributes order is fixed or not
+(the default is False, which implies attributes order in entry is
+not remembered)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Yield:</th><td class="field-body"><p class="first">LDAP entries (each item is dict)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>dn</em>, <em>attributes</em>, <em>controls=None</em>, <em>async=False</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.add" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dn</strong> (<em>str</em>) &#8211; DN</li>
+<li><strong>attributes</strong> (<em>[(str, [str])] or [(str, [bytes])]</em>) &#8211; <p>List of tuple. tuple has two items:</p>
+<ul>
+<li>attr   - Attribute name</li>
+<li>values - List of value</li>
+</ul>
+</li>
+<li><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set)</li>
+<li><strong>async</strong> (<em>bool</em>) &#8211; Flag for asynchronous or not (the default is False,
+which implies operation will done synchronously)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If operation is succeeded, None object is returned.
+If async is True, return message ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None or int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.modify">
+<code class="descname">modify</code><span class="sig-paren">(</span><em>dn</em>, <em>changes</em>, <em>controls=None</em>, <em>async=False</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.modify" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dn</strong> (<em>str</em>) &#8211; DN</li>
+<li><strong>changes</strong> (<em>[(str, [str], int)] or [(str, [bytes], int)]</em>) &#8211; <p>List of tuple. tuple has three items:</p>
+<ul>
+<li>attr   - Attribute name</li>
+<li>values - List of value</li>
+<li>mod_op - Modify operation (e.g.: LDAP_MOD_REPLACE)</li>
+</ul>
+</li>
+<li><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set)</li>
+<li><strong>async</strong> (<em>bool</em>) &#8211; Flag for asynchronous or not (the default is False,
+which implies operation will done synchronously)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If operation is succeeded, None object is returned.
+If async is True, return message ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None or int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><em>dn</em>, <em>controls=None</em>, <em>async=False</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.delete" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dn</strong> (<em>str</em>) &#8211; DN</li>
+<li><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set)</li>
+<li><strong>async</strong> (<em>bool</em>) &#8211; Flag for asynchronous or not (the default is False,
+which implies operation will done synchronously)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If operation is succeeded, None object is returned.
+If async is True, return message ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None or int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.rename">
+<code class="descname">rename</code><span class="sig-paren">(</span><em>dn</em>, <em>newrdn</em>, <em>newparent=None</em>, <em>deleteoldrdn=False</em>, <em>controls=None</em>, <em>async=False</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.rename" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dn</strong> (<em>str</em>) &#8211; DN</li>
+<li><strong>newrdn</strong> (<em>str</em>) &#8211; New RDN</li>
+<li><strong>newparent</strong> (<em>str or None</em>) &#8211; New Parent DN (ths default is None, which implies same parent
+with old dn is set)</li>
+<li><strong>deleteoldrdn</strong> (<em>bool</em>) &#8211; Flag for deleting old rdn attribute or not (the default is True,
+which implies oldrdn is not deleted after renaming)</li>
+<li><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set)</li>
+<li><strong>async</strong> (<em>bool</em>) &#8211; Flag for asynchronous or not (the default is False,
+which implies operation will done synchronously)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If operation is succeeded, None object is returned.
+If async is True, return message ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None or int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.compare">
+<code class="descname">compare</code><span class="sig-paren">(</span><em>dn</em>, <em>attribute</em>, <em>value</em>, <em>controls=None</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.compare" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dn</strong> (<em>str</em>) &#8211; DN</li>
+<li><strong>attribute</strong> (<em>str</em>) &#8211; Attribute for comparing</li>
+<li><strong>value</strong> (<em>str</em>) &#8211; Value for comparing</li>
+<li><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Attribute and value found in specified DN or not</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method operates synchronously.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.whoami">
+<code class="descname">whoami</code><span class="sig-paren">(</span><em>controls=None</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.whoami" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">If operation is succeeded, DN is returned.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">LDAPError</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method operates synchronously.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.passwd">
+<code class="descname">passwd</code><span class="sig-paren">(</span><em>user</em>, <em>oldpw=None</em>, <em>newpw=None</em>, <em>controls=None</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.passwd" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> (<em>str</em>) &#8211; DN of user</li>
+<li><strong>oldpw</strong> (<em>str or None</em>) &#8211; Old password of <em>user</em> (the default is None, which implies
+authentication will be skipped)</li>
+<li><strong>newpw</strong> (<em>str or None</em>) &#8211; New password of <em>user</em> (the default is None, which implies
+password will be created by randomly)</li>
+<li><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If operation is succeeded, New password is returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">str</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method operates synchronously.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.start_tls">
+<code class="descname">start_tls</code><span class="sig-paren">(</span><em>controls=None</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.start_tls" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">If operation is succeeded, None object is returned.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">LDAPError</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.set_option">
+<code class="descname">set_option</code><span class="sig-paren">(</span><em>option</em>, <em>value</em>, <em>is_global=False</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.set_option" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>option</strong> (<em>int</em>) &#8211; LDAP option. Available options are located in libldap.constants</li>
+<li><strong>value</strong> (<em>object</em>) &#8211; LDAP option value</li>
+<li><strong>is_global</strong> (<em>bool</em>) &#8211; Flag for LDAP option is set globally or not (the default is False,
+which implies LDAP option is set in this context)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If operation is succeeded, None object is returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p>These option parameters expect value parameter to be bool.</p>
+<ul class="simple">
+<li>LDAP_OPT_CONNECT_ASYNC</li>
+<li>LDAP_OPT_REFERRALS</li>
+<li>LDAP_OPT_RESTART</li>
+</ul>
+<p>These option parameters expect value parameter to be int.</p>
+<ul class="simple">
+<li>LDAP_OPT_DEBUG_LEVEL</li>
+<li>LDAP_OPT_DEREF</li>
+<li>LDAP_OPT_PROTOCOL_VERSION</li>
+<li>LDAP_OPT_RESULT_CODE</li>
+<li>LDAP_OPT_SIZELIMIT</li>
+<li>LDAP_OPT_TIMELIMIT</li>
+<li>LDAP_OPT_X_KEEPALIVE_IDLE</li>
+<li>LDAP_OPT_X_KEEPALIVE_PROBES</li>
+<li>LDAP_OPT_X_KEEPALIVE_INTERVAL</li>
+<li>LDAP_OPT_X_TLS_CRLCHECK</li>
+<li>LDAP_OPT_X_TLS_PROTOCOL_MIN</li>
+<li>LDAP_OPT_X_TLS_REQUIRE_CERT</li>
+<li>LDAP_OPT_X_SASL_NOCANON</li>
+<li>LDAP_OPT_X_SASL_MAXBUFSIZE</li>
+<li>LDAP_OPT_X_SASL_SSF_EXTERNAL</li>
+<li>LDAP_OPT_X_SASL_SSF_MAX</li>
+<li>LDAP_OPT_X_SASL_SSF_MIN</li>
+</ul>
+<p>These option parameters expect value parameter to be float or int.</p>
+<ul class="simple">
+<li>LDAP_OPT_NETWORK_TIMEOUT</li>
+<li>LDAP_OPT_TIMEOUT</li>
+</ul>
+<p>These option parameters expect value parameter to be str.</p>
+<ul class="simple">
+<li>LDAP_OPT_DEFBASE</li>
+<li>LDAP_OPT_DIAGNOSTIC_MESSAGE</li>
+<li>LDAP_OPT_MATCHED_DN</li>
+<li>LDAP_OPT_URI</li>
+<li>LDAP_OPT_X_TLS_CACERTDIR</li>
+<li>LDAP_OPT_X_TLS_CACERTFILE</li>
+<li>LDAP_OPT_X_TLS_CERTFILE</li>
+<li>LDAP_OPT_X_TLS_CIPHER_SUITE</li>
+<li>LDAP_OPT_X_TLS_CRLFILE</li>
+<li>LDAP_OPT_X_TLS_DHFILE</li>
+<li>LDAP_OPT_X_TLS_KEYFILE</li>
+<li>LDAP_OPT_X_TLS_RANDOM_FILE</li>
+<li>LDAP_OPT_X_SASL_SECPROPS</li>
+</ul>
+<p>LDAP_OPT_REFERRAL_URLS option expects value parameter to be [str].</p>
+<p class="last">Other options are not supported.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.get_option">
+<code class="descname">get_option</code><span class="sig-paren">(</span><em>option</em>, <em>is_global=False</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.get_option" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>option</strong> (<em>int</em>) &#8211; LDAP option. Available options are located in libldap.constants</li>
+<li><strong>is_global</strong> (<em>bool</em>) &#8211; Flag for LDAP option is set globally or not (the default is False,
+which implies LDAP option is set in this context)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Return value varies by option parameter of get_option().</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int, str, [str] or None</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p>These option parameters return bool value.</p>
+<ul class="simple">
+<li>LDAP_OPT_CONNECT_ASYNC</li>
+<li>LDAP_OPT_REFERRALS</li>
+<li>LDAP_OPT_RESTART</li>
+</ul>
+<p>These option parameters return int value.</p>
+<ul class="simple">
+<li>LDAP_OPT_DEBUG_LEVEL</li>
+<li>LDAP_OPT_DEREF</li>
+<li>LDAP_OPT_DESC</li>
+<li>LDAP_OPT_PROTOCOL_VERSION</li>
+<li>LDAP_OPT_RESULT_CODE</li>
+<li>LDAP_OPT_SESSION_REFCNT</li>
+<li>LDAP_OPT_SIZELIMIT</li>
+<li>LDAP_OPT_TIMELIMIT</li>
+<li>LDAP_OPT_X_KEEPALIVE_IDLE</li>
+<li>LDAP_OPT_X_KEEPALIVE_PROBES</li>
+<li>LDAP_OPT_X_KEEPALIVE_INTERVAL</li>
+<li>LDAP_OPT_X_TLS_CRLCHECK</li>
+<li>LDAP_OPT_X_TLS_NEWCTX</li>
+<li>LDAP_OPT_X_TLS_PROTOCOL_MIN</li>
+<li>LDAP_OPT_X_TLS_REQUIRE_CERT</li>
+<li>LDAP_OPT_X_SASL_NOCANON</li>
+</ul>
+<p>These option parameters return float value.</p>
+<ul class="simple">
+<li>LDAP_OPT_NETWORK_TIMEOUT</li>
+<li>LDAP_OPT_TIMEOUT</li>
+</ul>
+<p>These option parameters return str value.</p>
+<ul class="simple">
+<li>LDAP_OPT_DEFBASE</li>
+<li>LDAP_OPT_DIAGNOSTIC_MESSAGE</li>
+<li>LDAP_OPT_MATCHED_DN</li>
+<li>LDAP_OPT_URI</li>
+<li>LDAP_OPT_X_TLS_CACERTDIR</li>
+<li>LDAP_OPT_X_TLS_CACERTFILE</li>
+<li>LDAP_OPT_X_TLS_CERTFILE</li>
+<li>LDAP_OPT_X_TLS_CIPHER_SUITE</li>
+<li>LDAP_OPT_X_TLS_CRLFILE</li>
+<li>LDAP_OPT_X_TLS_DHFILE</li>
+<li>LDAP_OPT_X_TLS_KEYFILE</li>
+<li>LDAP_OPT_X_TLS_RANDOM_FILE</li>
+<li>LDAP_OPT_X_SASL_AUTHCID</li>
+<li>LDAP_OPT_X_SASL_AUTHZID</li>
+<li>LDAP_OPT_X_SASL_MECH</li>
+<li>LDAP_OPT_X_SASL_MECHLIST</li>
+<li>LDAP_OPT_X_SASL_REALM</li>
+<li>LDAP_OPT_X_SASL_SECPROPS</li>
+<li>LDAP_OPT_X_SASL_USERNAME</li>
+</ul>
+<p>LDAP_OPT_REFERRAL_URLS option parameter returns [str] value.</p>
+<p>LDAP_OPT_API_INFO option parameter returns dict value.
+Return value has following key-value:</p>
+<blockquote>
+<div><ul class="simple">
+<li>api_info_version: API Info Version</li>
+<li>api_version: API Version</li>
+<li>api_protocol_max: Protocol Max</li>
+<li>api_extensions:  Extensions</li>
+<li>api_vendor_name: Vendor Name</li>
+<li>api_vendor_version: Vendor Version</li>
+</ul>
+</div></blockquote>
+<p class="last">Other options are not supported.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.abandon">
+<code class="descname">abandon</code><span class="sig-paren">(</span><em>msgid</em>, <em>controls=None</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.abandon" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>msgid</strong> (<em>int</em>) &#8211; Message ID</li>
+<li><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If operation is succeeded, None object is returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.cancel">
+<code class="descname">cancel</code><span class="sig-paren">(</span><em>msgid</em>, <em>controls=None</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.cancel" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>msgid</strong> (<em>int</em>) &#8211; Message ID</li>
+<li><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If operation is succeeded, None object is returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.result">
+<code class="descname">result</code><span class="sig-paren">(</span><em>msgid</em>, <em>all=True</em>, <em>timeout=3</em>, <em>controls=None</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.result" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>msgid</strong> (<em>int</em>) &#8211; Message ID</li>
+<li><strong>all</strong> (<em>int</em>) &#8211; Flag for responsing all responses with msgid or not (the default
+is True, which implies all responses with msgid is returned)</li>
+<li><strong>timeout</strong> (<em>int</em>) &#8211; Timeout for result() method. Zero means wait foreve
+(the default is 3, which implies wait 3 seconds)</li>
+<li><strong>controls</strong> (<em>LDAPControl or None</em>) &#8211; LDAP Controls (the default is None, which implies no controls are set).
+If controls is set and LDAP response has control message, return value
+has control key-value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Return result for specified message ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">dict or list</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you have done search() asynchronously, you should use search_result()
+instead of result(). result() get raw data, raw data has __order__ key,
+which has attribute order.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="libldap.core.LDAP.search_result">
+<code class="descname">search_result</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP.search_result" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>*args</strong> (<em>tuple</em>) &#8211; Arguments for result()</li>
+<li><strong>**kwargs</strong> (<em>dict</em>) &#8211; <p>kwargs can contain following key:</p>
+<blockquote>
+<div><ul>
+<li>ordered_attributes : bool (the default is False)</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Return LDAP entries for specified message ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><p>[_DictEntry] or [_OrderedEntry]</p>
+<p>_OrderedEntry and _DictEntry are classes which inherit
+dict or OrderedDict. They have &#8216;dn&#8217; attribute.</p>
+</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="libldap.core.LDAPControl">
+<em class="property">class </em><code class="descclassname">libldap.core.</code><code class="descname">LDAPControl</code><a class="headerlink" href="#libldap.core.LDAPControl" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Hide _LDAPObjectControl methods.</p>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="manual.html" class="btn btn-neutral" title="python-libldap" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Yutaka Kamei.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.6',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

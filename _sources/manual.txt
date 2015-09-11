@@ -1,0 +1,4 @@
+python-libldap
+===============
+
+.. automodule:: libldap
