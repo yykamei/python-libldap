@@ -22,7 +22,7 @@ This class has following LDAP operation methods.
 * compare_
 * whoami_
 * passwd_
-* start_tls
+* start_tls_
 * set_option
 * get_option
 * abandon
@@ -57,6 +57,11 @@ Otherwise LDAP instance is still anonymous.
     ...
 
 After closing **with statement**, LDAP instance executes unbind() method.
+
+You can specify LDAPS uri. This initiate TLS processing on an LDAP session.
+
+    >>> from libldap import LDAP
+    >>> ld = LDAP('ldaps://localhost')
 
 bind
 -----
@@ -162,11 +167,10 @@ For example:
       'userPassword': [b'{SSHA}j3mvviOTZ1Or8dtvn/PRVjX1igZFnUnp']}]
 
 
+Each entry is dict-like object and value type is list.
+You can get *dn* value by accessing object attribute.
 
-Each entry is dict type and value type is list. **dn** attribute is also included
-in entry object.
-
-You can only specified attributes by **attributes** parameter. If `*` or None are
+You can get only specified attributes by **attributes** parameter. If `*` or None are
 specified, all attributes are fetched. **attrsonly** parameter fetchs attribute names
 only (value is empty list).
 
@@ -212,7 +216,7 @@ paged_search() is generator.
 add
 ---
 
-This is the method for LDAP add operation. Add method requires dn and
+This is the method for LDAP add operation. This method requires dn and
 LDAP attributes parameters. LDAP attributes type is [(str, [str])].
 
 Following is LDIF entry that we want to add.
@@ -257,7 +261,7 @@ Example.
 modify
 ------
 
-This is the method for LDAP modify operation. Modify method requires dn and
+This is the method for LDAP modify operation. This method requires dn and
 changes parameters. Changes type is [(str, [str], int)].
 
 Following is LDIF entry that we want to modify.
@@ -296,7 +300,7 @@ Example.
 delete
 -------
 
-This is the method for LDAP delete operation. Delete method requires dn parameter.
+This is the method for LDAP delete operation. This method requires dn parameter.
 
 Example.
 
@@ -310,7 +314,7 @@ Example.
 rename
 ------
 
-This is the method for LDAP rename operation. Rename method requires dn and
+This is the method for LDAP rename operation. This method requires dn and
 newrdn parameters. newparent and deleteoldrdn are optional parameters. if
 newparent parameter is None, newparent is same suffix with dn parameter.
 
@@ -332,7 +336,7 @@ Example.
 compare
 --------
 
-This is the method for LDAP compare operation. Compare method requires dn, attribute
+This is the method for LDAP compare operation. This method requires dn, attribute
 and value parameters. It returns boolean, specified attribute description and value
 to compare to those found in the entry or not.
 
@@ -367,7 +371,7 @@ passwd
 -------
 
 This is the method for LDAP passwd extended operation.
-Passwd method requires user parameter. oldpw and newpw parameters are optional.
+This method requires user parameter. oldpw and newpw parameters are optional.
 If oldpw is None, authentication will be skipped. If newpw is None, random password
 will be set.
 
@@ -388,6 +392,18 @@ Passwd method returns new password if succeeded.
       File "/home/kamei/git/python-libldap/test-stage/libldap/core.py", line 624, in passwd
         raise LDAPError(**result)
     libldap.core.LDAPError: Server is unwilling to perform (53)
+
+start_tls
+---------
+
+This is used to initiate TLS processing on an LDAP session. This sends *StartTLS*
+request to a server.
+
+.. code-block:: python
+
+    >>> from libldap import LDAP
+    >>> ld = LDAP('ldap://localhost')
+    >>> ld.start_tls()
 
 LDAPControl
 ===========
