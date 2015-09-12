@@ -86,6 +86,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#compare">compare</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#whoami">whoami</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#passwd">passwd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start-tls">start_tls</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ldapcontrol">LDAPControl</a></li>
@@ -148,7 +149,7 @@ Following objects are exposed.</p>
 <li><a class="reference internal" href="#compare">compare</a></li>
 <li><a class="reference internal" href="#whoami">whoami</a></li>
 <li><a class="reference internal" href="#passwd">passwd</a></li>
-<li>start_tls</li>
+<li><a class="reference internal" href="#start-tls">start_tls</a></li>
 <li>set_option</li>
 <li>get_option</li>
 <li>abandon</li>
@@ -182,6 +183,11 @@ Otherwise LDAP instance is still anonymous.</p>
 </pre></div>
 </div>
 <p>After closing <strong>with statement</strong>, LDAP instance executes unbind() method.</p>
+<p>You can specify LDAPS uri. This initiate TLS processing on an LDAP session.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldaps://localhost&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="bind">
 <h3>bind<a class="headerlink" href="#bind" title="Permalink to this headline">¶</a></h3>
@@ -273,9 +279,9 @@ and free the resources.</p>
 <span class="go">  &#39;userPassword&#39;: [b&#39;{SSHA}j3mvviOTZ1Or8dtvn/PRVjX1igZFnUnp&#39;]}]</span>
 </pre></div>
 </div>
-<p>Each entry is dict type and value type is list. <strong>dn</strong> attribute is also included
-in entry object.</p>
-<p>You can only specified attributes by <strong>attributes</strong> parameter. If <cite>*</cite> or None are
+<p>Each entry is dict-like object and value type is list.
+You can get <em>dn</em> value by accessing object attribute.</p>
+<p>You can get only specified attributes by <strong>attributes</strong> parameter. If <cite>*</cite> or None are
 specified, all attributes are fetched. <strong>attrsonly</strong> parameter fetchs attribute names
 only (value is empty list).</p>
 <p>You can specify <strong>timeout</strong> and <strong>sizelimit</strong> parameter. See ldap.conf(5).</p>
@@ -313,7 +319,7 @@ paged_search() is generator.</p>
 </div>
 <div class="section" id="add">
 <h3>add<a class="headerlink" href="#add" title="Permalink to this headline">¶</a></h3>
-<p>This is the method for LDAP add operation. Add method requires dn and
+<p>This is the method for LDAP add operation. This method requires dn and
 LDAP attributes parameters. LDAP attributes type is [(str, [str])].</p>
 <p>Following is LDIF entry that we want to add.</p>
 <div class="highlight-python"><div class="highlight"><pre>dn: cn=group1,ou=Groups,dc=example,dc=com
@@ -348,7 +354,7 @@ description Test Group 1
 </div>
 <div class="section" id="modify">
 <h3>modify<a class="headerlink" href="#modify" title="Permalink to this headline">¶</a></h3>
-<p>This is the method for LDAP modify operation. Modify method requires dn and
+<p>This is the method for LDAP modify operation. This method requires dn and
 changes parameters. Changes type is [(str, [str], int)].</p>
 <p>Following is LDIF entry that we want to modify.</p>
 <div class="highlight-python"><div class="highlight"><pre>dn: cn=group1,ou=Groups,dc=example,dc=com
@@ -380,7 +386,7 @@ description: Test Group One
 </div>
 <div class="section" id="delete">
 <h3>delete<a class="headerlink" href="#delete" title="Permalink to this headline">¶</a></h3>
-<p>This is the method for LDAP delete operation. Delete method requires dn parameter.</p>
+<p>This is the method for LDAP delete operation. This method requires dn parameter.</p>
 <p>Example.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
@@ -391,7 +397,7 @@ description: Test Group One
 </div>
 <div class="section" id="rename">
 <h3>rename<a class="headerlink" href="#rename" title="Permalink to this headline">¶</a></h3>
-<p>This is the method for LDAP rename operation. Rename method requires dn and
+<p>This is the method for LDAP rename operation. This method requires dn and
 newrdn parameters. newparent and deleteoldrdn are optional parameters. if
 newparent parameter is None, newparent is same suffix with dn parameter.</p>
 <p>Example.</p>
@@ -409,7 +415,7 @@ newparent parameter is None, newparent is same suffix with dn parameter.</p>
 </div>
 <div class="section" id="compare">
 <h3>compare<a class="headerlink" href="#compare" title="Permalink to this headline">¶</a></h3>
-<p>This is the method for LDAP compare operation. Compare method requires dn, attribute
+<p>This is the method for LDAP compare operation. This method requires dn, attribute
 and value parameters. It returns boolean, specified attribute description and value
 to compare to those found in the entry or not.</p>
 <p>Example.</p>
@@ -438,7 +444,7 @@ returned.</p>
 <div class="section" id="passwd">
 <h3>passwd<a class="headerlink" href="#passwd" title="Permalink to this headline">¶</a></h3>
 <p>This is the method for LDAP passwd extended operation.
-Passwd method requires user parameter. oldpw and newpw parameters are optional.
+This method requires user parameter. oldpw and newpw parameters are optional.
 If oldpw is None, authentication will be skipped. If newpw is None, random password
 will be set.</p>
 <p>Passwd method returns new password if succeeded.</p>
@@ -455,6 +461,16 @@ will be set.</p>
   File <span class="nb">&quot;/home/kamei/git/python-libldap/test-stage/libldap/core.py&quot;</span>, line <span class="m">624</span>, in <span class="n">passwd</span>
     <span class="k">raise</span> <span class="n">LDAPError</span><span class="p">(</span><span class="o">**</span><span class="n">result</span><span class="p">)</span>
 <span class="gr">libldap.core.LDAPError</span>: <span class="n">Server is unwilling to perform (53)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="start-tls">
+<h3>start_tls<a class="headerlink" href="#start-tls" title="Permalink to this headline">¶</a></h3>
+<p>This is used to initiate TLS processing on an LDAP session. This sends <em>StartTLS</em>
+request to a server.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">start_tls</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
