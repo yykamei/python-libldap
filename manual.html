@@ -87,6 +87,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#whoami">whoami</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#passwd">passwd</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#start-tls">start_tls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#set-option">set_option</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-option">get_option</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#abandon">abandon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#result">result</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ldapcontrol">LDAPControl</a></li>
@@ -150,11 +154,11 @@ Following objects are exposed.</p>
 <li><a class="reference internal" href="#whoami">whoami</a></li>
 <li><a class="reference internal" href="#passwd">passwd</a></li>
 <li><a class="reference internal" href="#start-tls">start_tls</a></li>
-<li>set_option</li>
-<li>get_option</li>
-<li>abandon</li>
+<li><a class="reference internal" href="#set-option">set_option</a></li>
+<li><a class="reference internal" href="#get-option">get_option</a></li>
+<li><a class="reference internal" href="#abandon">abandon</a></li>
 <li>cancel</li>
-<li>result</li>
+<li><a class="reference internal" href="#result">result</a></li>
 <li>search_result</li>
 </ul>
 <div class="section" id="init">
@@ -471,6 +475,53 @@ request to a server.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">start_tls</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="set-option">
+<h3>set_option<a class="headerlink" href="#set-option" title="Permalink to this headline">¶</a></h3>
+<p>This is used to set LDAP options to LDAP session or global settings.
+This method requires <em>option</em> and <em>value</em> parameters. <em>is_global</em> specifies
+option is set globally or not.
+LDAP sessions inherit their default settings from the global options in effect
+at the time the handle is created.</p>
+<p>Available option parameters are defined in <strong>ldap.constants.LDAP.set_option</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span><span class="p">,</span> <span class="n">LDAP_OPT_X_TLS_REQUIRE_CERT</span><span class="p">,</span> <span class="n">LDAP_OPT_X_TLS_TRY</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="n">LDAP_OPT_X_TLS_REQUIRE_CERT</span><span class="p">,</span> <span class="n">LDAP_OPT_X_TLS_TRY</span><span class="p">,</span> <span class="n">is_global</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-option">
+<h3>get_option<a class="headerlink" href="#get-option" title="Permalink to this headline">¶</a></h3>
+<p>This is used to get LDAP options of LDAP session or global settings.
+This method requires <em>option</em> parameter. You can get global settings option by
+specifying <em>is_global</em> parameter.</p>
+<p>Available option parameters are defined in <strong>ldap.constants.LDAP.get_option</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span><span class="p">,</span> <span class="n">LDAP_OPT_X_TLS_REQUIRE_CERT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="n">LDAP_OPT_X_TLS_REQUIRE_CERT</span><span class="p">,</span> <span class="n">is_global</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="abandon">
+<h3>abandon<a class="headerlink" href="#abandon" title="Permalink to this headline">¶</a></h3>
+<p>This is used to send a LDAP Abandon request for an operation in progress.</p>
+</div>
+<div class="section" id="result">
+<h3>result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h3>
+<p>This is used to wait for and return the result of an operation previously
+initiated by one of the LDAP asynchronous operation.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libldap</span> <span class="kn">import</span> <span class="n">LDAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ld</span> <span class="o">=</span> <span class="n">LDAP</span><span class="p">(</span><span class="s">&#39;ldap://localhost&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msgid</span> <span class="o">=</span> <span class="n">ld</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;cn=master,dc=example,dc=com&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">,</span> <span class="n">async</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">ld</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">msgid</span><span class="p">)</span>
+<span class="go">{&#39;error_message&#39;: None,</span>
+<span class="go"> &#39;message&#39;: &#39;Invalid credentials&#39;,</span>
+<span class="go"> &#39;referrals&#39;: [],</span>
+<span class="go"> &#39;return_code&#39;: 49}</span>
 </pre></div>
 </div>
 </div>
