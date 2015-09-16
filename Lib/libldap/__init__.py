@@ -23,11 +23,11 @@ This class has following LDAP operation methods.
 * whoami_
 * passwd_
 * start_tls_
-* set_option
-* get_option
-* abandon
+* set_option_
+* get_option_
+* abandon_
 * cancel
-* result
+* result_
 * search_result
 
 __init__
@@ -404,6 +404,62 @@ request to a server.
     >>> from libldap import LDAP
     >>> ld = LDAP('ldap://localhost')
     >>> ld.start_tls()
+
+set_option
+----------
+
+This is used to set LDAP options to LDAP session or global settings.
+This method requires *option* and *value* parameters. *is_global* specifies
+option is set globally or not.
+LDAP sessions inherit their default settings from the global options in effect
+at the time the handle is created.
+
+Available option parameters are defined in **ldap.constants.LDAP.set_option**
+
+.. code-block:: python
+
+    >>> from libldap import LDAP, LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_TRY
+    >>> ld = LDAP('ldap://localhost')
+    >>> ld.set_option(LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_TRY, is_global=True)
+
+get_option
+----------
+
+This is used to get LDAP options of LDAP session or global settings.
+This method requires *option* parameter. You can get global settings option by
+specifying *is_global* parameter.
+
+Available option parameters are defined in **ldap.constants.LDAP.get_option**
+
+.. code-block:: python
+
+    >>> from libldap import LDAP, LDAP_OPT_X_TLS_REQUIRE_CERT
+    >>> ld = LDAP('ldap://localhost')
+    >>> ld.get_option(LDAP_OPT_X_TLS_REQUIRE_CERT, is_global=True)
+    2
+
+abandon
+--------
+
+This is used to send a LDAP Abandon request for an operation in progress.
+
+result
+-------
+
+This is used to wait for and return the result of an operation previously
+initiated by one of the LDAP asynchronous operation.
+
+.. code-block:: python
+
+    >>> from pprint import pprint
+    >>> from libldap import LDAP
+    >>> ld = LDAP('ldap://localhost')
+    >>> msgid = ld.bind('cn=master,dc=example,dc=com', 'secret', async=True)
+    >>> result = ld.result(msgid)
+    {'error_message': None,
+     'message': 'Invalid credentials',
+     'referrals': [],
+     'return_code': 49}
 
 LDAPControl
 ===========
