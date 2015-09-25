@@ -61,8 +61,11 @@ class _OrderedEntry(_OrderedDict):
 class LDAP(_LDAPObject):
     """LDAP is libldap wrapper class
 
-    :param str uri:
+    :param uri:
         LDAP URI (e.g. `'ldap://localhost'`, `'ldaps://localhost'`, `'ldapi:///'`)
+
+    :type uri:
+        str, list or tuple
 
     :raises:
         LDAPError
@@ -75,7 +78,10 @@ class LDAP(_LDAPObject):
             self.bind_user = bind_user
             self.__bind_password = bind_password
         try:
-            super().__init__(uri)
+            if isinstance(uri, (list, tuple)):
+                super().__init__(','.join(uri))
+            else:
+                super().__init__(uri)
         except _LDAPError as e:
             raise LDAPError(str(e), LDAP_ERROR) from None
 

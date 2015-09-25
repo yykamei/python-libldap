@@ -90,6 +90,11 @@ Delete operation
 Changes
 =======
 
+0.8.8 release
+-------------
+
+* LDAP class constructor receives list of uri
+
 0.8.7 release
 -------------
 

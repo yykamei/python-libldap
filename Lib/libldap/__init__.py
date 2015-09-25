@@ -34,10 +34,14 @@ __init__
 --------
 
 LDAP constructor receives uri parameter.
-Example.
 
     >>> from libldap import LDAP
     >>> ld = LDAP('ldap://localhost')
+
+You can specify uri parameter with list type:
+
+    >>> from libldap import LDAP
+    >>> ld = LDAP(['ldap://someserver.example.com/', 'ldap://localhost/'])
 
 LDAP class supports context manager. You can write your code like this:
 
