@@ -486,5 +486,6 @@ For example:
 
 from .core import *
 from .constants import *
+from .exceptions import *
 
 # vi: set filetype=rst :

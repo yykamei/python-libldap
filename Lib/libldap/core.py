@@ -5,37 +5,21 @@
 This module provides LDAP core operations.
 """
 
+from collections import OrderedDict as _OrderedDict
+
 from _libldap import _LDAPError, _LDAPObject, _LDAPObjectControl
 from .constants import LDAP_CONTROL_PAGEDRESULTS
-from collections import OrderedDict as _OrderedDict
+from .exceptions import _generate_exception
 
 __all__ = (
     'LDAP',
     'LDAPControl',
-    'LDAPError',
 )
 
 LDAP_SUCCESS = 0x00
 LDAP_COMPARE_FALSE = 0x05
 LDAP_COMPARE_TRUE = 0x06
 LDAP_ERROR = -1
-
-
-class LDAPError(Exception):
-    def __init__(self, message, return_code, *args, **kwargs):
-        self.message = message
-        self.return_code = return_code
-        self.args = args
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-    def __repr__(self):
-        additional_info = ' %s' % (getattr(self, 'ppolicy_msg', ''),)
-        return 'LDAPError(%s (%d)%s)' % (self.message, self.return_code, additional_info)
-
-    def __str__(self):
-        additional_info = ' %s' % (getattr(self, 'ppolicy_msg', ''),)
-        return '%s (%d)%s' % (self.message, self.return_code, additional_info)
 
 
 class _DictEntry(dict):
@@ -83,7 +67,7 @@ class LDAP(_LDAPObject):
             else:
                 super().__init__(uri)
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
 
     def __enter__(self):
         if self.bind_user and self.__bind_password:
@@ -132,9 +116,9 @@ class LDAP(_LDAPObject):
                 return msgid
             result = self.result(msgid, controls=controls)
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
         if result['return_code'] != LDAP_SUCCESS:
-            raise LDAPError(**result)
+            raise _generate_exception(**result)
         self.bind_user = who
 
     def unbind(self):
@@ -150,7 +134,7 @@ class LDAP(_LDAPObject):
         try:
             super().unbind()
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
 
     def search(self,
                base,
@@ -232,7 +216,7 @@ class LDAP(_LDAPObject):
             if async:
                 return msgid
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
         return self.search_result(msgid, timeout=timeout, controls=controls,
                                   ordered_attributes=ordered_attributes)
 
@@ -308,7 +292,7 @@ class LDAP(_LDAPObject):
                 msgid = super().search(base, scope, filter, attributes,
                                        int(attrsonly), timeout, sizelimit, controls)
             except _LDAPError as e:
-                raise LDAPError(str(e), LDAP_ERROR) from None
+                raise _generate_exception(e) from None
             yield from self.search_result(msgid, timeout=timeout, controls=controls,
                                           ordered_attributes=ordered_attributes)
 
@@ -354,9 +338,9 @@ class LDAP(_LDAPObject):
                 return msgid
             result = self.result(msgid, controls=controls)
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
         if result['return_code'] != LDAP_SUCCESS:
-            raise LDAPError(**result)
+            raise _generate_exception(**result)
 
     def modify(self, dn, changes, controls=None, async=False):
         """
@@ -401,9 +385,9 @@ class LDAP(_LDAPObject):
                 return msgid
             result = self.result(msgid, controls=controls)
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
         if result['return_code'] != LDAP_SUCCESS:
-            raise LDAPError(**result)
+            raise _generate_exception(**result)
 
     def delete(self, dn, controls=None, async=False):
         """
@@ -440,9 +424,9 @@ class LDAP(_LDAPObject):
                 return msgid
             result = self.result(msgid, controls=controls)
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
         if result['return_code'] != LDAP_SUCCESS:
-            raise LDAPError(**result)
+            raise _generate_exception(**result)
 
     def rename(self, dn, newrdn, newparent=None, deleteoldrdn=False, controls=None, async=False):
         """
@@ -488,7 +472,7 @@ class LDAP(_LDAPObject):
             try:
                 newparent = dn.split(',', 1)[1]
             except IndexError:
-                raise LDAPError('Invalid DN syntax', 34)
+                raise _generate_exception('Invalid DN syntax', 0x22)
         try:
             if controls is not None:
                 msgid = super().rename(dn, newrdn, newparent, int(deleteoldrdn), controls)
@@ -498,9 +482,9 @@ class LDAP(_LDAPObject):
                 return msgid
             result = self.result(msgid, controls=controls)
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
         if result['return_code'] != LDAP_SUCCESS:
-            raise LDAPError(**result)
+            raise _generate_exception(**result)
 
     def compare(self, dn, attribute, value, controls=None):
         """
@@ -541,13 +525,13 @@ class LDAP(_LDAPObject):
                 msgid = super().compare(dn, attribute, value)
             result = self.result(msgid, controls=controls)
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
         if result['return_code'] == LDAP_COMPARE_TRUE:
             return True
         elif result['return_code'] == LDAP_COMPARE_FALSE:
             return False
         else:
-            raise LDAPError(**result)
+            raise _generate_exception(**result)
 
     def whoami(self, controls=None):
         """
@@ -576,9 +560,9 @@ class LDAP(_LDAPObject):
                 msgid = super().whoami()
             result = self.result(msgid, controls=controls)
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
         if result['return_code'] != LDAP_SUCCESS:
-            raise LDAPError(**result)
+            raise _generate_exception(**result)
         if 'data' in result and result['data']:
             return result['data'].decode('utf-8')
         else:
@@ -625,9 +609,9 @@ class LDAP(_LDAPObject):
                 msgid = super().passwd(user, oldpw, newpw)
             result = self.result(msgid, controls=controls)
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
         if result['return_code'] != LDAP_SUCCESS:
-            raise LDAPError(**result)
+            raise _generate_exception(**result)
         if 'data' in result:
             # We use lstrip instead of `ber_scanf( ber, "{a}", &s);`
             return result['data'].lstrip(b'0\n\x80\x08').decode('utf-8')
@@ -656,7 +640,7 @@ class LDAP(_LDAPObject):
             else:
                 super().start_tls()
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
 
     def set_option(self, option, value, is_global=False):
         """
@@ -739,7 +723,7 @@ class LDAP(_LDAPObject):
         try:
             super().set_option(option, value, int(is_global))
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
 
     def get_option(self, option, is_global=False):
         """
@@ -833,7 +817,7 @@ class LDAP(_LDAPObject):
         try:
             return super().get_option(option, int(is_global))
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
 
     def abandon(self, msgid, controls=None):
         """
@@ -861,7 +845,7 @@ class LDAP(_LDAPObject):
             else:
                 return super().abandon(msgid)
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
 
     def cancel(self, msgid, controls=None):
         """
@@ -889,7 +873,7 @@ class LDAP(_LDAPObject):
             else:
                 return super().cancel(msgid)
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
 
     def result(self, msgid, all=True, timeout=3, controls=None):
         """
@@ -935,7 +919,7 @@ class LDAP(_LDAPObject):
             else:
                 return super().result(msgid, int(all), timeout)
         except _LDAPError as e:
-            raise LDAPError(str(e), LDAP_ERROR) from None
+            raise _generate_exception(e) from None
 
     def search_result(self, *args, **kwargs):
         """
@@ -969,7 +953,7 @@ class LDAP(_LDAPObject):
         results = self.result(*args, **kwargs)
         if results:
             if results[-1]['return_code'] != LDAP_SUCCESS:
-                raise LDAPError(**results[-1])
+                raise _generate_exception(**results[-1])
         if ordered_attributes:
             return [_OrderedEntry(entry.pop('dn'), [(key, entry[key]) for key in entry['__order__']])
                     for entry in results if '__order__' in entry]

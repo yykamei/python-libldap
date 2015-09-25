@@ -90,6 +90,11 @@ Delete operation
 Changes
 =======
 
+0.8.9 release
+-------------
+
+* Add LDAP Exceptions which inherit LDAPError
+
 0.8.8 release
 -------------
 
