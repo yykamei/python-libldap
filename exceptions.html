@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to python-libldap’s documentation! &mdash; python-libldap 0.8.9 documentation</title>
+  <title>python-libldap exceptions &mdash; python-libldap 0.8.9 documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   
 
   
-    <link rel="top" title="python-libldap 0.8.9 documentation" href="#"/>
-        <link rel="next" title="python-libldap" href="manual.html"/> 
+    <link rel="top" title="python-libldap 0.8.9 documentation" href="index.html"/>
+        <link rel="prev" title="python-libldap API reference" href="reference.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -48,7 +48,7 @@
         
 
         
-          <a href="#" class="icon icon-home"> python-libldap
+          <a href="index.html" class="icon icon-home"> python-libldap
         
 
         
@@ -70,7 +70,7 @@
         
           
           
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="manual.html">python-libldap</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="manual.html#ldap">LDAP</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="manual.html#init">__init__</a></li>
@@ -100,7 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="reference.html#ldapcontrol">LDAPControl</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="exceptions.html">python-libldap exceptions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">python-libldap exceptions</a></li>
 </ul>
 
           
@@ -114,7 +114,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="#">python-libldap</a>
+        <a href="index.html">python-libldap</a>
       </nav>
 
 
@@ -123,9 +123,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="#">Docs</a> &raquo;</li>
+    <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>Welcome to python-libldap&#8217;s documentation!</li>
+    <li>python-libldap exceptions</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -136,51 +136,76 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="welcome-to-python-libldap-s-documentation">
-<h1>Welcome to python-libldap&#8217;s documentation!<a class="headerlink" href="#welcome-to-python-libldap-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="manual.html">python-libldap</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="manual.html#ldap">LDAP</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#init">__init__</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#bind">bind</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#unbind">unbind</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#search">search</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#paged-search">paged_search</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#add">add</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#modify">modify</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#delete">delete</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#rename">rename</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#compare">compare</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#whoami">whoami</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#passwd">passwd</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#start-tls">start_tls</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#set-option">set_option</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#get-option">get_option</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#abandon">abandon</a></li>
-<li class="toctree-l3"><a class="reference internal" href="manual.html#result">result</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="manual.html#ldapcontrol">LDAPControl</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">python-libldap API reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference.html#ldap">LDAP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference.html#ldapcontrol">LDAPControl</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="exceptions.html">python-libldap exceptions</a></li>
-</ul>
+  <div class="section" id="module-libldap.exceptions">
+<span id="python-libldap-exceptions"></span><h1>python-libldap exceptions<a class="headerlink" href="#module-libldap.exceptions" title="Permalink to this headline">¶</a></h1>
+<p>libldap.exceptions module</p>
+<p>This module provides LDAP exceptions classes.</p>
+<p>libldap exceptions hierarchy:</p>
+<div class="highlight-python"><div class="highlight"><pre>LDAPError
+├── LDAPAPIError
+│   ├── LDAPAuthUnknown
+│   ├── LDAPClientLoop
+│   ├── LDAPConnectError
+│   ├── LDAPControlNotFound
+│   ├── LDAPDecodingError
+│   ├── LDAPEncodingError
+│   ├── LDAPFilterError
+│   ├── LDAPLocalError
+│   ├── LDAPMoreResultsToReturn
+│   ├── LDAPNoMemory
+│   ├── LDAPNoResultsReturned
+│   ├── LDAPNotSupported
+│   ├── LDAPParamError
+│   ├── LDAPReferralLimitExceeded
+│   ├── LDAPServerDown
+│   ├── LDAPTimeout
+│   ├── LDAPUserCancelled
+│   └── LDAPXConnecting
+└── LDAPFailedResult
+    ├── LDAPAdminlimitExceeded
+    ├── LDAPAffectsMultipleDsas
+    ├── LDAPAliasDerefProblem
+    ├── LDAPAliasProblem
+    ├── LDAPAlreadyExists
+    ├── LDAPAuthMethodNotSupported
+    ├── LDAPBusy
+    ├── LDAPCompareFalse
+    ├── LDAPCompareTrue
+    ├── LDAPConfidentialityRequired
+    ├── LDAPConstraintViolation
+    ├── LDAPInappropriateAuth
+    ├── LDAPInappropriateMatching
+    ├── LDAPInsufficientAccess
+    ├── LDAPInvalidCredentials
+    ├── LDAPInvalidDnSyntax
+    ├── LDAPInvalidSyntax
+    ├── LDAPIsLeaf
+    ├── LDAPLoopDetect
+    ├── LDAPNamingViolation
+    ├── LDAPNoObjectClassMods
+    ├── LDAPNoSuchAttribute
+    ├── LDAPNoSuchObject
+    ├── LDAPNotAllowedOnNonleaf
+    ├── LDAPNotAllowedOnRdn
+    ├── LDAPObjectClassViolation
+    ├── LDAPOperationsError
+    ├── LDAPOther
+    ├── LDAPPartialResults
+    ├── LDAPProtocolError
+    ├── LDAPReferral
+    ├── LDAPResultsTooLarge
+    ├── LDAPSaslBindInProgress
+    ├── LDAPSizelimitExceeded
+    ├── LDAPStrongAuthRequired
+    ├── LDAPTimelimitExceeded
+    ├── LDAPTypeOrValueExists
+    ├── LDAPUnavailable
+    ├── LDAPUnavailableCriticalExtension
+    ├── LDAPUndefinedType
+    ├── LDAPUnwillingToPerform
+    └── LDAPVlvError
+</pre></div>
 </div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span>Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span>Search Page</span></a></li>
-</ul>
 </div>
 
 
@@ -189,8 +214,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="manual.html" class="btn btn-neutral float-right" title="python-libldap" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+        <a href="reference.html" class="btn btn-neutral" title="python-libldap API reference" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

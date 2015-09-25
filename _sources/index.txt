@@ -13,6 +13,7 @@ Contents:
 
    manual
    reference
+   exceptions
 
 
 
