@@ -42,7 +42,7 @@ LDAPObject_bind(LDAPObject *self, PyObject *args)
 	rc = ldap_sasl_bind(self->ldap, who, LDAP_SASL_SIMPLE, &passwd, sctrls, cctrls, &msgid);
 	LDAP_END_ALLOW_THREADS
 	if (msgid == -1) {
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 	return PyLong_FromLong(msgid);

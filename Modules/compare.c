@@ -44,7 +44,7 @@ LDAPObject_compare(LDAPObject *self, PyObject *args)
 	rc = ldap_compare_ext(self->ldap, dn, attribute, &bvalue, sctrls, cctrls, &msgid);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 	return PyLong_FromLong(msgid);

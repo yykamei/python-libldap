@@ -29,7 +29,7 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 	rc = ldap_get_dn_ber(ldap, msg, &ber, &bv);
 	if (rc != LDAP_SUCCESS) {
 		XDECREF_MANY(entry, order, values);
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 
@@ -104,14 +104,14 @@ parse_ctrls_result(LDAP *ldap, LDAPObjectControl *ldapoc, LDAPControl **sctrls, 
 			rc = ldap_parse_pageresponse_control(ldap, sctrls[i],
 					&estimate, &ldapoc->pr_cookie);
 			if (rc != LDAP_SUCCESS) {
-				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 				return -1;
 			}
 			ctrl = ldap_control_find(LDAP_CONTROL_PAGEDRESULTS, ldapoc->sctrls, NULL);
 			rc = ldap_create_page_control_value(ldap, ldapoc->pagesize,
 					&ldapoc->pr_cookie, &value);
 			if (rc != LDAP_SUCCESS) {
-				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 				return -1;
 			}
 			ctrl->ldctl_value.bv_val = value.bv_val;
@@ -122,7 +122,7 @@ parse_ctrls_result(LDAP *ldap, LDAPObjectControl *ldapoc, LDAPControl **sctrls, 
 			LDAPPasswordPolicyError error;
 			rc = ldap_parse_passwordpolicy_control(ldap, sctrls[i], &expire, &grace, &error);
 			if (rc != LDAP_SUCCESS) {
-				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 				return -1;
 			}
 			set_rc = PyDict_SetItemString(result, "ppolicy_msg",
@@ -235,7 +235,7 @@ parse_result(LDAP *ldap, LDAPMessage *msg, int with_extended, LDAPObjectControl 
 		LDAP_END_ALLOW_THREADS
 		if (rc != LDAP_SUCCESS) {
 			XDECREF_MANY(result, refs);
-			PyErr_SetString(LDAPError, ldap_err2string(rc));
+			PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 			return NULL;
 		}
 		if (oid) {
@@ -299,11 +299,11 @@ LDAPObject_result(LDAPObject *self, PyObject *args)
 	LDAP_END_ALLOW_THREADS
 	if (rc < 0) {
 		XDECREF_MANY(result);
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	} else if (rc == 0) {
 		XDECREF_MANY(result);
-		PyErr_SetString(LDAPError, ldap_err2string(LDAP_TIMEOUT));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(LDAP_TIMEOUT), LDAP_TIMEOUT);
 		return NULL;
 	}
 

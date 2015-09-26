@@ -19,7 +19,7 @@ create_page_control(LDAPObjectControl *self, struct berval *bv, int iscritical)
 	/* Dummy session */
 	rc = ldap_initialize(&ldap, NULL);
 	if (rc != LDAP_SUCCESS) {
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 
@@ -31,7 +31,7 @@ create_page_control(LDAPObjectControl *self, struct berval *bv, int iscritical)
 	rc = ldap_create_page_control(ldap, pagesize, &self->pr_cookie, iscritical, &ctrl);
 	if (rc != LDAP_SUCCESS) {
 		ldap_unbind_ext_s(ldap, NULL, NULL);
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 	ldap_unbind_ext_s(ldap, NULL, NULL);
@@ -51,7 +51,7 @@ create_sort_control(LDAPObjectControl *self, struct berval *bv, int iscritical)
 	/* Dummy session */
 	rc = ldap_initialize(&ldap, NULL);
 	if (rc != LDAP_SUCCESS) {
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 
@@ -59,7 +59,7 @@ create_sort_control(LDAPObjectControl *self, struct berval *bv, int iscritical)
 	rc = ldap_create_sort_keylist(&sss_keys, bv->bv_val);
 	if (rc != LDAP_SUCCESS) {
 		ldap_unbind_ext_s(ldap, NULL, NULL);
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 
@@ -67,7 +67,7 @@ create_sort_control(LDAPObjectControl *self, struct berval *bv, int iscritical)
 	if (rc != LDAP_SUCCESS) {
 		ldap_unbind_ext_s(ldap, NULL, NULL);
 		ldap_free_sort_keylist(sss_keys);
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 
@@ -130,7 +130,7 @@ LDAPObjectControl_add_control(LDAPObjectControl *self, PyObject *args)
 				PyBuffer_Release(&view);
 				ldap_control_free(ctrl);
 			}
-			PyErr_SetString(LDAPError, ldap_err2string(rc));
+			PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 			return NULL;
 		}
 	}

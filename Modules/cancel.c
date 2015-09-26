@@ -36,7 +36,7 @@ LDAPObject_cancel(LDAPObject *self, PyObject *args)
 	rc = ldap_cancel_s(self->ldap, cancelid, sctrls, cctrls);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 	Py_RETURN_NONE;

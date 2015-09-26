@@ -61,7 +61,7 @@ LDAPObject_init(LDAPObject *self, PyObject *args, PyObject *kwargs)
 
 	rc = ldap_set_option(NULL, LDAP_OPT_PROTOCOL_VERSION, &protocol);
 	if (rc != LDAP_OPT_SUCCESS) {
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return -1;
 	}
 
@@ -69,7 +69,7 @@ LDAPObject_init(LDAPObject *self, PyObject *args, PyObject *kwargs)
 	rc = ldap_initialize(&ld, uri);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return -1;
 	}
 

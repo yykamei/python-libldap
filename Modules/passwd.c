@@ -58,7 +58,7 @@ LDAPObject_passwd(LDAPObject *self, PyObject *args)
 	rc = ldap_passwd(self->ldap, &bv_user, bv_oldpwp, bv_newpwp, sctrls, cctrls, &msgid);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 	return PyLong_FromLong(msgid);

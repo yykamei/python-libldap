@@ -123,7 +123,7 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 		PyErr_SetString(LDAPError, "Invalid value is specified");
 		return NULL;
 	} else if (rc != LDAP_OPT_SUCCESS) {
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 	Py_RETURN_NONE;

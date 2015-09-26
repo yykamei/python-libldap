@@ -90,6 +90,11 @@ Delete operation
 Changes
 =======
 
+0.8.10 release
+--------------
+
+* Fix: We raise LDAPAPIError
+
 0.8.9 release
 -------------
 

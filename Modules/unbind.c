@@ -23,7 +23,7 @@ LDAPObject_unbind(LDAPObject *self, PyObject *args)
 	rc = ldap_unbind_ext(self->ldap, sctrls, NULL);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 	self->ldap = NULL;

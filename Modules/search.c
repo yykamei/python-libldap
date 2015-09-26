@@ -72,7 +72,7 @@ LDAPObject_search(LDAPObject *self, PyObject *args)
 	if (rc != LDAP_SUCCESS) {
 		if (attrs)
 			PyMem_RawFree(attrs);
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 

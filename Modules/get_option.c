@@ -44,7 +44,7 @@ LDAPObject_get_option(LDAPObject *self, PyObject *args)
 			rc = ldap_get_option(ctx, option, &integer);
 			LDAP_END_ALLOW_THREADS
 			if (rc != LDAP_OPT_SUCCESS) {
-				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 				return NULL;
 			}
 			py_outvalue = PyBool_FromLong(integer);
@@ -69,7 +69,7 @@ LDAPObject_get_option(LDAPObject *self, PyObject *args)
 			rc = ldap_get_option(ctx, option, &integer);
 			LDAP_END_ALLOW_THREADS
 			if (rc != LDAP_OPT_SUCCESS) {
-				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 				return NULL;
 			}
 			py_outvalue = PyLong_FromLong(integer);
@@ -82,7 +82,7 @@ LDAPObject_get_option(LDAPObject *self, PyObject *args)
 			rc = ldap_get_option(ctx, option, &bv_len);
 			LDAP_END_ALLOW_THREADS
 			if (rc != LDAP_OPT_SUCCESS) {
-				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 				return NULL;
 			}
 			py_outvalue = PyLong_FromLong(bv_len);
@@ -110,7 +110,7 @@ LDAPObject_get_option(LDAPObject *self, PyObject *args)
 			rc = ldap_get_option(ctx, option, &string);
 			LDAP_END_ALLOW_THREADS
 			if (rc != LDAP_OPT_SUCCESS) {
-				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 				return NULL;
 			}
 			if (string == NULL) {
@@ -125,7 +125,7 @@ LDAPObject_get_option(LDAPObject *self, PyObject *args)
 			rc = ldap_get_option(ctx, option, &tvp);
 			LDAP_END_ALLOW_THREADS
 			if (rc != LDAP_OPT_SUCCESS) {
-				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 				return NULL;
 			}
 			if (tvp == NULL) {
@@ -140,7 +140,7 @@ LDAPObject_get_option(LDAPObject *self, PyObject *args)
 			rc = ldap_get_option(ctx, option, &referral_urls);
 			LDAP_END_ALLOW_THREADS
 			if (rc != LDAP_OPT_SUCCESS) {
-				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 				return NULL;
 			}
 			if (referral_urls == NULL) {
@@ -162,7 +162,7 @@ LDAPObject_get_option(LDAPObject *self, PyObject *args)
 			rc = ldap_get_option(ctx, option, &api_info);
 			LDAP_END_ALLOW_THREADS
 			if (rc != LDAP_OPT_SUCCESS) {
-				PyErr_SetString(LDAPError, ldap_err2string(rc));
+				PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 				return NULL;
 			}
 			if ((py_extensions = PyList_New(0)) == NULL)

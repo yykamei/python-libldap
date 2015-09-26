@@ -44,7 +44,7 @@ LDAPObject_modify(LDAPObject *self, PyObject *args)
 	LDAP_END_ALLOW_THREADS
 	free_LDAPMods(mods);
 	if (rc != LDAP_SUCCESS) {
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 	return PyLong_FromLong(msgid);

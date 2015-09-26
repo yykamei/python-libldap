@@ -36,7 +36,7 @@ LDAPObject_abandon(LDAPObject *self, PyObject *args)
 	rc = ldap_abandon_ext(self->ldap, msgid, sctrls, cctrls);
 	LDAP_END_ALLOW_THREADS
 	if (rc != LDAP_SUCCESS) {
-		PyErr_SetString(LDAPError, ldap_err2string(rc));
+		PyErr_Format(LDAPError, "%s (%d)", ldap_err2string(rc), rc);
 		return NULL;
 	}
 	Py_RETURN_NONE;

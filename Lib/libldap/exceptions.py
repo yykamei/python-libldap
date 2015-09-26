@@ -72,6 +72,8 @@ libldap exceptions hierarchy::
         └── LDAPVlvError
 """
 
+import re
+
 
 class LDAPError(Exception):
     def __init__(self, message, return_code, *args, **kwargs):
@@ -84,13 +86,13 @@ class LDAPError(Exception):
     def __repr__(self):
         additional_info = ' %s' % (getattr(self, 'ppolicy_msg', ''),)
         if self.return_code is not None:
-            return 'LDAPError(%s (%s)%s)' % (self.message, self.return_code, additional_info)
+            return 'LDAPError(%s, %s)' % (repr(self.message), repr(self.return_code))
         else:
-            return 'LDAPError(%s%s)' % (self.message, additional_info)
+            return 'LDAPError(%s)' % (repr(self.message),)
 
     def __str__(self):
         additional_info = ' %s' % (getattr(self, 'ppolicy_msg', ''),)
-        if self.return_code is not None:
+        if self.return_code is not None and self.return_code > 0:
             return '%s (%s)%s' % (self.message, self.return_code, additional_info)
         else:
             return '%s%s' % (self.message, additional_info)
@@ -169,6 +171,10 @@ LDAPOther = type('LDAPOther', (LDAPFailedResult,), {})
 
 
 def _generate_exception(message, return_code=None, *args, **kwargs):
+    if return_code is None:
+        matched = re.search(r'\((-?\d+)\)', str(message))
+        if matched:
+            return_code = int(matched.group(1))
     try:
         return {
             -1: LDAPServerDown,
