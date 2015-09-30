@@ -90,6 +90,11 @@ Delete operation
 Changes
 =======
 
+0.8.11 release
+--------------
+
+* LDAP constructor receives options parameter
+
 0.8.10 release
 --------------
 

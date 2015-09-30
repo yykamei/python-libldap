@@ -47,15 +47,30 @@ class LDAP(_LDAPObject):
 
     :param uri:
         LDAP URI (e.g. `'ldap://localhost'`, `'ldaps://localhost'`, `'ldapi:///'`)
+    :param bind_user:
+        LDAP BIND user. This parameter is used only context manager
+        (the default is None, which implies BIND operation is not done)
+    :param bind_password:
+        LDAP BIND password. This parameter is used only context manager
+        (the default is None, which implies BIND operation is not done)
+    :param options:
+        LDAP options. If this is set, set_option() method is called.
+        (the default is [], which implies no options are set)
 
     :type uri:
         str, list or tuple
+    :type bind_user:
+        str
+    :type bind_password:
+        str
+    :type options:
+        [(option, value, is_global)]
 
     :raises:
         LDAPError
     """
 
-    def __init__(self, uri, bind_user=None, bind_password=None):
+    def __init__(self, uri, bind_user=None, bind_password=None, options=[]):
         self.bind_user = 'anonymous'
         self.__bind_password = None
         if bind_user and bind_password:
@@ -68,6 +83,12 @@ class LDAP(_LDAPObject):
                 super().__init__(uri)
         except _LDAPError as e:
             raise _generate_exception(e) from None
+        try:
+            for option, value, is_global in options:
+                self.set_option(option, value, is_global)
+        except ValueError:
+            raise ValueError("Invalid parameter: 'options' parameter type is [(option, value, is_global)]") from None
+
 
     def __enter__(self):
         if self.bind_user and self.__bind_password:
