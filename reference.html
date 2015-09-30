@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>python-libldap API reference &mdash; python-libldap 0.8.9 documentation</title>
+  <title>python-libldap API reference &mdash; python-libldap 0.8.11 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="python-libldap 0.8.9 documentation" href="index.html"/>
+    <link rel="top" title="python-libldap 0.8.11 documentation" href="index.html"/>
         <link rel="next" title="python-libldap exceptions" href="exceptions.html"/>
         <link rel="prev" title="python-libldap" href="manual.html"/> 
 
@@ -143,15 +143,25 @@
 <h2>LDAP<a class="headerlink" href="#ldap" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="libldap.core.LDAP">
-<em class="property">class </em><code class="descclassname">libldap.core.</code><code class="descname">LDAP</code><span class="sig-paren">(</span><em>uri</em>, <em>bind_user=None</em>, <em>bind_password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">libldap.core.</code><code class="descname">LDAP</code><span class="sig-paren">(</span><em>uri</em>, <em>bind_user=None</em>, <em>bind_password=None</em>, <em>options=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#libldap.core.LDAP" title="Permalink to this definition">¶</a></dt>
 <dd><p>LDAP is libldap wrapper class</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>uri</strong> (<em>str, list or tuple</em>) &#8211; LDAP URI (e.g. <cite>&#8216;ldap://localhost&#8217;</cite>, <cite>&#8216;ldaps://localhost&#8217;</cite>, <cite>&#8216;ldapi:///&#8217;</cite>)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>uri</strong> (<em>str, list or tuple</em>) &#8211; LDAP URI (e.g. <cite>&#8216;ldap://localhost&#8217;</cite>, <cite>&#8216;ldaps://localhost&#8217;</cite>, <cite>&#8216;ldapi:///&#8217;</cite>)</li>
+<li><strong>bind_user</strong> (<em>str</em>) &#8211; LDAP BIND user. This parameter is used only context manager
+(the default is None, which implies BIND operation is not done)</li>
+<li><strong>bind_password</strong> (<em>str</em>) &#8211; LDAP BIND password. This parameter is used only context manager
+(the default is None, which implies BIND operation is not done)</li>
+<li><strong>options</strong> (<em>[(option, value, is_global)]</em>) &#8211; LDAP options. If this is set, set_option() method is called.
+(the default is [], which implies no options are set)</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">LDAPError</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">LDAPError</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -877,7 +887,7 @@ dict or OrderedDict. They have &#8216;dn&#8217; attribute.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.9',
+            VERSION:'0.8.11',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
