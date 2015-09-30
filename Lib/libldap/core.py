@@ -60,9 +60,9 @@ class LDAP(_LDAPObject):
     :type uri:
         str, list or tuple
     :type bind_user:
-        str
+        str or None
     :type bind_password:
-        str
+        str or None
     :type options:
         [(option, value, is_global)]
 
