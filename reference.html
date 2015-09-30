@@ -151,9 +151,9 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>uri</strong> (<em>str, list or tuple</em>) &#8211; LDAP URI (e.g. <cite>&#8216;ldap://localhost&#8217;</cite>, <cite>&#8216;ldaps://localhost&#8217;</cite>, <cite>&#8216;ldapi:///&#8217;</cite>)</li>
-<li><strong>bind_user</strong> (<em>str</em>) &#8211; LDAP BIND user. This parameter is used only context manager
+<li><strong>bind_user</strong> (<em>str or None</em>) &#8211; LDAP BIND user. This parameter is used only context manager
 (the default is None, which implies BIND operation is not done)</li>
-<li><strong>bind_password</strong> (<em>str</em>) &#8211; LDAP BIND password. This parameter is used only context manager
+<li><strong>bind_password</strong> (<em>str or None</em>) &#8211; LDAP BIND password. This parameter is used only context manager
 (the default is None, which implies BIND operation is not done)</li>
 <li><strong>options</strong> (<em>[(option, value, is_global)]</em>) &#8211; LDAP options. If this is set, set_option() method is called.
 (the default is [], which implies no options are set)</li>
