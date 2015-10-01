@@ -90,6 +90,11 @@ Delete operation
 Changes
 =======
 
+0.8.12 release
+--------------
+
+* Get LDAP value length by using Pychon/C API in str2berval()
+
 0.8.11 release
 --------------
 
