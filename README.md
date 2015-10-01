@@ -94,6 +94,7 @@ Changes
 --------------
 
 * Get LDAP value length by using Pychon/C API in str2berval()
+* LDAP constructor receives start_tls parameter
 
 0.8.11 release
 --------------

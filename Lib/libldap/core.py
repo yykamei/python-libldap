@@ -56,6 +56,9 @@ class LDAP(_LDAPObject):
     :param options:
         LDAP options. If this is set, set_option() method is called.
         (the default is [], which implies no options are set)
+    :param start_tls:
+        Flag for start_tls() will be executed or not
+        (the default is False, which implies start_tls() is not done)
 
     :type uri:
         str, list or tuple
@@ -65,12 +68,14 @@ class LDAP(_LDAPObject):
         str or None
     :type options:
         [(option, value, is_global)]
+    :type start_tls:
+        bool
 
     :raises:
         LDAPError
     """
 
-    def __init__(self, uri, bind_user=None, bind_password=None, options=[]):
+    def __init__(self, uri, bind_user=None, bind_password=None, options=[], start_tls=False):
         self.bind_user = 'anonymous'
         self.__bind_password = None
         if bind_user and bind_password:
@@ -88,7 +93,8 @@ class LDAP(_LDAPObject):
                 self.set_option(option, value, is_global)
         except ValueError:
             raise ValueError("Invalid parameter: 'options' parameter type is [(option, value, is_global)]") from None
-
+        if start_tls:
+            self.start_tls()
 
     def __enter__(self):
         if self.bind_user and self.__bind_password:
