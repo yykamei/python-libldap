@@ -51,8 +51,14 @@ LDAPObject_search(LDAPObject *self, PyObject *args)
 		if ((size = PyList_GET_SIZE(attributes)) == -1)
 			return NULL;
 		attrs = (char **)PyMem_RawMalloc(sizeof(char *) * (size + 1));
+		if (attrs == NULL)
+			return NULL;
 		for (i = 0; i < size; i++) {
 			attrs[i] = PyUnicode_AsUTF8(PyList_GET_ITEM(attributes, i));
+			if (attrs[i] == NULL) {  /* PyUnicode_AsUTF8 failed */
+				PyMem_RawFree(attrs);
+				return NULL;
+			}
 		}
 		attrs[size] = NULL;
 	} else {

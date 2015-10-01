@@ -101,8 +101,14 @@ LDAPObject_set_option(LDAPObject *self, PyObject *args)
 				return NULL;
 			size = PyList_GET_SIZE(value);
 			referral_urls = (char **)PyMem_RawMalloc(sizeof(char *) * (size + 1));
+			if (referral_urls == NULL)
+				return NULL;
 			for (i = 0; i < size; i++) {
 				referral_urls[i] = PyUnicode_AsUTF8(PyList_GET_ITEM(value, i));
+				if (referral_urls[i] == NULL) {  /* PyUnicode_AsUTF8 failed */
+					PyMem_RawFree(referral_urls);
+					return NULL;
+				}
 			}
 			referral_urls[size] = NULL;
 			ptr = referral_urls;

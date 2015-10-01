@@ -90,6 +90,11 @@ Delete operation
 Changes
 =======
 
+0.8.13 release
+--------------
+
+* Fix: Encoding error and getting size of characters
+
 0.8.12 release
 --------------
 
