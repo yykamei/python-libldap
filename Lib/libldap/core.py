@@ -973,10 +973,7 @@ class LDAP(_LDAPObject):
         :raises:
             LDAPError
         """
-        if 'ordered_attributes' in kwargs:
-            ordered_attributes = kwargs.pop('ordered_attributes')
-        else:
-            ordered_attributes = False
+        ordered_attributes = kwargs.pop('ordered_attributes', False)
         results = self.result(*args, **kwargs)
         if results:
             if results[-1]['return_code'] != LDAP_SUCCESS:
