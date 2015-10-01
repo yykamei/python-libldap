@@ -8,7 +8,7 @@ This module provides LDAP core operations.
 from collections import OrderedDict as _OrderedDict
 
 from _libldap import _LDAPError, _LDAPObject, _LDAPObjectControl
-from .constants import LDAP_CONTROL_PAGEDRESULTS
+from .constants import LDAP_CONTROL_PAGEDRESULTS, LDAP_OPT_REFERRALS
 from .exceptions import _generate_exception
 
 __all__ = (
@@ -88,6 +88,9 @@ class LDAP(_LDAPObject):
                 super().__init__(uri)
         except _LDAPError as e:
             raise _generate_exception(e) from None
+        # NOTE: We set LDAP_OPT_REFERRALS False by default. This is same behavior
+        #       with OpenLDAP client tool. You can overwrite by using options parameter.
+        self.set_option(LDAP_OPT_REFERRALS, False)
         try:
             for option, value, is_global in options:
                 self.set_option(option, value, is_global)

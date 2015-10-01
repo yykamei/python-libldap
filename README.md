@@ -95,6 +95,7 @@ Changes
 
 * Fix: Get LDAP value length by using Pychon/C API in str2berval()
 * LDAP constructor receives start_tls parameter
+* LDAP_OPT_REFERRALS is False by default
 
 0.8.11 release
 --------------
