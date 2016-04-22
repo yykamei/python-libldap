@@ -468,7 +468,7 @@ class LDAP(_LDAPObject):
             New Parent DN (ths default is None, which implies same parent
             with old dn is set)
         :param deleteoldrdn:
-            Flag for deleting old rdn attribute or not (the default is True,
+            Flag for deleting old rdn attribute or not (the default is False,
             which implies oldrdn is not deleted after renaming)
         :param controls:
             LDAP Controls (the default is None, which implies no controls are set)

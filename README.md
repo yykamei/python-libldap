@@ -90,6 +90,11 @@ Delete operation
 Changes
 =======
 
+0.8.14 release
+--------------
+
+* Fix: LDAP.rename() description
+
 0.8.13 release
 --------------
 
