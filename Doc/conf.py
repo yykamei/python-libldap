@@ -13,9 +13,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
-import shlex
 
 with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Version')) as f:
     __version__ = f.read().strip()
