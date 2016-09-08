@@ -251,15 +251,15 @@ class LDAP(_LDAPObject):
                                   ordered_attributes=ordered_attributes)
 
     def paged_search(self,
-               base,
-               scope=0x0000,
-               filter='(objectClass=*)',
-               attributes=None,
-               attrsonly=False,
-               timeout=0,
-               sizelimit=0,
-               pagesize=100,
-               ordered_attributes=False):
+                     base,
+                     scope=0x0000,
+                     filter='(objectClass=*)',
+                     attributes=None,
+                     attrsonly=False,
+                     timeout=0,
+                     sizelimit=0,
+                     pagesize=100,
+                     ordered_attributes=False):
         """
         :param base:
             DN of the entry at which to start the search.

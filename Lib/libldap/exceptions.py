@@ -84,7 +84,6 @@ class LDAPError(Exception):
             setattr(self, key, value)
 
     def __repr__(self):
-        additional_info = ' %s' % (getattr(self, 'ppolicy_msg', ''),)
         if self.return_code is not None:
             return 'LDAPError(%s, %s)' % (repr(self.message), repr(self.return_code))
         else:

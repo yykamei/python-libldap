@@ -481,11 +481,9 @@ For example:
     >>> ld.bind('cn=master,dc=example,dc=com', 'secret')
     >>> ld.modify('cn=test,dc=example,dc=com',
     ...           [('pwdAccountLockedTime', [], LDAP_MOD_DELETE)], controls=c)
-    >>> 
+    >>>
 """
 
 from .core import *
 from .constants import *
 from .exceptions import *
-
-# vi: set filetype=rst :
