@@ -1,0 +1,10 @@
+FROM python:3.5-alpine
+MAINTAINER Yutaka Kamei<kamei@ykamei.net>
+RUN apk add --no-cache build-base openldap-dev
+WORKDIR /srv
+COPY Lib /srv/Lib
+COPY Modules /srv/Modules
+COPY Tests /srv/Tests
+COPY setup.py Version /srv/
+RUN python setup.py install
+CMD ["python", "setup.py", "test"]

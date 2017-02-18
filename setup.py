@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2015 Yutaka Kamei
+# Copyright (C) 2015-2017 Yutaka Kamei
 
 # Required Python libraries:
 #   - setuptools
@@ -10,10 +10,10 @@
 #   - libsasl2
 
 import os.path
+from setuptools import setup, find_packages, Extension
+
 with open(os.path.join(os.path.dirname(__file__), 'Version')) as f:
     __version__ = f.read().strip()
-
-from setuptools import setup, find_packages, Extension
 
 ext_module = Extension('_libldap',
                        sources=['Modules/libldap.c',
@@ -40,24 +40,27 @@ ext_module = Extension('_libldap',
                        libraries=['ldap_r'],
                        extra_compile_args=['-g', '-O2'])
 
-setup(name='python-libldap',
-      license='MIT',
-      author='Yutaka Kamei',
-      author_email='kamei@ykamei.net',
-      url='https://github.com/yykamei/python-libldap',
-      version=__version__,
-      description='A Python binding for libldap',
-      ext_modules=[ext_module],
-      packages=find_packages('Lib'),
-      package_dir={'': 'Lib'},
-      classifiers=[
+setup(
+    name='python-libldap',
+    license='MIT',
+    author='Yutaka Kamei',
+    author_email='kamei@ykamei.net',
+    url='https://github.com/yykamei/python-libldap',
+    version=__version__,
+    description='A Python binding for libldap',
+    ext_modules=[ext_module],
+    packages=find_packages('Lib'),
+    package_dir={'': 'Lib'},
+    classifiers=[
           'Development Status :: 4 - Beta',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: MIT License',
           'Operating System :: POSIX :: Linux',
           'Programming Language :: C',
           'Programming Language :: Python :: 3.4',
+          'Programming Language :: Python :: 3.5',
+          'Programming Language :: Python :: 3.6',
           'Topic :: Software Development :: Libraries :: Python Modules',
           'Topic :: System :: Systems Administration :: Authentication/Directory :: LDAP',
-      ],
+    ],
 )

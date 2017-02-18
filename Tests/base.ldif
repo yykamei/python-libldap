@@ -1,0 +1,32 @@
+dn: dc=example,dc=com
+objectClass: organization
+objectClass: dcObject
+o: example
+dc: example
+
+dn: ou=Users,dc=example,dc=com
+objectClass: organizationalUnit
+ou: Users
+
+dn: ou=Groups,dc=example,dc=com
+objectClass: organizationalUnit
+ou: Groups
+
+dn: cn=auth,ou=Users,dc=example,dc=com
+objectClass: organizationalRole
+objectClass: simpleSecurityObject
+cn: auth
+userPassword: secret
+
+dn: uid=someUser,ou=Users,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+cn: someUser
+uid: someUser
+sn: Some
+givenName: User
+uidNumber: 12345
+gidNumber: 100
+homeDirectory: /home/someUser
+loginShell: /bin/bash
+userPassword: secret

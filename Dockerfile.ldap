@@ -1,0 +1,10 @@
+FROM alpine
+MAINTAINER Yutaka Kamei<kamei@ykamei.net>
+RUN apk add --no-cache openldap
+COPY Tests/slapd.conf /etc/openldap/slapd.conf
+COPY Tests/cacert.pem /etc/openldap/cert.pem
+COPY Tests/cacertkey.pem /etc/openldap/key.pem
+COPY Tests/base.ldif /etc/openldap/base.ldif
+RUN slapadd -l /etc/openldap/base.ldif && \
+    chown -R ldap: /var/lib/openldap/openldap-data/
+CMD ["slapd", "-u", "ldap", "-d", "none", "-h", "ldap:/// ldaps:///"]
