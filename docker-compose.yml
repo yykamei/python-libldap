@@ -16,6 +16,8 @@ services:
       dockerfile: Dockerfile.py34
     links:
       - 'ldap:ldap.example.com'
+    environment:
+      COVERALLS_REPO_TOKEN:
 
   py35:
     build:
@@ -23,6 +25,8 @@ services:
       dockerfile: Dockerfile.py35
     links:
       - 'ldap:ldap.example.com'
+    environment:
+      COVERALLS_REPO_TOKEN:
 
   py36:
     build:
@@ -30,3 +34,5 @@ services:
       dockerfile: Dockerfile.py36
     links:
       - 'ldap:ldap.example.com'
+    environment:
+      COVERALLS_REPO_TOKEN:
