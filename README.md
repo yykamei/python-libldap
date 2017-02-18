@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/yykamei/python-libldap.svg?branch=master)](https://travis-ci.org/yykamei/python-libldap)
+[![PyPI version](https://badge.fury.io/py/python-libldap.svg)](https://badge.fury.io/py/python-libldap)
 
 python-libldap
 ==============
