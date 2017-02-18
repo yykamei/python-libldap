@@ -1,0 +1,10 @@
+sudo: required
+services:
+  - docker
+install:
+  - docker-compose build
+  - docker-compose up -d ldap
+script:
+  - docker-compose up py34
+  - docker-compose up py35
+  - docker-compose up py36

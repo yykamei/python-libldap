@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/yykamei/python-libldap.svg?branch=master)](https://travis-ci.org/yykamei/python-libldap)
+
 python-libldap
 ==============
 
@@ -89,6 +91,11 @@ Delete operation
 
 Changes
 =======
+
+0.8.15 release
+--------------
+
+* Add: Travis CI testing
 
 0.8.14 release
 --------------

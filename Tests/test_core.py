@@ -9,7 +9,14 @@ from types import GeneratorType
 
 from .environ import Environment, cacert_file, create_user_entry
 from libldap import LDAP, LDAPControl, LDAPError
-from libldap.constants import *
+from libldap.constants import (
+        LDAP_CONTROL_PASSWORDPOLICYREQUEST,
+        LDAP_CONTROL_RELAX,
+        LDAP_SCOPE_SUB,
+        LDAP_MOD_REPLACE,
+        LDAP_MOD_DELETE,
+        LDAP_OPT_X_TLS_CACERTFILE,
+)
 
 
 class LDAPBindTests(unittest.TestCase):
@@ -39,7 +46,7 @@ class LDAPBindTests(unittest.TestCase):
         self.assertIn('ppolicy_msg', result)
 
     def test_bind_error(self):
-        with self.assertRaises(LDAPError) as cm:
+        with self.assertRaises(LDAPError):
             ld = LDAP(self.env['uri_389'])
             ld.bind(self.env['auth_user'], 'bad password')
 
@@ -73,7 +80,7 @@ class LDAPSearchTests(unittest.TestCase):
         self.assertIn('cn', r[0])
         self.assertNotIn('objectClass', r[0])
 
-    def test_search_attributes(self):
+    def test_search_attributes_attrs_only(self):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
         r = ld.search(self.env['suffix'], LDAP_SCOPE_SUB, filter='cn=auth', attrsonly=True)
@@ -83,7 +90,7 @@ class LDAPSearchTests(unittest.TestCase):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
         with self.assertRaises(LDAPError) as cm:
-            r = ld.search(self.env['suffix'], LDAP_SCOPE_SUB, sizelimit=1)
+            ld.search(self.env['suffix'], LDAP_SCOPE_SUB, sizelimit=1)
         self.assertEqual(cm.exception.return_code, 4)  # Size limit exceeded (4)
 
     def test_paged_search(self):
@@ -142,13 +149,13 @@ class LDAPModifyTests(unittest.TestCase):
         changes = [
             ('description', ['Modified at %s' % (dtime,)], LDAP_MOD_REPLACE)
         ]
-        ld.modify(self.env['modify_user'], changes)
+        ld.modify(self.env['target_user'], changes)
 
     def test_modify_mod_delete(self):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
         changes = [('description', [], LDAP_MOD_DELETE)]
-        ld.modify(self.env['modify_user'], changes)
+        ld.modify(self.env['target_user'], changes)
 
     def test_modify_async(self):
         ld = LDAP(self.env['uri_389'])
@@ -157,7 +164,7 @@ class LDAPModifyTests(unittest.TestCase):
         changes = [
             ('description', ['Modified at %s' % (dtime,)], LDAP_MOD_REPLACE)
         ]
-        msgid = ld.modify(self.env['modify_user'], changes, async=True)
+        msgid = ld.modify(self.env['target_user'], changes, async=True)
         result = ld.result(msgid)
         self.assertEqual(result['return_code'], 0)
 
@@ -170,7 +177,7 @@ class LDAPModifyTests(unittest.TestCase):
         changes = [
             ('pwdAccountLockedTime', [dtime], LDAP_MOD_REPLACE)
         ]
-        ld.modify(self.env['modify_user'], changes, controls=c)
+        ld.modify(self.env['target_user'], changes, controls=c)
 
 
 class LDAPDeleteTests(unittest.TestCase):
@@ -205,43 +212,43 @@ class LDAPRenameTests(unittest.TestCase):
     def test_rename(self):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
-        (newrdn, newparent) = self.env['modify_user'].split(',', 1)
+        (newrdn, newparent) = self.env['target_user'].split(',', 1)
         newrdn += '-newrdn'
-        ld.rename(self.env['modify_user'], newrdn, newparent)
+        ld.rename(self.env['target_user'], newrdn, newparent)
         # re-rename
-        ld.rename('%s,%s' % (newrdn, newparent), self.env['modify_user'].split(',', 1)[0], newparent)
+        ld.rename('%s,%s' % (newrdn, newparent), self.env['target_user'].split(',', 1)[0], newparent)
 
     def test_rename_async(self):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
-        (newrdn, newparent) = self.env['modify_user'].split(',', 1)
+        (newrdn, newparent) = self.env['target_user'].split(',', 1)
         newrdn += '-newrdn'
-        msgid = ld.rename(self.env['modify_user'], newrdn, newparent, async=True)
+        msgid = ld.rename(self.env['target_user'], newrdn, newparent, async=True)
         result = ld.result(msgid)
         self.assertEqual(result['return_code'], 0)
         # re-rename
-        ld.rename('%s,%s' % (newrdn, newparent), self.env['modify_user'].split(',', 1)[0], newparent)
+        ld.rename('%s,%s' % (newrdn, newparent), self.env['target_user'].split(',', 1)[0], newparent)
 
     def test_rename_oldrdn(self):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
-        (newrdn, newparent) = self.env['modify_user'].split(',', 1)
+        (newrdn, newparent) = self.env['target_user'].split(',', 1)
         newrdn += '-newrdn'
-        ld.rename(self.env['modify_user'], newrdn, newparent, deleteoldrdn=False, async=True)
+        ld.rename(self.env['target_user'], newrdn, newparent, deleteoldrdn=False, async=True)
         time.sleep(0.3)
         entry = ld.search('%s,%s' % (newrdn, newparent), attributes=['uid'])[0]
         self.assertEqual(len(entry['uid']), 2)
         # re-rename
-        ld.rename('%s,%s' % (newrdn, newparent), self.env['modify_user'].split(',', 1)[0], newparent)
+        ld.rename('%s,%s' % (newrdn, newparent), self.env['target_user'].split(',', 1)[0], newparent)
 
     def test_rename_without_parent(self):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
-        (newrdn, newparent) = self.env['modify_user'].split(',', 1)
+        (newrdn, newparent) = self.env['target_user'].split(',', 1)
         newrdn += '-newrdn'
-        ld.rename(self.env['modify_user'], newrdn)
+        ld.rename(self.env['target_user'], newrdn)
         # re-rename
-        ld.rename('%s,%s' % (newrdn, newparent), self.env['modify_user'].split(',', 1)[0], newparent)
+        ld.rename('%s,%s' % (newrdn, newparent), self.env['target_user'].split(',', 1)[0], newparent)
 
 
 class LDAPCompareTests(unittest.TestCase):
@@ -252,19 +259,19 @@ class LDAPCompareTests(unittest.TestCase):
         self.compare_value = 'This value will be compared'
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
-        ld.modify(self.env['modify_user'],
+        ld.modify(self.env['target_user'],
                   [(self.compare_attribute, [self.compare_value], LDAP_MOD_REPLACE)])
 
     def test_compare(self):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
-        result = ld.compare(self.env['modify_user'], self.compare_attribute, self.compare_value)
+        result = ld.compare(self.env['target_user'], self.compare_attribute, self.compare_value)
         self.assertTrue(result)
 
     def test_compare_fail(self):
         ld = LDAP(self.env['uri_389'])
         ld.bind(self.env['root_dn'], self.env['root_pw'])
-        result = ld.compare(self.env['modify_user'], self.compare_attribute, 'dummy')
+        result = ld.compare(self.env['target_user'], self.compare_attribute, 'dummy')
         self.assertFalse(result)
 
 

@@ -1,0 +1,32 @@
+version: '2'
+services:
+  ldap:
+    build:
+      context: .
+      dockerfile: Dockerfile.ldap
+    ports:
+      - 389:389
+      - 636:636
+    hostname: ldap
+    domainname: example.com
+
+  py34:
+    build:
+      context: .
+      dockerfile: Dockerfile.py34
+    links:
+      - 'ldap:ldap.example.com'
+
+  py35:
+    build:
+      context: .
+      dockerfile: Dockerfile.py35
+    links:
+      - 'ldap:ldap.example.com'
+
+  py36:
+    build:
+      context: .
+      dockerfile: Dockerfile.py36
+    links:
+      - 'ldap:ldap.example.com'

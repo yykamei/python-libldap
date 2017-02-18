@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2015 Yutaka Kamei
+# Copyright (C) 2015-2017 Yutaka Kamei
 
 from uuid import uuid4
 from pathlib import Path
@@ -7,14 +7,14 @@ from pathlib import Path
 
 Environment = {
     'ldap-server': {  # Require ppolicy overlay
-        'uri_389': 'ldap://ldap-server/',
-        'uri_636': 'ldaps://ldap-server/',
+        'uri_389': 'ldap://ldap.example.com/',
+        'uri_636': 'ldaps://ldap.example.com/',
         'suffix': 'dc=example,dc=com',
-        'root_dn': 'cn=master,dc=example,dc=com',
+        'root_dn': 'cn=Manager,dc=example,dc=com',
         'root_pw': 'secret',
         'auth_user': 'cn=auth,ou=Users,dc=example,dc=com',
         'auth_pw': 'secret',
-        'modify_user': 'uid=modify,ou=Users,dc=example,dc=com',
+        'target_user': 'uid=someUser,ou=Users,dc=example,dc=com',
     }
 }
 cacert_file = (Path(__file__).parent / 'cacert.pem').absolute()
