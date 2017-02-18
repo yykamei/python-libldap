@@ -1,6 +1,6 @@
 [![PyPI version](https://badge.fury.io/py/python-libldap.svg)](https://badge.fury.io/py/python-libldap)
 [![Build Status](https://travis-ci.org/yykamei/python-libldap.svg?branch=master)](https://travis-ci.org/yykamei/python-libldap)
-[![Coverage Status](https://coveralls.io/repos/github/yykamei/python-libldap/badge.svg)](https://coveralls.io/github/yykamei/python-libldap)
+[![Coverage Status](https://coveralls.io/repos/github/yykamei/python-libldap/badge.svg?branch=HEAD)](https://coveralls.io/github/yykamei/python-libldap?branch=HEAD)
 
 python-libldap
 ==============
