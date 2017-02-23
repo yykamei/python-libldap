@@ -77,7 +77,7 @@ get_entry(LDAP *ldap, LDAPMessage *msg)
 		/* Set values */
 		if (bvals) {
 			for (i = 0; bvals[i].bv_val != NULL; i++) {
-				v = PyBytes_FromString(bvals[i].bv_val);
+				v = PyBytes_FromStringAndSize(bvals[i].bv_val, bvals[i].bv_len);
 				if (PyList_Append(values, v) == -1) {
 					XDECREF_MANY(entry, order, values);
 					return NULL;
