@@ -94,6 +94,14 @@ Delete operation
 Changes
 =======
 
+0.8.16 release
+--------------
+
+* Fix: Fix memleak
+    - HAMANO Tsukasa <hamano@osstech.co.jp>
+* Fix: fix for binary attribute
+    - HAMANO Tsukasa <hamano@osstech.co.jp>
+
 0.8.15 release
 --------------
 
